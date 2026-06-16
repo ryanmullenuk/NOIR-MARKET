@@ -164,3 +164,15 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 #particles{z-index:0!important;opacity:.42!important;}
 .modal{z-index:10;}
 @keyframes liveDustRise{0%{transform:translate3d(0,20vh,0);opacity:0}8%{opacity:var(--dust-opacity,1)}80%{opacity:var(--dust-opacity,1)}100%{transform:translate3d(var(--drift,0),-120vh,0);opacity:0}}
+
+
+/* v17 splash-only dust and logo */
+#particle-canvas,.game-dust{display:none!important;}
+.splash{background:#000!important; opacity:1!important; overflow:hidden;}
+.splash::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),transparent 34%),#000;z-index:0;}
+.splash-logo{position:relative;z-index:4;width:min(78vw,430px);height:auto;display:block;margin:0 auto 18px;filter:drop-shadow(0 0 22px rgba(255,255,255,.18));}
+.splash h1,.splash p{position:relative;z-index:5;}
+.live-dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;opacity:1!important;}
+.live-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 7px rgba(255,255,255,.75);animation:dustRise linear infinite;}
+@keyframes dustRise{0%{transform:translate3d(0,10vh,0) scale(.7);opacity:0;}8%{opacity:.95;}70%{opacity:.75;}100%{transform:translate3d(var(--drift),-118vh,0) scale(1.25);opacity:0;}}
+.howto p{line-height:1.45;margin:10px 0}.disclaimer{color:#858585!important;font-size:12px;margin-top:18px!important}.play-wide{width:100%;margin-top:10px}.loan-choice{display:grid;gap:10px;margin-top:14px}.loan-choice button{width:100%;}

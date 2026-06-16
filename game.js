@@ -64,7 +64,11 @@ function confirmNewGame(){modal('New Game',`<p>Your current save will be lost.</
 function newGame(showLoans=false){s=baseState(); genPrices(); newRumour(); save(); draw(); if(showLoans) showLoanIntro();}
 
 function showWelcome(){
-  modal('Welcome to Noir Market',`<p class="subtle">Buy low, sell high and move between UK cities before the market turns. Prices shift daily, rumours may be true or false, and debt can help you scale quickly if you survive the terms.</p><p class="subtle">You start with £1,000 cash, no bank balance and no debt.</p><button type="button" id="visitLoansBtn" class="sell">Visit Shady Loans</button><button type="button" id="startCleanBtn">Start Clean</button>`);
+  modal('How to Play',`<div class="howto"><p>You start with £1,000, no debt and questionable judgement.</p><p>Buy low, sell high, travel between cities and try not to get robbed, arrested, battered or completely rinsed by the market.</p><p>Rumours may help. They may also be nonsense. That is business.</p><p class="disclaimer">This game is for entertainment purposes only.</p><button type="button" id="playWelcomeBtn" class="buy play-wide">Play</button></div>`);
+  setTimeout(()=>{const b=$('playWelcomeBtn'); if(b)b.onclick=showShadyChoice;},0);
+}
+function showShadyChoice(){
+  modal('Shady Loans',`<p class="subtle">You can start clean, but debt gives you buying power. These terms are deliberately bad and missed payments will hurt.</p><p class="subtle">High interest. Short deadlines. Bad people. Useful cash.</p><div class="loan-choice"><button type="button" id="visitLoansBtn" class="sell">Visit Shady Loans</button><button type="button" id="startCleanBtn">Start Clean</button></div>`);
   setTimeout(()=>{
     const v=$('visitLoansBtn'); if(v)v.onclick=()=>bank();
     const c=$('startCleanBtn'); if(c)c.onclick=()=>done();
@@ -213,7 +217,7 @@ function particles(){
 function createSplashDust(){
   const splash=$('splash'); if(!splash || splash.querySelector('.live-dust'))return;
   const layer=document.createElement('div'); layer.className='live-dust';
-  const count=260;
+  const count=420;
   for(let i=0;i<count;i++){
     const d=document.createElement('i');
     const size=(Math.random()*3.4+1.2).toFixed(2);
@@ -267,19 +271,20 @@ function stopBackgroundMusic(){
 function startSynthMusic(){
   if(!soundEnabled||synthMusicOn)return;
   synthMusicOn=true; unlockAudio();
-  const bass=[98,98,110,98,87,87,92,82,98,98,110,123,110,98,87,82];
-  const lead=[196,0,185,0,165,0,147,0,196,0,220,0,185,0,165,0];
+  const bass=[55,55,55,49,49,52,52,46,46,49,55,55,41,41,49,49];
+  const pulse=[110,0,98,0,82,0,73,0,98,0,92,0,82,0,73,0];
   let i=0;
   synthMusicTimer=setInterval(()=>{
     if(!soundEnabled){stopSynthMusic();return;}
     const b=bass[i%bass.length];
-    tone(b,.22,'square',.018,0);
-    tone(b/2,.28,'triangle',.012,.02);
-    const l=lead[i%lead.length];
-    if(l && i%2===0)tone(l,.07,'square',.010,.06);
-    if(i%8===0)tone(49,.32,'sine',.010,.02);
+    tone(b,.80,'triangle',.020,0);
+    tone(b/2,.95,'sine',.014,.03);
+    if(i%4===0)tone(27.5,.70,'sine',.020,.01);
+    const p=pulse[i%pulse.length];
+    if(p)tone(p,.10,'square',.009,.08);
+    if(i%16===12)tone(146.8,.09,'square',.007,.1);
     i++;
-  },430);
+  },1875);
 }
 function stopSynthMusic(){synthMusicOn=false; if(synthMusicTimer){clearInterval(synthMusicTimer); synthMusicTimer=null;}}
 document.addEventListener('visibilitychange',()=>{ if(document.hidden)stopBackgroundMusic(); else if(soundEnabled&&musicStarted)startBackgroundMusic(); });
@@ -315,7 +320,7 @@ function modal(t,h){
 function showMenu(){ensureStats(); modal('Menu',`<div class="menu-list"><button type="button" id="statsBtn">Stats</button><button type="button" id="soundToggleBtn">Sound: ${soundEnabled?'ON':'OFF'}</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>`); setTimeout(()=>{$('statsBtn').onclick=showStats; $('soundToggleBtn').onclick=()=>{soundEnabled=!soundEnabled; localStorage.setItem('noir_market_sound',soundEnabled?'on':'off'); if(soundEnabled){sound('positive'); startBackgroundMusic();} else stopBackgroundMusic(); showMenu();}; $('menuNewGameBtn').onclick=confirmNewGame;},0)}
 function showStats(){ensureStats(); modal('Stats',`<div class="stats-list"><p><span>Days survived</span><strong>${s.day-1}</strong></p><p><span>Net worth</span><strong>${money(netWorth())}</strong></p><p><span>Best net worth</span><strong>${money(s.stats.bestNet||netWorth())}</strong></p><p><span>Storage type</span><strong>${storageType()}</strong></p><p><span>Flights taken</span><strong>${s.stats.flights||0}</strong></p><p><span>Stays</span><strong>${s.stats.stays||0}</strong></p><p><span>Fights won</span><strong>${s.stats.fightsWon||0}</strong></p><p><span>Fights lost</span><strong>${s.stats.fightsLost||0}</strong></p><p><span>Times mugged</span><strong>${s.stats.mugged||0}</strong></p><p><span>Loans taken</span><strong>${s.stats.loansTaken||0}</strong></p><p><span>Drugs bought</span><strong>${s.stats.tradesBought||0}</strong></p><p><span>Drugs sold</span><strong>${s.stats.tradesSold||0}</strong></p><p><span>Largest single trade</span><strong>${money(s.stats.largestTrade||0)}</strong></p><p><span>Heat level</span><strong>${s.heat}%</strong></p></div><button type="button" id="backMenuBtn">Back to Menu</button>`); setTimeout(()=>$('backMenuBtn').onclick=showMenu,0)}
 
-$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; sound('positive'); $('splash').classList.add('hide'); setTimeout(()=>{if(firstFreshGame)showWelcome();},460)}; particles(); setupTilt(); createSplashDust(); createGameDust(); firstFreshGame=load();
+$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; sound('positive'); $('splash').classList.add('hide'); setTimeout(()=>{showWelcome();},460)}; setupTilt(); createSplashDust(); firstFreshGame=load();
 
 // Native app feel: suppress iOS double-tap and pinch zoom when launched from browser/home screen.
 let __lastTouchEnd=0;

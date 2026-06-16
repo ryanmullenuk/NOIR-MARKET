@@ -1,5 +1,5 @@
-const CACHE_NAME='noir-market-v16-fix';
-const ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./icon-192.png','./icon-512.png','./assets/music/noir_theme.wav'];
+const CACHE_NAME='noir-market-v17';
+const ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./icon-192.png','./icon-512.png','./assets/logo.png','./assets/music/noir_theme.wav'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',event=>{event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));});
