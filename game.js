@@ -1054,3 +1054,104 @@ function save(){ensureStats(); s.version='1.7'; localStorage.setItem('noir_marke
 function load(){let x=localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.7'; setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
 function v17SelfTest(){console.log('NOIR MARKET V1.7 checks: travel/shipping mode, export/import shipments, 5 percent plus 200 shipping cost, city vault import and V1.6 save migration active.');}
 setTimeout(v17SelfTest,160);
+
+/* Noir Market V1.8 bug-fix release: menu stats/settings, name, ticker and loan max borrow */
+let musicEnabled=localStorage.getItem('noir_market_music')!=='off';
+function rankWeightV18(r){return {'Wannabe':0,'Street Dealer':1,'Hustler':2,'Kingpin':3,'Legend':4,'Drug Lord':5}[r]??0;}
+function updateBestRankV18(){
+  if(!s)return;
+  ensureRankState();
+  s.stats=s.stats||{};
+  const current=rank();
+  if(!s.stats.bestRank || rankWeightV18(current)>rankWeightV18(s.stats.bestRank))s.stats.bestRank=current;
+  return current;
+}
+function ensurePlayerProfileV18(){
+  if(!s)return;
+  s.playerName=String(s.playerName||localStorage.getItem('noir_market_player_name')||'').slice(0,24);
+  s.settings=s.settings||{};
+  s.settings.sound=soundEnabled?'on':'off';
+  s.settings.music=musicEnabled?'on':'off';
+  s.stats=s.stats||{};
+  if(!s.stats.bestRank)s.stats.bestRank=s.rankState?.current||rank();
+  updateBestRankV18();
+}
+const v18PreviousEnsureStats=ensureStats;
+function ensureStats(){
+  if(typeof v18PreviousEnsureStats==='function')v18PreviousEnsureStats();
+  if(!s)return;
+  const defaults={shipmentsExported:0,shipmentsImported:0,arrests:0,jailDays:0,bribes:0,informants:0,loansTaken:0,tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,largestTrade:0,bestNet:0};
+  s.stats=s.stats||{};
+  Object.entries(defaults).forEach(([k,v])=>{if(typeof s.stats[k]!=='number')s.stats[k]=v;});
+  ensurePlayerProfileV18();
+}
+function baseState(){return{version:'1.8',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function save(){ensureStats(); s.version='1.8'; localStorage.setItem('noir_market_v1_8',JSON.stringify(s));}
+function load(){let x=localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.8'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;} newGame(false); return true;}
+function startSynthMusic(){
+  if(!musicEnabled||synthMusicOn)return;
+  synthMusicOn=true; unlockAudio();
+  const bass=[41.2,41.2,41.2,36.7,36.7,38.9,38.9,34.6,34.6,36.7,41.2,41.2,30.9,30.9,36.7,36.7];
+  const tones=[0,82.4,0,73.4,0,65.4,0,61.7,0,73.4,0,82.4,0,55,0,61.7];
+  let i=0;
+  synthMusicTimer=setInterval(()=>{if(!musicEnabled){stopSynthMusic();return;} const b=bass[i%bass.length]; tone(b,1.05,'sine',.016,0); tone(b/2,1.20,'triangle',.012,.04); if(i%4===0)tone(27.5,.85,'sine',.014,.02); const t=tones[i%tones.length]; if(t)tone(t,.16,'square',.006,.12); if(i%16===15)tone(98,.12,'square',.005,.18); i++;},1250);
+}
+function startBackgroundMusic(){
+  if(!musicEnabled)return;
+  unlockAudio(); musicStarted=true;
+  try{if(typeof Audio!=='undefined'){if(!bgMusic){bgMusic=new Audio(MUSIC_PATH); bgMusic.loop=true; bgMusic.volume=0.42;} bgMusic.loop=true; const p=bgMusic.play(); if(p&&p.catch)p.catch(()=>startSynthMusic()); return;}}catch(e){}
+  startSynthMusic();
+}
+function stopBackgroundMusic(){try{if(bgMusic)bgMusic.pause();}catch(e){} stopSynthMusic();}
+document.addEventListener('visibilitychange',()=>{ if(document.hidden)stopBackgroundMusic(); else if(musicEnabled&&musicStarted)startBackgroundMusic(); });
+const v18PreviousDraw=draw;
+function draw(){
+  if(typeof v18PreviousDraw==='function')v18PreviousDraw();
+  ensurePlayerProfileV18();
+  const ticker=$('newsTicker');
+  if(ticker){
+    const text=upperNews(s.economy?.news?.text||s.news||'MARKETS ARE QUIET TODAY.');
+    if(ticker.textContent!==text){ticker.textContent=text; ticker.style.animation='none'; ticker.offsetHeight; ticker.style.animation='';}
+  }
+  const current=updateBestRankV18();
+  if($('rank'))$('rank').textContent=current;
+  if($('rankDays'))$('rankDays').textContent=rankDaysText();
+  if($('reputation'))$('reputation').textContent=`${s.reputation}/100`;
+}
+function setPlayerNameV18(){
+  const input=$('playerNameInput'); if(!input)return;
+  s.playerName=String(input.value||'').trim().slice(0,24);
+  localStorage.setItem('noir_market_player_name',s.playerName);
+  save(); draw(); success(s.playerName?'NAME SAVED':'NAME CLEARED'); showMenu();
+}
+function showMenu(){
+  ensureStats();
+  const nameVal=(s.playerName||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  modal('Menu',`<div class="menu-player"><label for="playerNameInput">Player name</label><input id="playerNameInput" maxlength="24" placeholder="Add your name" value="${nameVal}"><button type="button" id="savePlayerNameBtn">SAVE NAME</button></div><div class="menu-settings"><button type="button" id="soundToggleBtn">SOUNDS: ${soundEnabled?'ON':'OFF'}</button><button type="button" id="musicToggleBtn">MUSIC: ${musicEnabled?'ON':'OFF'}</button></div><div class="menu-list"><button type="button" id="statsBtn">Stats</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>`);
+  setTimeout(()=>{
+    const stats=$('statsBtn'), snd=$('soundToggleBtn'), mus=$('musicToggleBtn'), saveName=$('savePlayerNameBtn'), newGameBtn=$('menuNewGameBtn');
+    if(saveName)saveName.onclick=setPlayerNameV18;
+    if(stats)stats.onclick=showStats;
+    if(snd)snd.onclick=()=>{soundEnabled=!soundEnabled; localStorage.setItem('noir_market_sound',soundEnabled?'on':'off'); if(soundEnabled)sound('positive'); save(); showMenu();};
+    if(mus)mus.onclick=()=>{musicEnabled=!musicEnabled; localStorage.setItem('noir_market_music',musicEnabled?'on':'off'); if(musicEnabled)startBackgroundMusic(); else stopBackgroundMusic(); save(); showMenu();};
+    if(newGameBtn)newGameBtn.onclick=confirmNewGame;
+  },0);
+}
+function showStats(){
+  ensureStats();
+  const current=updateBestRankV18();
+  modal('Stats',`<div class="stats-list"><p><span>Player</span><strong>${s.playerName||'Unnamed'}</strong></p><p><span>Current rank</span><strong>${current}</strong></p><p><span>Best rank</span><strong>${s.stats.bestRank||current}</strong></p><p><span>Days held at rank</span><strong>${rankDaysText()}</strong></p><p><span>Reputation</span><strong>${s.reputation}/100</strong></p><p><span>Days survived</span><strong>${s.day-1}</strong></p><p><span>Net worth</span><strong>${money(netWorth())}</strong></p><p><span>Best net worth</span><strong>${money(s.stats.bestNet||netWorth())}</strong></p><p><span>Current city</span><strong>${places[s.city][0]}</strong></p><p><span>Storage type</span><strong>${storageType()}</strong></p><p><span>Shipments exported</span><strong>${s.stats.shipmentsExported||0}</strong></p><p><span>Shipments imported</span><strong>${s.stats.shipmentsImported||0}</strong></p><p><span>Flights taken</span><strong>${s.stats.flights||0}</strong></p><p><span>Stays</span><strong>${s.stats.stays||0}</strong></p><p><span>Arrests</span><strong>${s.stats.arrests||0}</strong></p><p><span>Jail days</span><strong>${s.stats.jailDays||0}</strong></p><p><span>Bribes paid</span><strong>${s.stats.bribes||0}</strong></p><p><span>Informants paid</span><strong>${s.stats.informants||0}</strong></p><p><span>Fights won</span><strong>${s.stats.fightsWon||0}</strong></p><p><span>Fights lost</span><strong>${s.stats.fightsLost||0}</strong></p><p><span>Times mugged</span><strong>${s.stats.mugged||0}</strong></p><p><span>Loans taken</span><strong>${s.stats.loansTaken||0}</strong></p><p><span>Drugs bought</span><strong>${s.stats.tradesBought||0}</strong></p><p><span>Drugs sold</span><strong>${s.stats.tradesSold||0}</strong></p><p><span>Largest single trade</span><strong>${money(s.stats.largestTrade||0)}</strong></p><p><span>Heat level</span><strong>${s.heat}%</strong></p></div><div class="back-menu-spacer"></div><button type="button" id="backMenuBtn">Back to Menu</button>`);
+  setTimeout(()=>{const b=$('backMenuBtn'); if(b)b.onclick=showMenu;},0);
+}
+function chooseLoan(i){
+  let l=lenders[i], name=l[0], max=adjustedLenderMax(l), days=l[2], interest=l[3];
+  modal(name,`<p>${lenderBio(name)}</p><p class="subtle">Borrow up to <strong>${money(max)}</strong>. Full-term interest is <strong>${Math.round(interest*100)}%</strong> by day <strong>${s.day+days}</strong>. Pay early to reduce the interest charged.</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${max}" placeholder="Amount"><div class="loan-max-row"><button type="button" id="borrowMaxLoan">BORROW MAXIMUM AMOUNT</button></div><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
+  setTimeout(()=>{
+    const input=$('loanAmount'), maxBtn=$('borrowMaxLoan'), btn=$('confirmLoan');
+    if(maxBtn)maxBtn.onclick=()=>{if(input)input.value=max; sound('positive');};
+    if(!btn)return;
+    btn.onclick=()=>{sound('negative'); haptic('error'); let raw=+($('loanAmount')?.value)||0; if(!raw){errorMsg('ENTER AN AMOUNT');return;} if(raw>max){modal('Loan Declined',`<p><strong>${name} declines.</strong></p><p>You asked for ${money(raw)}, but ${name} will only lend up to ${money(max)}.</p><button type="button" id="backToLender">Try a lower amount</button>`); setTimeout(()=>{const b=$('backToLender'); if(b)b.onclick=()=>chooseLoan(i);},0); return;} let amt=Math.max(1,Math.floor(raw)); ensureStats(); s.stats.loansTaken++; const loan={id:`loan_${Date.now()}_${Math.floor(Math.random()*100000)}`,name,principal:amt,interestRate:interest,startDay:s.day,due:s.day+days,termDays:days}; s.cash+=amt; s.loans.push(loan); s.debt=activeDebtTotal(); const fullRepay=loanFullRepay(loan); s.notice=`Borrowed ${money(amt)} from ${name}. Full-term repayment is ${money(fullRepay)} by day ${s.day+days}; early settlement is cheaper.`; $('modal').close(); save(); draw(); toast(`LOAN ACCEPTED: ${money(amt)}`,'bad');};
+  },0);
+}
+function v18SelfTest(){console.log('NOIR MARKET V1.8 checks: smooth non-overlap ticker, player name, updated stats, sounds/music toggles, spaced back menu button, and borrow maximum loan button active.');}
+setTimeout(v18SelfTest,180);
