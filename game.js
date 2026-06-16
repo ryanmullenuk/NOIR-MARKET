@@ -543,3 +543,105 @@ function travel(){
     document.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{let i=+b.dataset.city, fare=travelFare(i); if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;} airportWarning(i,fare);});
   },0);
 }
+
+/* v24 lender bios, stricter loan declines, dangerous event reinforcement and airport seizure warning */
+const lenderBios = {
+  SPAMMER: `Spammer looks friendly, which is normally the first warning. He lends small, smiles wide, and allegedly keeps a little box labelled “late payment fingers”. Every day you are late, he adds interest and starts looking at your hands like a tapas menu.`,
+  TOMMY: `Tommy wears a tracksuit, calls everyone “chief”, and has never once accepted “I forgot” as a payment plan. His loans are bigger, his patience is smaller, and his dog is somehow on the payroll.`,
+  SMUDGER: `Smudger does not shout. That is the problem. He just nods, writes your name down, and lets compound interest do the violence first. After that, he improvises.`,
+  BAZZER: `BazzER lends like a mate and collects like a horror film. Three days sounds generous until you realise Bazzer counts nights, lunch breaks and awkward silences as separate days.`,
+  GRIFF: `Griff is the last door you knock on when every sensible option has already locked itself. He will lend six figures, but his repayment reminders come with tyre irons and poor spelling.`
+};
+function lenderBio(name){return lenderBios[name]||'A charming local finance professional, if your definition of finance includes threats and dental work.';}
+
+function chooseLoan(i){
+  let l=lenders[i], name=l[0], max=l[1], days=l[2], interest=l[3];
+  modal(name,`<p>${lenderBio(name)}</p><p class="subtle">Borrow up to <strong>${money(max)}</strong>. Repay <strong>${Math.round(interest*100)}%</strong> interest by day <strong>${s.day+days}</strong>.</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${max}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
+  setTimeout(()=>{
+    const btn=$('confirmLoan'); if(!btn)return;
+    btn.onclick=()=>{
+      sound('negative'); haptic('error');
+      let raw=+$('loanAmount').value||0;
+      if(!raw){errorMsg('ENTER AN AMOUNT');return;}
+      if(raw>max){
+        modal('Loan Declined',`<p><strong>${name} declines.</strong></p><p>You asked for ${money(raw)}, but ${name} will only lend up to ${money(max)}.</p><p class="subtle">Even shady lenders have credit controls. Depressing, but true.</p><button type="button" id="backToLender">Try a lower amount</button>`);
+        setTimeout(()=>{const b=$('backToLender'); if(b)b.onclick=()=>chooseLoan(i);},0);
+        return;
+      }
+      let amt=Math.max(1,Math.floor(raw));
+      let repay=Math.round(amt*(1+interest));
+      ensureStats(); s.stats.loansTaken++;
+      s.cash+=amt; s.debt+=repay; s.loans.push({name,due:s.day+days,repay});
+      s.notice=`Borrowed ${money(amt)} from ${name}. ${money(repay)} due day ${s.day+days}.`;
+      $('modal').close(); save(); draw(); toast(`Loan accepted: ${money(amt)}`,'bad');
+    };
+  },0);
+}
+
+function showLoanIntro(){
+  modal('Shady Loans',`<p class="subtle">You can start clean, but debt gives you buying power. These terms are deliberately bad and missed payments will hurt.</p><div class="loan-list">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>up to ${money(l[1])} · ${Math.round(l[3]*100)}% interest · due in ${l[2]} days<br><span class="subtle">${lenderBio(l[0]).slice(0,92)}...</span></button>`).join('')}</div><button type="button" id="skipLoan">Start without debt</button>`);
+  setTimeout(()=>{document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); const sk=$('skipLoan'); if(sk)sk.onclick=()=>$('modal').close();},0);
+}
+
+function dangerousEventText(){
+  const r=Math.random(), d=pickDrug(); ensureStats();
+  if(r<.16){
+    const losses=removeDrugPercent(25,100), wloss=removeWeaponPercent(10,70); s.heat=Math.min(100,s.heat+rand(18,35));
+    return `Police raid. Doors come off, dignity leaves first. Stock seized: ${losses.length?losses.join(', '):'nothing found'}.${wloss.length?' Weapons seized: '+wloss.join(', ')+'.':''}`;
+  }
+  if(r<.31){
+    const losses=removeDrugPercent(10,50); s.heat=Math.min(100,s.heat+rand(5,18));
+    return `Stash discovery. Someone finds your hiding place and helps themselves. Lost: ${losses.length?losses.join(', '):'nothing useful'}.`;
+  }
+  if(r<.43){
+    s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.25)); s.prices[d]=Math.round(s.prices[d]*rand(160,300)/100); s.heat=Math.min(100,s.heat+rand(8,22));
+    return `Supplier arrested. ${d} goes scarce and the price jumps like it heard sirens.`;
+  }
+  if(r<.55){
+    const losses=removeDrugPercent(5,40); s.heat=Math.min(100,s.heat+rand(12,28));
+    return `Customs seizure. Airport dogs earn their biscuits. ${losses.length?'Lost '+losses.join(', ')+'.':'You had nothing worth sniffing out.'}`;
+  }
+  if(r<.68){
+    s.prices[d]=Math.round(s.prices[d]*rand(180,360)/100); s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.5));
+    return `Festival demand spike. Everyone suddenly wants ${d}. Prices go feral.`;
+  }
+  if(r<.80){
+    s.prices[d]=Math.round(s.prices[d]*rand(220,480)/100); s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.35));
+    return `Rodents got into local stashes. Horrible for hygiene, excellent for ${d} prices.`;
+  }
+  if(r<.90){
+    s.stats.mugged++; let pct=rand(10,65),lost=Math.floor(s.cash*pct/100),stolen=takeDrugs(35); s.cash-=lost; s.health=Math.max(5,s.health-rand(3,15));
+    return `You are mugged. ${pct}% of your cash is taken (${money(lost)}). ${stolen.length?'Stock stolen: '+stolen.join(', ')+'.':'No stock was taken.'}`;
+  }
+  return 'A quiet day. The market holds. Suspicious, frankly.';
+}
+function randomEvent(base){
+  s.notice=base+' '+dangerousEventText();
+}
+
+function boardFlightWithSeizure(i,fare){
+  const hadDrugs=used(), hadWeapons=(s.weapons||[]).length;
+  let seizedDrugs=0, seizedWeapons=0;
+  if(hadDrugs && Math.random()<.92){seizedDrugs=hadDrugs; Object.keys(s.inv).forEach(k=>s.inv[k]=0);}
+  if(hadWeapons && Math.random()<.92){seizedWeapons=hadWeapons; s.weapons=[];}
+  s.heat=Math.min(100,s.heat+((seizedDrugs||seizedWeapons)?rand(12,30):rand(2,8)));
+  s.notice=(seizedDrugs||seizedWeapons)
+    ? `Airport security seized ${seizedDrugs} drug units and ${seizedWeapons} weapon${seizedWeapons===1?'':'s'}. Next time, vault first, fly second.`
+    : `Somehow you slip through airport security with your stock intact. Do not make that your business plan.`;
+  doFlight(i,fare);
+}
+function airportWarning(i,fare){
+  const dest=places[i][0];
+  modal('Airport Warning',`<p><strong>Before you board:</strong> guns and drugs are likely to be seized at the airport.</p><p>Destination: <strong>${dest}</strong><br>Flight price: <strong>${money(fare)}</strong></p><p class="subtle">Store anything you want to keep in this city’s vault before flying. Vault stock stays where you leave it. Dump it if you would rather not risk carrying it.</p><div class="warning-stock"><p>Drugs carried: <strong>${used()}</strong></p><p>Weapons carried: <strong>${(s.weapons||[]).length}</strong></p></div><div class="loan-choice"><button type="button" id="storeBeforeFlight">Store in Vault</button><button type="button" class="sell" id="boardAnyway">Board Anyway</button><button type="button" id="cancelFlight">Cancel</button></div>`);
+  setTimeout(()=>{
+    const sv=$('storeBeforeFlight'), ba=$('boardAnyway'), cf=$('cancelFlight');
+    if(sv)sv.onclick=()=>dump();
+    if(ba)ba.onclick=()=>boardFlightWithSeizure(i,fare);
+    if(cf)cf.onclick=()=>travel();
+  },0);
+}
+
+function v24SelfTest(){
+  console.log('NOIR MARKET v24 checks: lender caps active, lender bios active, dangerous event table active, airport seizure warning active.');
+}
+setTimeout(v24SelfTest,120);
