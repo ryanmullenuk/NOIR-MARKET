@@ -435,3 +435,111 @@ function recreateDustSlowerSmaller(){
   createSplashDust(); createGameDust();
 }
 setTimeout(recreateDustSlowerSmaller,80);
+
+/* v23 loan limits, raids, customs and airport warnings */
+function stockSummary(){
+  const items=Object.entries(s.inv||{}).filter(([,q])=>q>0).map(([n,q])=>`${n} x${q}`);
+  const wc=weaponCounts();
+  const ws=Object.entries(wc).filter(([,q])=>q>0).map(([n,q])=>`${n} x${q}`);
+  return {items,ws,total:items.length+ws.length};
+}
+function removeDrugPercent(minPct,maxPct){
+  const losses=[];
+  Object.keys(s.inv||{}).forEach(n=>{
+    const q=s.inv[n]||0; if(q<=0)return;
+    const pct=rand(minPct,maxPct);
+    const lost=Math.min(q, Math.max(1, Math.floor(q*pct/100)));
+    s.inv[n]-=lost; losses.push(`${n} -${lost} (${pct}%)`);
+  });
+  return losses;
+}
+function removeRandomStockPercent(maxPct=100){return removeDrugPercent(5,maxPct);}
+function removeWeaponPercent(minPct,maxPct){
+  const wc=weaponCounts(), losses=[];
+  Object.entries(wc).forEach(([n,q])=>{
+    const pct=rand(minPct,maxPct);
+    const lost=Math.min(q, Math.max(1, Math.floor(q*pct/100)));
+    adjustWeaponList(n,lost,'remove'); losses.push(`${n} -${lost}`);
+  });
+  return losses;
+}
+function chooseLoan(i){
+  let l=lenders[i];
+  modal(l[0],`<p>Borrow up to <strong>${money(l[1])}</strong>. Repay ${l[3]*100}% interest by day ${s.day+l[2]}.</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${l[1]}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
+  setTimeout(()=>{
+    const btn=$('confirmLoan'); if(!btn)return;
+    btn.onclick=()=>{
+      sound('negative'); haptic('error');
+      let raw=+$('loanAmount').value||0;
+      if(!raw){errorMsg('ENTER AN AMOUNT');return;}
+      if(raw>l[1]){errorMsg(`${l[0]} DECLINED: MAX ${money(l[1])}`); s.notice=`${l[0]} declines the loan. Their ceiling is ${money(l[1])}, and apparently they do have standards.`; draw(); return;}
+      let amt=Math.max(1,Math.floor(raw));
+      let repay=Math.round(amt*(1+l[3])); ensureStats(); s.stats.loansTaken++;
+      s.cash+=amt; s.debt+=repay; s.loans.push({name:l[0],due:s.day+l[2],repay});
+      s.notice=`Borrowed ${money(amt)} from ${l[0]}. ${money(repay)} due day ${s.day+l[2]}.`;
+      $('modal').close(); save(); draw(); toast(`Loan accepted: ${money(amt)}`,'bad');
+    };
+  },0);
+}
+function randomEvent(base){
+  let roll=Math.random(), d=pickDrug(); ensureStats(); s.notice=base+' ';
+  if(roll<.10){
+    s.stats.mugged++; let pct=rand(10,65),lost=Math.floor(s.cash*pct/100),stolen=takeDrugs(35); s.cash-=lost; s.health=Math.max(5,s.health-rand(3,15));
+    s.notice+=`You are mugged. ${pct}% of your cash is taken (${money(lost)}). ${stolen.length?'Stock stolen: '+stolen.join(', ')+'.':'No stock was taken.'}`;
+  } else if(roll<.20){
+    const losses=removeDrugPercent(20,100), wloss=removeWeaponPercent(0,35); s.heat=Math.min(100,s.heat+rand(15,30));
+    s.notice+=`Police raid. Stock gets lifted: ${losses.length?losses.join(', '):'nothing found'}.${wloss.length?' Weapons seized: '+wloss.join(', ')+'.':''}`;
+  } else if(roll<.30){
+    const losses=removeDrugPercent(10,50); s.heat=Math.min(100,s.heat+rand(5,15));
+    s.notice+=`Stash discovery. Someone found the wrong hiding place. Lost: ${losses.length?losses.join(', '):'nothing useful'}.`;
+  } else if(roll<.38){
+    s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.25)); s.prices[d]=Math.round(s.prices[d]*rand(160,280)/100); s.heat=Math.min(100,s.heat+rand(8,20));
+    s.notice+=`Supplier arrested. ${d} supply collapses and prices jump.`;
+  } else if(roll<.46){
+    const losses=removeDrugPercent(5,35); s.heat=Math.min(100,s.heat+rand(12,24));
+    s.notice+=`Customs seizure. Airport dogs ruin the business plan. ${losses.length?'Lost '+losses.join(', ')+'.':'You had nothing worth sniffing out.'}`;
+  } else if(roll<.56){
+    s.prices[d]=Math.round(s.prices[d]*rand(180,340)/100); s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.5));
+    s.notice+=`Festival demand spike. Everybody suddenly wants ${d}. Prices go feral.`;
+  } else if(roll<.64){
+    s.prices[d]=Math.round(s.prices[d]*rand(220,450)/100); s.supply[d]=Math.max(0,Math.floor((s.supply[d]||0)*.35));
+    s.notice+=`Rodents got into local stashes. Grim news for hygiene, great news for ${d} prices.`;
+  } else if(roll<.72){
+    let q=Math.min(rand(5,80),totalSpace()-used()); if(q>0)s.inv[d]+=q;
+    s.notice+=q>0?`A contact gives you ${q} units of ${d}.`:'A contact offers free stock, but you have no room. Professional.';
+  } else if(roll<.82){
+    s.prices[d]*=rand(2,4); s.notice+=`${d} is drying up. Prices spike.`;
+  } else if(roll<.90){
+    s.prices[d]=Math.max(1,Math.round(s.prices[d]*.35)); s.supply[d]+=rand(100,500); s.notice+=`The market is flooded with ${d}. Prices collapse.`;
+  } else {
+    s.notice+='A quiet day. The market holds. Suspicious, frankly.';
+  }
+}
+function doFlight(i,fare){
+  sound('travel'); haptic(); ensureStats(); s.stats.flights++; s.cash-=fare; s.city=i; save(); draw();
+  $('modal').close(); nextDay(`You land in ${places[s.city][0]}. Flight cost ${money(fare)}.`,false);
+}
+function boardFlightWithSeizure(i,fare){
+  const hadDrugs=used(), hadWeapons=(s.weapons||[]).length;
+  if(hadDrugs){Object.keys(s.inv).forEach(k=>s.inv[k]=0);}
+  if(hadWeapons)s.weapons=[];
+  s.heat=Math.min(100,s.heat+(hadDrugs||hadWeapons?rand(10,25):0));
+  s.notice=`Airport security seized ${hadDrugs} drug units and ${hadWeapons} weapon${hadWeapons===1?'':'s'}. That is what happens when you pack like an idiot.`;
+  doFlight(i,fare);
+}
+function airportWarning(i,fare){
+  const dest=places[i][0], summary=stockSummary();
+  modal('Airport Warning',`<p><strong>Before you board:</strong> guns and drugs will be seized at the airport if you carry them through security.</p><p>Destination: <strong>${dest}</strong><br>Flight price: <strong>${money(fare)}</strong></p><p class="subtle">Store anything you want to keep in this city’s vault before flying. Vault stock stays where you leave it.</p><div class="warning-stock"><p>Drugs carried: <strong>${used()}</strong></p><p>Weapons carried: <strong>${(s.weapons||[]).length}</strong></p></div><div class="loan-choice"><button type="button" id="storeBeforeFlight">Store in Vault</button><button type="button" class="sell" id="boardAnyway">Board Anyway</button><button type="button" id="cancelFlight">Cancel</button></div>`);
+  setTimeout(()=>{
+    $('storeBeforeFlight').onclick=()=>dump();
+    $('boardAnyway').onclick=()=>boardFlightWithSeizure(i,fare);
+    $('cancelFlight').onclick=()=>travel();
+  },0);
+}
+function travel(){
+  modal('Travel',`<div class="travel-head"><p class="subtle">Select a UK or Ireland city. Prices change daily and airport security is not your mate.</p><button type="button" id="stayFromTravel">STAY HERE</button></div><div class="travel-list">${places.map((p,i)=>`<button type="button" data-city="${i}" ${i===s.city?'disabled':''}><strong>${p[0]} <em>${money(travelFare(i))}</em></strong><span>${p[1]} · ${p[3]}</span></button>`).join('')}</div>`);
+  setTimeout(()=>{
+    let st=$('stayFromTravel'); if(st)st.onclick=()=>{sound('positive');haptic(); ensureStats(); s.stats.stays++; $('modal').close();nextDay(`You stay in ${places[s.city][0]}.`,true)};
+    document.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{let i=+b.dataset.city, fare=travelFare(i); if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;} airportWarning(i,fare);});
+  },0);
+}
