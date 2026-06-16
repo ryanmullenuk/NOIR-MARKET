@@ -1,6 +1,6 @@
 const drugs=[['Cocaine','⚪',1200,9000],['Crack','🪨',800,5200],['Ecstasy','🟢',200,2800],['Hashish','🧱',300,2500],['Heroin','💉',900,6000],['Ice','💎',700,4200],['Kat','🌿',40,800],['LSD','🎟️',120,1600],['MDA','🟣',200,1800],['Morphine','🧴',500,2600],['Mushrooms','🍄',60,900],['Peyote','🌵',80,1200],['Pot','🍃',80,900],['Speed','▱',160,1800]];
 const places=[['London','UK','🇬🇧','Heathrow / City'],['Manchester','UK','🇬🇧','Manchester Airport'],['Birmingham','UK','🇬🇧','BHX'],['Liverpool','UK','🇬🇧','John Lennon'],['Leeds','UK','🇬🇧','Leeds Bradford'],['Newcastle','UK','🇬🇧','NCL'],['Bristol','UK','🇬🇧','Bristol Airport'],['Cardiff','Wales','🏴','Cardiff Airport'],['Glasgow','Scotland','🏴','GLA'],['Edinburgh','Scotland','🏴','EDI'],['Aberdeen','Scotland','🏴','ABZ'],['Belfast','Northern Ireland','🇬🇧','BFS'],['Dublin','Ireland','🇮🇪','DUB'],['Cork','Ireland','🇮🇪','ORK']];
-const lenders=[['SPAMMER',10000,3,.25],['TOMMY',20000,5,.30],['SMUDGER',50000,5,.50],['BAZZER',75000,3,.50],['GRIFF',100000,3,.70]];
+const lenders=[['UNCLE VINNY',500,7,.20],['SPAMMER STEVE',1000,5,.30],['THE DENTIST',2500,7,.40],['LADY LUCK LUCY',5000,10,.50],['MR BLACK',10000,14,.60],['THE SYNDICATE',25000,20,1.00]];
 const shopItems=[['Bigger Backpack',5000,25,'person'],['Sports Bag',20000,50,'person'],['Trunk Upgrade',100000,100,'offsite'],['Warehouse',1000000,500,'offsite']];
 const hospitalTreatments=[['+25% Health',25000,25],['+50% Health',50000,50],['Full Health (100%)',100000,100]];
 const weapons=[
@@ -665,3 +665,57 @@ function v24SelfTest(){
   console.log('NOIR MARKET v24 checks: lender caps active, lender bios active, dangerous event table active, airport seizure warning active.');
 }
 setTimeout(v24SelfTest,120);
+
+const lenderBios={
+  'UNCLE VINNY': `Vinny calls himself family, which is worrying because nobody remembers inviting him.`,
+  'SPAMMER STEVE': `Steve calls himself an entrepreneur. The courts call him several other things.`,
+  'THE DENTIST': `Nobody knows if he was ever a dentist. People just know they leave appointments unable to chew.`,
+  'LADY LUCK LUCY': `Lucy believes every debt is a gamble. Unfortunately, she is the dealer.`,
+  'MR BLACK': `Mr Black does not send reminders. He sends examples.`,
+  'THE SYNDICATE': `You do not borrow from The Syndicate. You temporarily rent their patience.`
+};
+function lenderBio(n){return lenderBios[n]||'Bad terms. Worse manners.';}
+
+
+/* v28 realistic lender terms and stricter loan flow */
+const lenderPenaltyText={
+  'UNCLE VINNY':'Miss payment and Vinny starts arranging “family visits”, usually involving random cash loss.',
+  'SPAMMER STEVE':'Miss payment and Steve gets creative: stock theft, odd threats and very poor boundaries.',
+  'THE DENTIST':'Miss payment and the appointment becomes physical. Health loss becomes more likely.',
+  'LADY LUCK LUCY':'Miss payment and Lucy may turn collection into a gamble you cannot win.',
+  'MR BLACK':'Miss payment and Mr Black sends enforcers. They do not use calendar invites.',
+  'THE SYNDICATE':'Miss payment and the city gets smaller. Heat rises and everyone suddenly knows your name.'
+};
+function lenderBio(n){return lenderBios[n]||'Bad terms. Worse manners.';}
+function showLoanIntro(){
+  modal('Shady Loans',`<p class="subtle">Debt gives you buying power. It also gives awful people a reason to remember your name.</p><div class="loan-list">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>Max ${money(l[1])} · ${Math.round(l[3]*100)}% interest · due in ${l[2]} days<br><span class="subtle">${lenderBio(l[0]).slice(0,110)}...</span></button>`).join('')}</div><button type="button" id="skipLoan">Start without debt</button>`);
+  setTimeout(()=>{document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); const sk=$('skipLoan'); if(sk)sk.onclick=()=>$('modal').close();},0);
+}
+function chooseLoan(i){
+  let l=lenders[i], name=l[0], max=l[1], days=l[2], interest=l[3];
+  modal(name,`<p>${lenderBio(name)}</p><p class="subtle">Maximum loan: <strong>${money(max)}</strong><br>Repayment: <strong>${money(Math.round(max*(1+interest)))}</strong> if you borrow the full amount.<br>Interest: <strong>${Math.round(interest*100)}%</strong><br>Due: <strong>${days} days</strong></p><p class="subtle">${lenderPenaltyText[name]||'Late payment increases debt and costs health.'}</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${max}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
+  setTimeout(()=>{
+    const btn=$('confirmLoan'); if(!btn)return;
+    btn.onclick=()=>{
+      sound('negative'); haptic('error');
+      let raw=+$('loanAmount').value||0;
+      if(!raw || raw<=0){errorMsg('ENTER AN AMOUNT');return;}
+      if(raw>max){
+        modal('Loan Declined',`<p><strong>${name} declines.</strong></p><p>You asked for ${money(raw)}, but ${name} will only lend up to ${money(max)}.</p><p class="subtle">Even predatory finance has limits. Grim, but administratively tidy.</p><button type="button" id="backToLender">Try a lower amount</button>`);
+        setTimeout(()=>{const b=$('backToLender'); if(b)b.onclick=()=>chooseLoan(i);},0);
+        return;
+      }
+      let amt=Math.floor(raw);
+      let repay=Math.round(amt*(1+interest));
+      ensureStats(); s.stats.loansTaken++;
+      s.cash+=amt; s.debt+=repay; s.loans.push({name,due:s.day+days,repay,principal:amt,interest});
+      s.notice=`Borrowed ${money(amt)} from ${name}. ${money(repay)} due on day ${s.day+days}.`;
+      $('modal').close(); save(); draw(); toast(`Loan accepted: ${money(amt)}`,'bad');
+    };
+  },0);
+}
+function bank(){
+  let openLoans=s.loans.length?s.loans.map(l=>{let days=l.due-s.day, urgent=days<=5; return `<div class="loan-row ${urgent?'urgent-loan':''}"><div><span>${l.name}</span><strong>${money(l.repay)}</strong><em>${days>0?'due in '+days+' day'+(days===1?'':'s'):'DUE NOW'}</em></div><button type="button" data-payloan="${l.name}|${l.due}|${l.repay}">Pay</button></div>`}).join(''):'<p class="subtle">No active loans.</p>';
+  modal('Bank',`<p class="subtle">Bank balance only changes when you deposit or withdraw.</p><input id="amount" inputmode="numeric" type="number" placeholder="Amount"><div class="bank-grid"><button type="button" id="deposit">Deposit</button><button type="button" id="withdraw">Withdraw</button><button type="button" class="full" id="payDebt">Pay General Debt</button></div><h4>Loans</h4>${openLoans}<h4>Shady Lenders</h4><div class="loan-list compact">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>Max ${money(l[1])} · ${Math.round(l[3]*100)}% interest · due in ${l[2]} days</button>`).join('')}</div>`);
+  setTimeout(()=>{let amt=()=>+$('amount').value||0; $('deposit').onclick=()=>{let a=Math.min(amt(),s.cash); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.cash-=a;s.bank+=a;success('Deposit complete');done()}; $('withdraw').onclick=()=>{let a=Math.min(amt(),s.bank); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.bank-=a;s.cash+=a;success('Withdrawal complete');done()}; $('payDebt').onclick=()=>{let a=Math.min(amt(),s.cash,s.debt); if(a<=0){errorMsg('NO DEBT PAYMENT MADE');return;} s.cash-=a;s.debt-=a;success('Debt payment made');done()}; document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); document.querySelectorAll('[data-payloan]').forEach(b=>b.onclick=()=>paySpecificLoan(b.dataset.payloan));},0)
+}
