@@ -217,7 +217,7 @@ function particles(){
 function createSplashDust(){
   const splash=$('splash'); if(!splash || splash.querySelector('.live-dust'))return;
   const layer=document.createElement('div'); layer.className='live-dust';
-  const count=420;
+  const count=520;
   for(let i=0;i<count;i++){
     const d=document.createElement('i');
     const size=(Math.random()*3.4+1.2).toFixed(2);
@@ -225,8 +225,8 @@ function createSplashDust(){
     d.style.bottom=(-8-Math.random()*18).toFixed(2)+'%';
     d.style.width=size+'px'; d.style.height=size+'px';
     d.style.opacity=(Math.random()*0.75+0.35).toFixed(2);
-    d.style.animationDuration=(5+Math.random()*9).toFixed(2)+'s';
-    d.style.animationDelay=(-Math.random()*10).toFixed(2)+'s';
+    d.style.animationDuration=(18+Math.random()*22).toFixed(2)+'s';
+    d.style.animationDelay=(-Math.random()*28).toFixed(2)+'s';
     d.style.setProperty('--drift',(Math.random()*70-35).toFixed(1)+'px');
     layer.appendChild(d);
   }
