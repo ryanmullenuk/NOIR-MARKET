@@ -338,7 +338,35 @@ function createSplashDust(){const splash=$('splash'); if(!splash || splash.query
 
 
 
-$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; if($('hustleBtn'))$('hustleBtn').onclick=hustle; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; sound('positive'); $('splash').classList.add('hide'); setTimeout(()=>{showWelcome();},460)}; setupTilt(); createSplashDust(); createGameDust(); firstFreshGame=load();
+let firstFreshGame=false;
+function initialiseNoirMarket(){
+  const bind=(id,fn)=>{const el=$(id); if(el)el.onclick=fn;};
+  bind('buyBtn',()=>transact('Buy'));
+  bind('sellBtn',()=>transact('Sell'));
+  bind('stayBtn',stay);
+  bind('travelBtn',travel);
+  bind('bankBtn',bank);
+  bind('dumpBtn',dump);
+  bind('shopBtn',shop);
+  bind('hustleBtn',hustle);
+  bind('menuBtn',showMenu);
+  const splash=$('splash');
+  if(splash){
+    splash.onclick=()=>{
+      unlockAudio();
+      startBackgroundMusic();
+      musicStarted=true;
+      sound('positive');
+      splash.classList.add('hide');
+      setTimeout(()=>{showWelcome();},460);
+    };
+  }
+  setupTilt();
+  createSplashDust();
+  createGameDust();
+  firstFreshGame=load();
+}
+setTimeout(initialiseNoirMarket,0);
 
 // Native app feel: suppress iOS double-tap and pinch zoom when launched from browser/home screen.
 let __lastTouchEnd=0;
@@ -1155,3 +1183,73 @@ function chooseLoan(i){
 }
 function v18SelfTest(){console.log('NOIR MARKET V1.8 checks: smooth non-overlap ticker, player name, updated stats, sounds/music toggles, spaced back menu button, and borrow maximum loan button active.');}
 setTimeout(v18SelfTest,180);
+
+
+/* Noir Market V1.9 hotfix: delayed startup so V1.8 variables are initialised before load/click handlers run. */
+function save(){ensureStats(); s.version='1.9'; localStorage.setItem('noir_market_v1_9',JSON.stringify(s));}
+function load(){
+  let x=localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  if(x){s=JSON.parse(x); ensureStats(); s.version='1.9'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+  newGame(false); return true;
+}
+function v19SelfTest(){console.log('NOIR MARKET V1.9 checks: splash click and initial load hotfix active; V1.8 save migration retained.');}
+setTimeout(v19SelfTest,220);
+
+
+/* Noir Market V1.9 base state override. */
+function baseState(){return{version:'1.9',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+
+
+/* Noir Market V1.9 final non-recursive stats override. */
+function ensureStats(){
+  if(!s)return;
+  s.stats=s.stats||{};
+  const defaults={tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:0,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0};
+  Object.entries(defaults).forEach(([k,v])=>{if(typeof v==='number'){if(typeof s.stats[k]!=='number')s.stats[k]=v;}else if(!s.stats[k])s.stats[k]=v;});
+  s.travelFares=s.travelFares||{};
+  s.reputation=clamp(s.reputation??50,0,100);
+  if(typeof ensureVaults==='function')ensureVaults();
+  if(typeof ensureVaultLevels==='function')ensureVaultLevels();
+  if(typeof ensureEconomy==='function')ensureEconomy();
+  if(typeof ensureRankState==='function')ensureRankState();
+  if(typeof normaliseLoans==='function')normaliseLoans();
+  if(typeof ensureShipping==='function')ensureShipping();
+  if(typeof ensurePlayerProfileV18==='function')ensurePlayerProfileV18();
+}
+
+
+/* Noir Market V1.9 final non-recursive draw override. */
+function draw(){
+  ensureStats();
+  setActiveCityMarket();
+  s.stats.bestNet=Math.max(s.stats.bestNet||0,netWorth());
+  const p=places[s.city], hc=healthClass();
+  const ticker=$('newsTicker');
+  if(ticker){
+    const text=upperNews(s.economy?.news?.text||s.news||'MARKETS ARE QUIET TODAY.');
+    if(ticker.textContent!==text){ticker.textContent=text; ticker.style.animation='none'; ticker.offsetHeight; ticker.style.animation='';}
+  }
+  if($('dayCount'))$('dayCount').textContent=s.day;
+  if($('cash'))$('cash').textContent=money(s.cash);
+  if($('bank'))$('bank').textContent=money(s.bank);
+  if($('debt'))$('debt').textContent=money(s.debt);
+  if($('health')){$('health').textContent=Math.round(s.health)+'%'; $('health').className=hc;}
+  if($('healthBar')){$('healthBar').style.width=Math.max(0,s.health)+'%'; $('healthBar').className=hc;}
+  if($('city'))$('city').textContent=p[0]+' '+p[1];
+  if($('country'))$('country').textContent='';
+  if($('flag'))$('flag').textContent='';
+  if($('marketInfo'))$('marketInfo').innerHTML=`${p[0]}: ${cityText()}.<br>${rumourHtml()}`;
+  if($('noticeText'))$('noticeText').textContent=s.notice;
+  if($('spaceLabel'))$('spaceLabel').innerHTML=`${used()}/${totalSpace()} <span class="storage-type">${storageType()}</span>`;
+  if($('statusLocation'))$('statusLocation').textContent=p[0]+', '+p[1];
+  const current=updateBestRankV18();
+  if($('rank'))$('rank').textContent=current;
+  if($('rankDays'))$('rankDays').textContent=rankDaysText();
+  if($('reputation'))$('reputation').textContent=`${s.reputation}/100`;
+  if($('space'))$('space').textContent=`${used()}/${totalSpace()} · ${storageType()}`;
+  if($('heat'))$('heat').textContent=s.heat+'%';
+  if($('marketTable'))$('marketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span></span></div>'+drugs.map(([name,icon])=>`<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${s.supply[name]}</span><span class="price ${s.trends[name]?'':'down'}">${money(s.prices[name])}</span><span class="trend ${s.trends[name]?'up':'down'}">${s.trends[name]?'↑':'↓'}</span></div>`).join('');
+  let items=Object.entries(s.inv).filter(([,q])=>q>0);
+  let wc=weaponCounts(), weaponsRows=Object.entries(wc).map(([k,v])=>`<div class="row storage-weapon"><span>${k}</span><span>${v}</span><span>Weapon</span></div>`).join('');
+  if($('pocketTable'))$('pocketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.slice(0,10).map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*s.prices[k])}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`)+`<div class="row header"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>`+(weaponsRows||'<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
+}
