@@ -288,3 +288,24 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .status-grid{grid-template-columns:1fr 1fr 1fr;}
 #reputation,#rankDays{color:var(--amber);}
 @media (max-width:560px){.news-ticker{padding:8px 10px}.status-grid{grid-template-columns:1fr 1fr}.news-ticker marquee{font-size:12px}}
+
+
+/* Noir Market V1.4 refinements */
+.news-ticker{overflow:hidden;position:relative;text-transform:uppercase;}
+.news-ticker .ticker-track{overflow:hidden;white-space:nowrap;flex:1;min-width:0;}
+.news-ticker #newsTicker{display:inline-block;white-space:nowrap;color:#ececec;font-size:13px;letter-spacing:.35px;font-weight:800;will-change:transform;animation:noirTicker 26s linear infinite;padding-left:100%;}
+@keyframes noirTicker{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+#modal[open] .toast,.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 12px);transform:translate(-50%,-125%);z-index:2147483647;}
+#modal[open] .toast.show,.toast.show{transform:translate(-50%,0);opacity:1;}
+.storage-move.vault-row{grid-template-columns:minmax(0,1fr) 78px;gap:10px;align-items:start;}
+.storage-move.vault-row input{width:78px;margin:0;min-height:40px;}
+.storage-actions{grid-column:1 / -1;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px!important;margin-top:2px;}
+.storage-actions.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+.storage-actions button{width:100%;min-height:40px;white-space:normal;line-height:1.15;padding:8px 6px;}
+.hustle-grid{display:grid;gap:10px;margin:10px 0 16px;}
+.hustle-card{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.035);padding:12px;}
+.hustle-card h4{margin:0 0 6px!important;}
+.hustle-card p{margin:6px 0;color:#cfcfcf;line-height:1.4;}
+.hustle-card button{width:100%;margin-top:8px;}
+.coming-soon{border:1px dashed rgba(216,184,91,.35);border-radius:14px;padding:12px;background:rgba(216,184,91,.05);}
+@media(max-width:560px){.storage-move.vault-row{grid-template-columns:minmax(0,1fr) 70px}.storage-move.vault-row input{width:70px}.storage-actions{grid-template-columns:1fr;}.storage-actions.two{grid-template-columns:1fr}.news-ticker #newsTicker{font-size:12px;animation-duration:22s}}
