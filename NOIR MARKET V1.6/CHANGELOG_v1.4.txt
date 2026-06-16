@@ -1,0 +1,63 @@
+NOIR MARKET V1.4 CHANGELOG
+
+Baseline
+- Built from Noir Market V1.3.
+- Existing V1.3 features preserved unless directly updated by this release.
+
+Versioning
+- Updated visible title, manifest version, service worker cache and save version to V1.4.
+- V1.4 saves use noir_market_v1_4.
+- Load migration retained for V1.3, V1.2 and older known save keys.
+
+UI
+- News ticker text is now uppercase.
+- Replaced the old marquee ticker with a CSS-based smooth scrolling ticker.
+- Notifications such as LOAN ACCEPTED and INSUFFICIENT FUNDS are forced into a top-layer display so they remain visible above modals and other screens.
+- Storage and vault action buttons have been reworked into grouped rows to prevent button overlap and cramped text.
+
+News and Economy
+- Daily news now includes the main market event plus two additional random stories.
+- Added random increased-police-presence stories affecting a random city.
+- Added random spiked-batch stories affecting a different/random city and drug.
+- News stories continue to affect city-level prices, supply, heat and market trends.
+
+Hustle
+- Rebuilt Hustle with three informants:
+  - Simon the Snitch: £100, low trust.
+  - Loose Lisa: £250, medium trust.
+  - Pistol Pete: £10,000, high trust.
+- Each informant has a short criminal-style bio.
+- Any informant has a 10% chance to scam the player and run.
+- Added Businesses section marked COMING SOON.
+
+Audio
+- Added the uploaded MP3 music file.
+- Background music now points to assets/music/noir_theme.mp3.
+- Existing WAV remains in the package as a fallback asset.
+
+Preserved Features
+- Splash screen logo.
+- Dust particle effects.
+- Background music behaviour.
+- Shady lenders.
+- City vault system and vault upgrades.
+- Flight seizure warnings.
+- Sell All buttons.
+- Storage/Vault transfer system.
+- Random police raids.
+- Stash discoveries.
+- Supplier arrests.
+- Festival demand spikes.
+- Customs seizures.
+- Rodent events.
+- Weapon seizure mechanics.
+
+Checks Completed
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- ZIP integrity test passed.
+- Save key migration path retained and reviewed.
+- MP3 included and service-worker cached.
+- Particle code retained.
+- Audio loop code retained.
