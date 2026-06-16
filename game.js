@@ -346,3 +346,92 @@ document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false})
 document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
 
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+
+/* v21 vault refinements */
+function cityVaultLine(city){
+  const lines={
+    London:"London stock stays in London. Liverpool will not carry London’s mess.",
+    Manchester:"Manchester keeps its own stash. Try moving it to Glasgow and it develops trust issues.",
+    Birmingham:"Birmingham vault stock stays in Brum. It is not doing a national tour.",
+    Liverpool:"Liverpool stock stays by the Mersey. London’s chaos can sort itself out.",
+    Leeds:"Leeds stock stays in Leeds. It refuses to commute for your poor decisions.",
+    Newcastle:"Newcastle stock stays up north. It is not getting on a plane for anyone.",
+    Bristol:"Bristol vault stock stays in Bristol. Very relaxed, very unavailable elsewhere.",
+    Cardiff:"Cardiff stock stays in Cardiff. It will not cross the bridge unless you carry it.",
+    Glasgow:"Glasgow stock stays in Glasgow. It is not scared, just geographically committed.",
+    Edinburgh:"Edinburgh stock stays in Edinburgh. It has standards and a postcode.",
+    Aberdeen:"Aberdeen stock stays in Aberdeen. Too far north to care about your travel plans.",
+    Belfast:"Belfast stock stays in Belfast. It does not magically appear in Dublin.",
+    Dublin:"Dublin stock stays in Dublin. It likes the city and hates admin.",
+    Cork:"Cork stock stays in Cork. Even the vault has decided that is far enough."
+  };
+  return lines[city]||`${city} stock stays in ${city}. Other cities are not running a delivery service.`;
+}
+function blankWeaponVault(){return {};}
+function ensureVaults(){
+  s.vaults=s.vaults||{};
+  s.weaponVaults=s.weaponVaults||{};
+  places.forEach(p=>{
+    let key=p[0];
+    if(!s.vaults[key])s.vaults[key]=blankInv();
+    if(!s.weaponVaults[key])s.weaponVaults[key]=blankWeaponVault();
+  });
+  return s.vaults[places[s.city][0]];
+}
+function vaultDrugUsed(cityName=places[s.city][0]){ensureVaults(); return Object.values(s.vaults[cityName]||{}).reduce((a,b)=>a+b,0);}
+function vaultWeaponUsed(cityName=places[s.city][0]){ensureVaults(); return Object.values(s.weaponVaults[cityName]||{}).reduce((a,b)=>a+b,0);}
+function vaultUsed(cityName=places[s.city][0]){return vaultDrugUsed(cityName)+vaultWeaponUsed(cityName);}
+function carriedWeaponCounts(){return weaponCounts();}
+function adjustWeaponList(name,qty,mode){
+  qty=Math.max(0,qty|0);
+  if(mode==='remove'){
+    let removed=0;
+    for(let i=0;i<qty;i++){
+      let idx=s.weapons.indexOf(name);
+      if(idx<0)break;
+      s.weapons.splice(idx,1); removed++;
+    }
+    return removed;
+  }
+  if(mode==='add'){
+    for(let i=0;i<qty;i++)s.weapons.push(name);
+    return qty;
+  }
+  return 0;
+}
+function dump(){
+  ensureVaults();
+  const city=places[s.city][0], vault=s.vaults[city], wVault=s.weaponVaults[city];
+  const carried=Object.entries(s.inv).filter(([,q])=>q>0);
+  const stored=Object.entries(vault).filter(([,q])=>q>0);
+  const cWeapons=Object.entries(carriedWeaponCounts()).filter(([,q])=>q>0);
+  const vWeapons=Object.entries(wVault).filter(([,q])=>q>0);
+  const rowDrug=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Carried: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vdrug-${i}"><button type="button" data-storedrug="${i}">STORE</button><button type="button" data-storealldrug="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropdrug="${i}">DUMP</button></div>`;
+  const rowWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Held: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vweapon-${i}"><button type="button" data-storeweapon="${i}">STORE</button><button type="button" data-storeallweapon="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropweapon="${i}">DUMP</button></div>`;
+  const rowStored=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tdrug-${i}"><button type="button" data-takedrug="${i}">TAKE</button><button type="button" data-takealldrug="${i}">TAKE ALL</button></div>`;
+  const rowStoredWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tweapon-${i}"><button type="button" data-takeweapon="${i}">TAKE</button><button type="button" data-takeallweapon="${i}">TAKE ALL</button></div>`;
+  modal('Storage',`<div class="modal-money"><span>Carried</span><strong>${used()}/${totalSpace()}</strong><em>${storageType()}</em></div><div class="modal-money"><span>${city} Vault</span><strong>${vaultUsed(city)}/100</strong><em>City only</em></div><p class="subtle vault-line">${cityVaultLine(city)}</p><h4>Vault Options</h4><p class="subtle">Store stock or weapons in this city vault, retrieve them later, or dump unwanted items permanently.</p><h4>Move Drugs to Vault</h4>${carried.length?`<div class="storage-move-list">${carried.map(([n,q],i)=>rowDrug(n,q,i)).join('')}</div>`:'<p class="subtle">No carried drugs.</p>'}<h4>Move Weapons to Vault</h4>${cWeapons.length?`<div class="storage-move-list">${cWeapons.map(([n,q],i)=>rowWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons held.</p>'}<h4>${city} Vault Drugs</h4>${stored.length?`<div class="storage-move-list">${stored.map(([n,q],i)=>rowStored(n,q,i)).join('')}</div>`:'<p class="subtle">No drugs in this city vault.</p>'}<h4>${city} Vault Weapons</h4>${vWeapons.length?`<div class="storage-move-list">${vWeapons.map(([n,q],i)=>rowStoredWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons in this city vault.</p>'}`);
+  setTimeout(()=>{
+    function toVaultDrug(name,qty){let space=100-vaultUsed(city); qty=Math.min(qty,s.inv[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO STOCK');return;} s.inv[name]-=qty; vault[name]=(vault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('Stored in vault'); dump();}
+    function dropDrug(name,qty){qty=Math.min(qty,s.inv[name]||0); if(qty<1){errorMsg('NO STOCK');return;} s.inv[name]-=qty; s.notice=`Dumped ${qty} ${name}. Gone. No refunds. No questions.`; save(); draw(); sound('negative'); dump();}
+    function fromVaultDrug(name,qty){let space=totalSpace()-used(); qty=Math.min(qty,vault[name]||0,space); if(qty<1){errorMsg(space<1?'INSUFFICIENT STORAGE':'NO VAULT STOCK');return;} vault[name]-=qty; s.inv[name]=(s.inv[name]||0)+qty; s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('Retrieved from vault'); dump();}
+    function toVaultWeapon(name,qty){let space=100-vaultUsed(city); qty=Math.min(qty,carriedWeaponCounts()[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); wVault[name]=(wVault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('Weapon stored'); dump();}
+    function dropWeapon(name,qty){qty=Math.min(qty,carriedWeaponCounts()[name]||0); if(qty<1){errorMsg('NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); s.notice=`Dumped ${qty} ${name}. Sensible? Probably not. Convenient? Yes.`; save(); draw(); sound('negative'); dump();}
+    function fromVaultWeapon(name,qty){qty=Math.min(qty,wVault[name]||0); if(qty<1){errorMsg('NO VAULT WEAPON');return;} wVault[name]-=qty; adjustWeaponList(name,qty,'add'); s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('Weapon retrieved'); dump();}
+    document.querySelectorAll('[data-storedrug]').forEach(b=>b.onclick=()=>{let [name,q]=carried[+b.dataset.storedrug]; toVaultDrug(name,+$('vdrug-'+b.dataset.storedrug).value||0);});
+    document.querySelectorAll('[data-storealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=carried[+b.dataset.storealldrug]; toVaultDrug(name,q);});
+    document.querySelectorAll('[data-dropdrug]').forEach(b=>b.onclick=()=>{let [name,q]=carried[+b.dataset.dropdrug]; dropDrug(name,+$('vdrug-'+b.dataset.dropdrug).value||0);});
+    document.querySelectorAll('[data-takedrug]').forEach(b=>b.onclick=()=>{let [name,q]=stored[+b.dataset.takedrug]; fromVaultDrug(name,+$('tdrug-'+b.dataset.takedrug).value||0);});
+    document.querySelectorAll('[data-takealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=stored[+b.dataset.takealldrug]; fromVaultDrug(name,q);});
+    document.querySelectorAll('[data-storeweapon]').forEach(b=>b.onclick=()=>{let [name,q]=cWeapons[+b.dataset.storeweapon]; toVaultWeapon(name,+$('vweapon-'+b.dataset.storeweapon).value||0);});
+    document.querySelectorAll('[data-storeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=cWeapons[+b.dataset.storeallweapon]; toVaultWeapon(name,q);});
+    document.querySelectorAll('[data-dropweapon]').forEach(b=>b.onclick=()=>{let [name,q]=cWeapons[+b.dataset.dropweapon]; dropWeapon(name,+$('vweapon-'+b.dataset.dropweapon).value||0);});
+    document.querySelectorAll('[data-takeweapon]').forEach(b=>b.onclick=()=>{let [name,q]=vWeapons[+b.dataset.takeweapon]; fromVaultWeapon(name,+$('tweapon-'+b.dataset.takeweapon).value||0);});
+    document.querySelectorAll('[data-takeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=vWeapons[+b.dataset.takeallweapon]; fromVaultWeapon(name,q);});
+  },0);
+}
+function recreateDustSlowerSmaller(){
+  document.querySelectorAll('.game-dust,.live-dust').forEach(el=>el.remove());
+  createSplashDust(); createGameDust();
+}
+setTimeout(recreateDustSlowerSmaller,80);
