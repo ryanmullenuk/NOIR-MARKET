@@ -1,0 +1,26 @@
+NOIR MARKET V1.6 CHANGELOG
+
+Release focus: home screen icon update.
+
+Changes:
+- Replaced the 192x192 home screen/PWA icon with the supplied Noir bag artwork.
+- Replaced the 512x512 home screen/PWA icon with the supplied Noir bag artwork.
+- Added Apple touch icon links to index.html for better iPhone home screen support.
+- Updated application version references from V1.5 to V1.6.
+- Updated service worker cache name to noir-market-v1-6 so devices fetch the new icon assets.
+- Updated save key to noir_market_v1_6 while keeping V1.5, V1.4, V1.3, V1.2 and legacy save fallbacks.
+
+Preserved:
+- Splash screen logo.
+- Dust particle effects.
+- Background music and loop behaviour.
+- Loan proportional interest system from V1.5.
+- Dynamic economy, news ticker, rumours, informants, vaults, rank and reputation systems.
+- Existing save migration path.
+
+Checks completed:
+- Icon dimensions verified: 192x192 and 512x512.
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- ZIP integrity check passed.
