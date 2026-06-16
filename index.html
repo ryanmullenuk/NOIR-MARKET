@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Noir Market v13</title>
+  <title>Noir Market v14 Dust</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="particle-canvas"></div>
   <div id="splash" class="splash">
+    <div class="dust-bg" aria-hidden="true"><div id="dust1"></div><div id="dust2"></div><div id="dust3"></div></div>
+    <div class="splash-vignette" aria-hidden="true"></div>
     <div class="baggie">
       <div class="zip"></div>
       <div class="powder"></div>
@@ -91,7 +93,7 @@
 
   <dialog id="modal">
     <form method="dialog" class="modal-card">
-      <div class="modal-header"><h3 id="modalTitle"></h3><button type="button" class="modal-x" id="modalCloseBtn" aria-label="Close">×</button></div>
+      <h3 id="modalTitle"></h3>
       <div id="modalBody"></div>
       <menu>
         <button value="cancel">Close</button>

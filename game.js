@@ -201,7 +201,66 @@ function particles(){
   loop();
 }
 function setupTilt(){let splash=$('splash');function setTilt(x,y){let px=Math.max(-18,Math.min(18,x*.8)),py=Math.max(-9,Math.min(9,y*.35));splash.style.setProperty('--tilt-x',(x*.55)+'deg');splash.style.setProperty('--tilt-y',(-y*.35)+'deg');splash.style.setProperty('--powder-x',px+'px');splash.style.setProperty('--powder-y',py+'px');splash.style.setProperty('--powder-r',(x*.35)+'deg')} window.addEventListener('deviceorientation',e=>{setTilt(e.gamma||0,e.beta||0)},true); window.addEventListener('mousemove',e=>{let x=(e.clientX/innerWidth-.5)*18,y=(e.clientY/innerHeight-.5)*18;setTilt(x,y)})}
-$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio();$('splash').classList.add('hide'); setTimeout(()=>{if(firstFreshGame)showLoanIntro();},460)}; particles(); setupTilt(); firstFreshGame=load();
+
+
+/* v13 requested refinements and music support */
+const MUSIC_PATH='./assets/music/noir_theme.mp3';
+let bgMusic=null, musicStarted=false, synthMusicTimer=null, synthMusicOn=false;
+function startBackgroundMusic(){
+  if(!soundEnabled)return;
+  unlockAudio();
+  if(bgMusic){bgMusic.volume=.22; bgMusic.loop=true; bgMusic.play().catch(()=>startSynthMusic()); return;}
+  bgMusic=new Audio(MUSIC_PATH);
+  bgMusic.loop=true; bgMusic.volume=.22; bgMusic.preload='auto';
+  bgMusic.addEventListener('error',()=>startSynthMusic(),{once:true});
+  bgMusic.play().then(()=>{musicStarted=true;}).catch(()=>startSynthMusic());
+}
+function stopBackgroundMusic(){
+  if(bgMusic)bgMusic.pause();
+  stopSynthMusic();
+}
+function startSynthMusic(){
+  if(!soundEnabled||synthMusicOn)return;
+  synthMusicOn=true; unlockAudio();
+  const notes=[196,247,294,247,330,294,247,220,196,247,294,370,330,294,247,220];
+  let i=0;
+  synthMusicTimer=setInterval(()=>{ if(!soundEnabled){stopSynthMusic();return;} tone(notes[i%notes.length],.075,'square',.012,0); if(i%4===0)tone(notes[(i+4)%notes.length]/2,.12,'triangle',.008,.03); i++;},190);
+}
+function stopSynthMusic(){synthMusicOn=false; if(synthMusicTimer){clearInterval(synthMusicTimer); synthMusicTimer=null;}}
+document.addEventListener('visibilitychange',()=>{ if(document.hidden)stopBackgroundMusic(); else if(soundEnabled&&musicStarted)startBackgroundMusic(); });
+function storageType(){
+  const owned=(s&&s.owned)||[];
+  if(owned.includes('Warehouse'))return 'Warehouse';
+  if(owned.includes('Trunk Upgrade'))return 'Trunk Upgrade';
+  if(owned.includes('Sports Bag'))return 'Sports Bag';
+  if(owned.includes('Bigger Backpack'))return 'Bigger Backpack';
+  return 'Pocket';
+}
+function healthClass(){let h=s.health; return h<=30?'health-bad':(h<=85?'health-warn':'health-good');}
+function draw(){
+  ensureStats(); s.stats.bestNet=Math.max(s.stats.bestNet||0,netWorth()); let p=places[s.city], hc=healthClass();
+  $('dayCount').textContent=s.day; $('cash').textContent=money(s.cash); $('bank').textContent=money(s.bank); $('debt').textContent=money(s.debt);
+  $('health').textContent=Math.round(s.health)+'%'; $('health').className=hc;
+  $('healthBar').style.width=Math.max(0,s.health)+'%'; $('healthBar').className=hc;
+  $('city').textContent=p[0]+' '+p[1]; $('country').textContent=''; $('flag').textContent='';
+  $('marketInfo').innerHTML=`${p[0]}: ${cityText()}.<br>${rumourHtml()}`; $('noticeText').textContent=s.notice;
+  $('spaceLabel').innerHTML=`${used()}/${totalSpace()} <span class="storage-type">${storageType()}</span>`;
+  $('statusLocation').textContent=p[0]+', '+p[1]; $('rank').textContent=rank(); $('space').textContent=`${used()}/${totalSpace()} · ${storageType()}`; $('heat').textContent=s.heat+'%';
+  $('marketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span></span></div>'+drugs.map(([name,icon])=>`<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${s.supply[name]}</span><span class="price ${s.trends[name]?'':'down'}">${money(s.prices[name])}</span><span class="trend ${s.trends[name]?'up':'down'}">${s.trends[name]?'↑':'↓'}</span></div>`).join('');
+  let items=Object.entries(s.inv).filter(([,q])=>q>0); let wc=weaponCounts(), weaponsRows=Object.entries(wc).map(([k,v])=>`<div class="row storage-weapon"><span>${k}</span><span>${v}</span><span>Weapon</span></div>`).join('');
+  $('pocketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.slice(0,10).map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*s.prices[k])}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`)+`<div class="row header"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>`+(weaponsRows||'<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
+}
+function healthBlock(){let hc=healthClass(); return `<div class="health-decision"><div><strong>Health</strong><span class="${hc}">${Math.round(s.health)}%</span></div><div class="health-track"><i class="${hc}" style="width:${Math.max(0,s.health)}%"></i></div></div>`}
+function modal(t,h){
+  $('modalTitle').textContent=t;
+  $('modalBody').innerHTML=`<div class="modal-head"><h3>${t}</h3><button type="button" class="modal-x" id="modalCloseBtn" aria-label="Close">×</button></div><div class="modal-scroll">${h+payDebtButton()}</div>`;
+  if(!$('modal').open)$('modal').showModal();
+  setTimeout(()=>{bindModalDebt(); let x=$('modalCloseBtn'); if(x)x.onclick=()=>done();},0);
+}
+function showMenu(){ensureStats(); modal('Menu',`<div class="menu-list"><button type="button" id="statsBtn">Stats</button><button type="button" id="soundToggleBtn">Sound: ${soundEnabled?'ON':'OFF'}</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>`); setTimeout(()=>{$('statsBtn').onclick=showStats; $('soundToggleBtn').onclick=()=>{soundEnabled=!soundEnabled; localStorage.setItem('noir_market_sound',soundEnabled?'on':'off'); if(soundEnabled){sound('positive'); startBackgroundMusic();} else stopBackgroundMusic(); showMenu();}; $('menuNewGameBtn').onclick=confirmNewGame;},0)}
+function showStats(){ensureStats(); modal('Stats',`<div class="stats-list"><p><span>Days survived</span><strong>${s.day-1}</strong></p><p><span>Net worth</span><strong>${money(netWorth())}</strong></p><p><span>Best net worth</span><strong>${money(s.stats.bestNet||netWorth())}</strong></p><p><span>Storage type</span><strong>${storageType()}</strong></p><p><span>Flights taken</span><strong>${s.stats.flights||0}</strong></p><p><span>Stays</span><strong>${s.stats.stays||0}</strong></p><p><span>Fights won</span><strong>${s.stats.fightsWon||0}</strong></p><p><span>Fights lost</span><strong>${s.stats.fightsLost||0}</strong></p><p><span>Times mugged</span><strong>${s.stats.mugged||0}</strong></p><p><span>Loans taken</span><strong>${s.stats.loansTaken||0}</strong></p><p><span>Drugs bought</span><strong>${s.stats.tradesBought||0}</strong></p><p><span>Drugs sold</span><strong>${s.stats.tradesSold||0}</strong></p><p><span>Largest single trade</span><strong>${money(s.stats.largestTrade||0)}</strong></p><p><span>Heat level</span><strong>${s.heat}%</strong></p></div><button type="button" id="backMenuBtn">Back to Menu</button>`); setTimeout(()=>$('backMenuBtn').onclick=showMenu,0)}
+
+$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; $('splash').classList.add('hide'); setTimeout(()=>{if(firstFreshGame)showLoanIntro();},460)}; particles(); setupTilt(); firstFreshGame=load();
 
 // Native app feel: suppress iOS double-tap and pinch zoom when launched from browser/home screen.
 let __lastTouchEnd=0;
