@@ -1,0 +1,42 @@
+NOIR MARKET V1.7 CHANGELOG
+
+Release focus: Travel Shipping System
+
+Added
+- Travel section now has two modes: TRAVEL and SHIPPING.
+- TRAVEL keeps the existing flight-based city movement and airport warning flow.
+- SHIPPING allows drugs to be exported to another city before the player travels.
+- Exported drugs are removed from carried inventory and stored as a pending shipment for the destination city.
+- IMPORT allows pending shipments to be collected once the player reaches the destination city.
+- Imported shipments are added into the destination city vault storage.
+- Shipping cost is calculated as 5% of the shipment value plus a £200 fee.
+- Shipments track origin city, destination city, item quantity, value, cost and day sent.
+- V1.7 save structure now includes a shipments array.
+- V1.6 and earlier save migration retained.
+
+Preserved
+- Existing flight travel.
+- Airport seizure warnings.
+- Weapon and drug seizure mechanics when travelling by air.
+- City-specific vault storage.
+- Vault capacity and upgrade system.
+- Storage/Vault transfer system.
+- Dynamic economy, rumours, news ticker and reputation systems.
+- Proportional loan interest from V1.5.
+- Home screen icons from V1.6.
+- Splash screen logo, dust particles and background music.
+
+Notes
+- Shipping does not advance the day by itself.
+- The player must still travel to the destination city to import shipped stock.
+- Shipments require enough vault capacity at the destination city before they can be imported.
+
+Checks Completed
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- Runtime smoke test passed.
+- Shipping cost calculation checked.
+- Shipment state creation checked.
+- V1.6 save migration path retained.
+- ZIP integrity check passed.

@@ -166,7 +166,7 @@ function resolveFight(choice,weaponName=''){
   }
 }
 function endGame(){let score=s.cash+s.bank+Object.entries(s.inv).reduce((a,[k,v])=>a+v*s.prices[k],0)-s.debt; modal('Game Over',`<p>Final net worth: <strong>${money(score)}</strong></p><p>Rank: <strong>${rank()}</strong></p><button type="button" id="again">New Game</button>`); setTimeout(()=>$('again').onclick=()=>{newGame();},0)}
-function save(){ensureStats(); localStorage.setItem('noir_market_v1_4',JSON.stringify(s))} function load(){let x=localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x);ensureStats();draw();return false;} newGame(false);return true;}
+function save(){ensureStats(); localStorage.setItem('noir_market_v1_6',JSON.stringify(s))} function load(){let x=localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x);ensureStats();draw();return false;} newGame(false);return true;}
 function particles(){
   const holder=$('particle-canvas');
   const canvas=document.createElement('canvas');
@@ -255,7 +255,7 @@ function createGameDust(){
 function setupTilt(){let splash=$('splash');function setTilt(x,y){let px=Math.max(-18,Math.min(18,x*.8)),py=Math.max(-9,Math.min(9,y*.35));splash.style.setProperty('--tilt-x',(x*.55)+'deg');splash.style.setProperty('--tilt-y',(-y*.35)+'deg');splash.style.setProperty('--powder-x',px+'px');splash.style.setProperty('--powder-y',py+'px');splash.style.setProperty('--powder-r',(x*.35)+'deg')} window.addEventListener('deviceorientation',e=>{setTilt(e.gamma||0,e.beta||0)},true); window.addEventListener('mousemove',e=>{let x=(e.clientX/innerWidth-.5)*18,y=(e.clientY/innerHeight-.5)*18;setTilt(x,y)})}
 
 
-/* V1.4 retained refinements and music support */
+/* V1.6 retained refinements and music support */
 const MUSIC_PATH='./assets/music/noir_theme.mp3';
 let bgMusic=null, musicStarted=false, synthMusicTimer=null, synthMusicOn=false;
 function startBackgroundMusic(){
@@ -322,7 +322,7 @@ function showStats(){ensureStats(); modal('Stats',`<div class="stats-list"><p><s
 
 
 
-/* V1.4 retained gameplay/UI refinements */
+/* V1.6 retained gameplay/UI refinements */
 function round10(n){return Math.max(10,Math.round(n/10)*10)}
 function ensureVaults(){ s.vaults=s.vaults||{}; places.forEach(p=>{let key=p[0]; if(!s.vaults[key]) s.vaults[key]=blankInv();}); return s.vaults[places[s.city][0]]; }
 function vaultUsed(cityName=places[s.city][0]){ ensureVaults(); return Object.values(s.vaults[cityName]||{}).reduce((a,b)=>a+b,0); }
@@ -349,7 +349,7 @@ document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
 
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 
-/* V1.4 retained vault refinements */
+/* V1.6 retained vault refinements */
 function cityVaultLine(city){
   const lines={
     London:"London stock stays in London. Liverpool will not carry London’s mess.",
@@ -438,7 +438,7 @@ function recreateDustSlowerSmaller(){
 }
 setTimeout(recreateDustSlowerSmaller,80);
 
-/* V1.4 retained loan limits, raids, customs and airport warnings */
+/* V1.6 retained loan limits, raids, customs and airport warnings */
 function stockSummary(){
   const items=Object.entries(s.inv||{}).filter(([,q])=>q>0).map(([n,q])=>`${n} x${q}`);
   const wc=weaponCounts();
@@ -546,7 +546,7 @@ function travel(){
   },0);
 }
 
-/* V1.4 retained lender bios, stricter loan declines, dangerous event reinforcement and airport seizure warning */
+/* V1.6 retained lender bios, stricter loan declines, dangerous event reinforcement and airport seizure warning */
 const lenderBios = {
   SPAMMER: `Spammer looks friendly, which is normally the first warning. He lends small, smiles wide, and allegedly keeps a little box labelled “late payment fingers”. Every day you are late, he adds interest and starts looking at your hands like a tapas menu.`,
   TOMMY: `Tommy wears a tracksuit, calls everyone “chief”, and has never once accepted “I forgot” as a payment plan. His loans are bigger, his patience is smaller, and his dog is somehow on the payroll.`,
@@ -648,8 +648,8 @@ setTimeout(v13SelfTest,120);
 
 setInterval(()=>{if(s){s.news=['Police crack down in Birmingham.','Festival season boosts ecstasy demand.','Rumour: MDMA shortage in Manchester.'][Math.floor(Math.random()*3)]}},15000);
 
-/* Noir Market V1.4 final override layer */
-/* Noir Market V1.4 economy, reputation, rank, hustle and vault upgrades */
+/* Noir Market V1.7 final override layer */
+/* Noir Market V1.7 economy, reputation, rank, hustle and vault upgrades */
 function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
 function rep(delta){s.reputation=clamp((s.reputation??50)+delta,0,100);}
 function rankDefs(){return [
@@ -702,10 +702,10 @@ function ensureStats(){
   Object.entries(defaults).forEach(([k,v])=>{if(typeof s.stats[k] !== 'number')s.stats[k]=v;});
   s.travelFares=s.travelFares||{}; s.reputation=clamp(s.reputation??50,0,100); ensureVaults(); ensureVaultLevels(); ensureEconomy(); ensureRankState();
 }
-function baseState(){return{version:'1.4',reputation:50,news:'Markets are quiet today.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'Markets are quiet today.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0}}}
+function baseState(){return{version:'1.6',reputation:50,news:'Markets are quiet today.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'Markets are quiet today.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0}}}
 function newGame(showLoans=false){s=baseState(); ensureStats(); genPrices(); newRumour(); updateRankProgress(); save(); draw(); if(showLoans) showLoanIntro();}
-function save(){ensureStats(); s.version='1.4'; localStorage.setItem('noir_market_v1_4',JSON.stringify(s));}
-function load(){let x=localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
+function save(){ensureStats(); s.version='1.6'; localStorage.setItem('noir_market_v1_6',JSON.stringify(s));}
+function load(){let x=localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
 function newRumour(){
   ensureEconomy(); const city=pick(places)[0], drug=pickDrug(); const types=['shortage','crackdown','collapse']; const type=pick(types); const accurate=Math.random()<.60;
   const text= type==='shortage'?`Rumour: ${drug} shortage in ${city}.`: type==='crackdown'?`Rumour: Police crackdown expected in ${city}.`:`Rumour: ${drug} prices collapsing in ${city}.`;
@@ -751,11 +751,11 @@ function randomEvent(base){s.notice=base+' '+dangerousEventText()+maybeCashMuggi
 function nextDay(base,showRumour){ensureStats(); let old={rumour:s.rumour,true:!!(s.rumour&&s.rumour.accurate)}; s.day++; s.debt=Math.round(s.debt*1.02); s.heat=Math.min(100,Math.max(0,s.heat+rand(-8,13))); rep(1); genPrices(old); newRumour(); randomEvent(base); updateRankProgress(); if(s.day>s.maxDay)return endGame(); save(); draw(); let rumourBlock=showRumour?`<h4>Rumour Result</h4><p><strong>${old.true?'TRUE':'FALSE'}</strong> · ${old.rumour?.text||'No rumour was active.'}</p>`:''; const title=showRumour?'Stay Here':'Travel Result', body=`<p>${s.notice}</p>${rumourBlock}<h4>Loan Status</h4>${debtReminderHtml()}`; const arrest=maybeArrest(showRumour?'stay':'travel'); if(arrest)return showArrestModal(arrest,title,body,rumourBlock); modal(title,`${body}<button type="button" id="continueEvent">Continue</button>`); setTimeout(()=>$('continueEvent').onclick=()=>{$('modal').close();handleDueLoans();},0);}
 function hustle(){ensureStats(); const cost=rand(1000,10000); modal('Hustle',`<h4>Informant</h4><p class="subtle">Pay for market information. 80% chance of accurate information. 20% chance of being scammed.</p><p>Cost: <strong>${money(cost)}</strong></p><button type="button" class="buy" id="buyInfo">Pay Informant</button>`); setTimeout(()=>{$('buyInfo').onclick=()=>{if(s.cash<cost){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=cost; s.stats.informants++; if(Math.random()<.8){const city=pick(places)[0], drug=pickDrug(), kind=pick(['shortage','collapse','crackdown']); const text=kind==='shortage'?`${drug} shortage likely in ${city}.`:kind==='collapse'?`${drug} prices may collapse in ${city}.`:`Police pressure expected in ${city}.`; s.notice=`Informant: ${text}`; success('Informant paid');} else {s.notice='Your informant disappears with your cash and suspiciously expensive trainers.'; errorMsg('Scammed');} save(); draw(); hustle();};},0);}
 function dump(){ensureStats(); ensureVaults(); ensureVaultLevels(); const city=places[s.city][0], vault=s.vaults[city], wVault=s.weaponVaults[city], cap=vaultCapacity(city), next=nextVaultLevel(city), nextCost=vaultUpgradeCost(next); const carried=Object.entries(s.inv).filter(([,q])=>q>0); const stored=Object.entries(vault).filter(([,q])=>q>0); const cWeapons=Object.entries(carriedWeaponCounts()).filter(([,q])=>q>0); const vWeapons=Object.entries(wVault).filter(([,q])=>q>0); const rowDrug=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Carried: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vdrug-${i}"><button type="button" data-storedrug="${i}">STORE</button><button type="button" data-storealldrug="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropdrug="${i}">DUMP</button></div>`; const rowWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Held: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vweapon-${i}"><button type="button" data-storeweapon="${i}">STORE</button><button type="button" data-storeallweapon="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropweapon="${i}">DUMP</button></div>`; const rowStored=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tdrug-${i}"><button type="button" data-takedrug="${i}">TAKE</button><button type="button" data-takealldrug="${i}">TAKE ALL</button></div>`; const rowStoredWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tweapon-${i}"><button type="button" data-takeweapon="${i}">TAKE</button><button type="button" data-takeallweapon="${i}">TAKE ALL</button></div>`; const upgrade=next?`<div class="vault-line"><strong>${s.vaultLevels[city]} Vault</strong><br>Capacity ${vaultUsed(city)}/${cap}. Upgrade to ${next} (${next==='Secure'?'250':'500'} slots) for ${money(nextCost)}.<br><button type="button" id="upgradeVault">Upgrade Vault</button></div>`:`<div class="vault-line"><strong>Fortress Vault</strong><br>Capacity ${vaultUsed(city)}/${cap}. Maximum security installed.</div>`; modal('Storage',`<div class="modal-money"><span>Carried</span><strong>${used()}/${totalSpace()}</strong><em>${storageType()}</em></div><div class="modal-money"><span>${city} Vault</span><strong>${vaultUsed(city)}/${cap}</strong><em>City only</em></div>${upgrade}<p class="subtle vault-line">${cityVaultLine(city)}</p><h4>Move Drugs to Vault</h4>${carried.length?`<div class="storage-move-list">${carried.map(([n,q],i)=>rowDrug(n,q,i)).join('')}</div>`:'<p class="subtle">No carried drugs.</p>'}<h4>Move Weapons to Vault</h4>${cWeapons.length?`<div class="storage-move-list">${cWeapons.map(([n,q],i)=>rowWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons held.</p>'}<h4>${city} Vault Drugs</h4>${stored.length?`<div class="storage-move-list">${stored.map(([n,q],i)=>rowStored(n,q,i)).join('')}</div>`:'<p class="subtle">No drugs in this city vault.</p>'}<h4>${city} Vault Weapons</h4>${vWeapons.length?`<div class="storage-move-list">${vWeapons.map(([n,q],i)=>rowStoredWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons in this city vault.</p>'}`); setTimeout(()=>{const up=$('upgradeVault'); if(up)up.onclick=()=>{if(s.cash<nextCost){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=nextCost; s.vaultLevels[city]=next; s.notice=`${city} vault upgraded to ${next}.`; success('Vault upgraded'); save(); draw(); dump();}; function toVaultDrug(name,qty){let space=vaultCapacity(city)-vaultUsed(city); qty=Math.min(qty,s.inv[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO STOCK');return;} s.inv[name]-=qty; vault[name]=(vault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('Stored in vault'); dump();} function dropDrug(name,qty){qty=Math.min(qty,s.inv[name]||0); if(qty<1){errorMsg('NO STOCK');return;} s.inv[name]-=qty; s.notice=`Dumped ${qty} ${name}. Gone. No refunds. No questions.`; save(); draw(); sound('negative'); dump();} function fromVaultDrug(name,qty){let space=totalSpace()-used(); qty=Math.min(qty,vault[name]||0,space); if(qty<1){errorMsg(space<1?'INSUFFICIENT STORAGE':'NO VAULT STOCK');return;} vault[name]-=qty; s.inv[name]=(s.inv[name]||0)+qty; s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('Retrieved from vault'); dump();} function toVaultWeapon(name,qty){let space=vaultCapacity(city)-vaultUsed(city); qty=Math.min(qty,carriedWeaponCounts()[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); wVault[name]=(wVault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('Weapon stored'); dump();} function dropWeapon(name,qty){qty=Math.min(qty,carriedWeaponCounts()[name]||0); if(qty<1){errorMsg('NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); s.notice=`Dumped ${qty} ${name}. Sensible? Probably not. Convenient? Yes.`; save(); draw(); sound('negative'); dump();} function fromVaultWeapon(name,qty){qty=Math.min(qty,wVault[name]||0); if(qty<1){errorMsg('NO VAULT WEAPON');return;} wVault[name]-=qty; adjustWeaponList(name,qty,'add'); s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('Weapon retrieved'); dump();} document.querySelectorAll('[data-storedrug]').forEach(b=>b.onclick=()=>{let [name]=carried[+b.dataset.storedrug]; toVaultDrug(name,+$('vdrug-'+b.dataset.storedrug).value||0);}); document.querySelectorAll('[data-storealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=carried[+b.dataset.storealldrug]; toVaultDrug(name,q);}); document.querySelectorAll('[data-dropdrug]').forEach(b=>b.onclick=()=>{let [name]=carried[+b.dataset.dropdrug]; dropDrug(name,+$('vdrug-'+b.dataset.dropdrug).value||0);}); document.querySelectorAll('[data-takedrug]').forEach(b=>b.onclick=()=>{let [name]=stored[+b.dataset.takedrug]; fromVaultDrug(name,+$('tdrug-'+b.dataset.takedrug).value||0);}); document.querySelectorAll('[data-takealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=stored[+b.dataset.takealldrug]; fromVaultDrug(name,q);}); document.querySelectorAll('[data-storeweapon]').forEach(b=>b.onclick=()=>{let [name]=cWeapons[+b.dataset.storeweapon]; toVaultWeapon(name,+$('vweapon-'+b.dataset.storeweapon).value||0);}); document.querySelectorAll('[data-storeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=cWeapons[+b.dataset.storeallweapon]; toVaultWeapon(name,q);}); document.querySelectorAll('[data-dropweapon]').forEach(b=>b.onclick=()=>{let [name]=cWeapons[+b.dataset.dropweapon]; dropWeapon(name,+$('vweapon-'+b.dataset.dropweapon).value||0);}); document.querySelectorAll('[data-takeweapon]').forEach(b=>b.onclick=()=>{let [name]=vWeapons[+b.dataset.takeweapon]; fromVaultWeapon(name,+$('tweapon-'+b.dataset.takeweapon).value||0);}); document.querySelectorAll('[data-takeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=vWeapons[+b.dataset.takeallweapon]; fromVaultWeapon(name,q);});},0);}
-function v13SelfTest(){console.log('NOIR MARKET V1.4 checks: dynamic city economy, market rumours, news ticker, reputation, arrest/bribe system, informants, city vault upgrades and rank progression active.');}
+function v13SelfTest(){console.log('NOIR MARKET V1.7 checks: dynamic city economy, market rumours, news ticker, reputation, arrest/bribe system, informants, city vault upgrades and rank progression active.');}
 
 
 
-/* Noir Market V1.4 final audio loop override */
+/* Noir Market V1.7 final audio loop override */
 function startBackgroundMusic(){
   if(!soundEnabled)return;
   unlockAudio();
@@ -776,7 +776,7 @@ function stopBackgroundMusic(){
   stopSynthMusic();
 }
 
-/* Noir Market V1.4 immediate rank drop enforcement */
+/* Noir Market V1.7 immediate rank drop enforcement */
 function rank(){
   ensureRankState();
   const qualified=rankFromWorth(netWorth());
@@ -790,7 +790,7 @@ function rank(){
 }
 
 
-/* Noir Market V1.4 news, notifications, hustle and storage overrides */
+/* Noir Market V1.7 news, notifications, hustle and storage overrides */
 function upperNews(text){return String(text||'MARKETS ARE QUIET.').toUpperCase();}
 function formatTicker(stories){return stories.map(upperNews).join('   •   ');}
 function policeMovementStory(){
@@ -830,9 +830,9 @@ function toast(msg,type='ok'){
   clearTimeout(el._t);
   el._t=setTimeout(()=>el.classList.remove('show'),2200);
 }
-function save(){ensureStats(); s.version='1.4'; localStorage.setItem('noir_market_v1_4',JSON.stringify(s));}
-function load(){let x=localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.4'; setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
-function baseState(){return{version:'1.4',reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0}}}
+function save(){ensureStats(); s.version='1.6'; localStorage.setItem('noir_market_v1_6',JSON.stringify(s));}
+function load(){let x=localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.6'; setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
+function baseState(){return{version:'1.6',reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0}}}
 function draw(){ensureStats(); setActiveCityMarket(); s.stats.bestNet=Math.max(s.stats.bestNet||0,netWorth()); const p=places[s.city], hc=healthClass(); if($('newsTicker')){$('newsTicker').textContent=upperNews(s.economy?.news?.text||s.news||'MARKETS ARE QUIET TODAY.');} $('dayCount').textContent=s.day; $('cash').textContent=money(s.cash); $('bank').textContent=money(s.bank); $('debt').textContent=money(s.debt); $('health').textContent=Math.round(s.health)+'%'; $('health').className=hc; $('healthBar').style.width=Math.max(0,s.health)+'%'; $('healthBar').className=hc; $('city').textContent=p[0]+' '+p[1]; $('country').textContent=''; $('flag').textContent=''; $('marketInfo').innerHTML=`${p[0]}: ${cityText()}.<br>${rumourHtml()}`; $('noticeText').textContent=s.notice; $('spaceLabel').innerHTML=`${used()}/${totalSpace()} <span class="storage-type">${storageType()}</span>`; $('statusLocation').textContent=p[0]+', '+p[1]; $('rank').textContent=rank(); if($('rankDays'))$('rankDays').textContent=rankDaysText(); if($('reputation'))$('reputation').textContent=`${s.reputation}/100`; $('space').textContent=`${used()}/${totalSpace()} · ${storageType()}`; $('heat').textContent=s.heat+'%'; $('marketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span></span></div>'+drugs.map(([name,icon])=>`<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${s.supply[name]}</span><span class="price ${s.trends[name]?'':'down'}">${money(s.prices[name])}</span><span class="trend ${s.trends[name]?'up':'down'}">${s.trends[name]?'↑':'↓'}</span></div>`).join(''); let items=Object.entries(s.inv).filter(([,q])=>q>0); let wc=weaponCounts(), weaponsRows=Object.entries(wc).map(([k,v])=>`<div class="row storage-weapon"><span>${k}</span><span>${v}</span><span>Weapon</span></div>`).join(''); $('pocketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.slice(0,10).map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*s.prices[k])}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`)+`<div class="row header"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>`+(weaponsRows||'<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');}
 function hustle(){
   ensureStats();
@@ -845,4 +845,212 @@ function hustle(){
   setTimeout(()=>{document.querySelectorAll('[data-informant]').forEach(btn=>btn.onclick=()=>{const info=informants.find(i=>i.id===btn.dataset.informant); if(!info)return; if(s.cash<info.cost){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=info.cost; ensureStats(); s.stats.informants++; if(Math.random()<0.10){s.notice=`${info.name} disappears with your cash and suspiciously expensive trainers.`; errorMsg('SCAMMED'); save(); draw(); hustle(); return;} const city=pick(places)[0], drug=pickDrug(), kind=pick(['shortage','collapse','crackdown','spiked']); const accurate=Math.random()<info.trust; let text=kind==='shortage'?`${drug} shortage likely in ${city}.`:kind==='collapse'?`${drug} prices may collapse in ${city}.`:kind==='spiked'?`Spiked ${drug} batches causing panic in ${city}.`:`Police pressure expected in ${city}.`; if(!accurate){text=pick([`${pickDrug()} shipment rumoured in ${pick(places)[0]}.`,`Police looking the wrong way in ${pick(places)[0]}.`,`Street prices turning weird in ${pick(places)[0]}.`]);} s.notice=`${info.name}: ${text}`; success('INFORMANT PAID'); save(); draw(); hustle();});},0);
 }
 function dump(){ensureStats(); ensureVaults(); ensureVaultLevels(); const city=places[s.city][0], vault=s.vaults[city], wVault=s.weaponVaults[city], cap=vaultCapacity(city), next=nextVaultLevel(city), nextCost=vaultUpgradeCost(next); const carried=Object.entries(s.inv).filter(([,q])=>q>0); const stored=Object.entries(vault).filter(([,q])=>q>0); const cWeapons=Object.entries(carriedWeaponCounts()).filter(([,q])=>q>0); const vWeapons=Object.entries(wVault).filter(([,q])=>q>0); const actionButtons=(buttons,cls='')=>`<div class="storage-actions ${cls}">${buttons}</div>`; const rowDrug=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Carried: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vdrug-${i}">${actionButtons(`<button type="button" data-storedrug="${i}">STORE</button><button type="button" data-storealldrug="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropdrug="${i}">DUMP</button>`)}</div>`; const rowWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Held: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="vweapon-${i}">${actionButtons(`<button type="button" data-storeweapon="${i}">STORE</button><button type="button" data-storeallweapon="${i}">STORE ALL</button><button type="button" class="danger-mini" data-dropweapon="${i}">DUMP</button>`)}</div>`; const rowStored=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tdrug-${i}">${actionButtons(`<button type="button" data-takedrug="${i}">TAKE</button><button type="button" data-takealldrug="${i}">TAKE ALL</button>`,'two')}</div>`; const rowStoredWeapon=(name,q,i)=>`<div class="storage-move vault-row"><div><strong>${name}</strong><span>Vault: ${q}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="tweapon-${i}">${actionButtons(`<button type="button" data-takeweapon="${i}">TAKE</button><button type="button" data-takeallweapon="${i}">TAKE ALL</button>`,'two')}</div>`; const upgrade=next?`<div class="vault-line"><strong>${s.vaultLevels[city]} Vault</strong><br>Capacity ${vaultUsed(city)}/${cap}. Upgrade to ${next} (${next==='Secure'?'250':'500'} slots) for ${money(nextCost)}.<br><button type="button" id="upgradeVault">Upgrade Vault</button></div>`:`<div class="vault-line"><strong>Fortress Vault</strong><br>Capacity ${vaultUsed(city)}/${cap}. Maximum security installed.</div>`; modal('Storage',`<div class="modal-money"><span>Carried</span><strong>${used()}/${totalSpace()}</strong><em>${storageType()}</em></div><div class="modal-money"><span>${city} Vault</span><strong>${vaultUsed(city)}/${cap}</strong><em>City only</em></div>${upgrade}<p class="subtle vault-line">${cityVaultLine(city)}</p><h4>Move Drugs to Vault</h4>${carried.length?`<div class="storage-move-list">${carried.map(([n,q],i)=>rowDrug(n,q,i)).join('')}</div>`:'<p class="subtle">No carried drugs.</p>'}<h4>Move Weapons to Vault</h4>${cWeapons.length?`<div class="storage-move-list">${cWeapons.map(([n,q],i)=>rowWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons held.</p>'}<h4>${city} Vault Drugs</h4>${stored.length?`<div class="storage-move-list">${stored.map(([n,q],i)=>rowStored(n,q,i)).join('')}</div>`:'<p class="subtle">No drugs in this city vault.</p>'}<h4>${city} Vault Weapons</h4>${vWeapons.length?`<div class="storage-move-list">${vWeapons.map(([n,q],i)=>rowStoredWeapon(n,q,i)).join('')}</div>`:'<p class="subtle">No weapons in this city vault.</p>'}`); setTimeout(()=>{const up=$('upgradeVault'); if(up)up.onclick=()=>{if(s.cash<nextCost){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=nextCost; s.vaultLevels[city]=next; s.notice=`${city} vault upgraded to ${next}.`; success('VAULT UPGRADED'); save(); draw(); dump();}; function toVaultDrug(name,qty){let space=vaultCapacity(city)-vaultUsed(city); qty=Math.min(qty,s.inv[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO STOCK');return;} s.inv[name]-=qty; vault[name]=(vault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('STORED IN VAULT'); dump();} function dropDrug(name,qty){qty=Math.min(qty,s.inv[name]||0); if(qty<1){errorMsg('NO STOCK');return;} s.inv[name]-=qty; s.notice=`Dumped ${qty} ${name}. Gone. No refunds. No questions.`; save(); draw(); sound('negative'); dump();} function fromVaultDrug(name,qty){let space=totalSpace()-used(); qty=Math.min(qty,vault[name]||0,space); if(qty<1){errorMsg(space<1?'INSUFFICIENT STORAGE':'NO VAULT STOCK');return;} vault[name]-=qty; s.inv[name]=(s.inv[name]||0)+qty; s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('RETRIEVED FROM VAULT'); dump();} function toVaultWeapon(name,qty){let space=vaultCapacity(city)-vaultUsed(city); qty=Math.min(qty,carriedWeaponCounts()[name]||0,space); if(qty<1){errorMsg(space<1?'VAULT FULL':'NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); wVault[name]=(wVault[name]||0)+qty; s.notice=`Stored ${qty} ${name} in the ${city} vault.`; save(); draw(); success('WEAPON STORED'); dump();} function dropWeapon(name,qty){qty=Math.min(qty,carriedWeaponCounts()[name]||0); if(qty<1){errorMsg('NO WEAPON');return;} adjustWeaponList(name,qty,'remove'); s.notice=`Dumped ${qty} ${name}. Sensible? Probably not. Convenient? Yes.`; save(); draw(); sound('negative'); dump();} function fromVaultWeapon(name,qty){qty=Math.min(qty,wVault[name]||0); if(qty<1){errorMsg('NO VAULT WEAPON');return;} wVault[name]-=qty; adjustWeaponList(name,qty,'add'); s.notice=`Retrieved ${qty} ${name} from the ${city} vault.`; save(); draw(); success('WEAPON RETRIEVED'); dump();} document.querySelectorAll('[data-storedrug]').forEach(b=>b.onclick=()=>{let [name]=carried[+b.dataset.storedrug]; toVaultDrug(name,+$('vdrug-'+b.dataset.storedrug).value||0);}); document.querySelectorAll('[data-storealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=carried[+b.dataset.storealldrug]; toVaultDrug(name,q);}); document.querySelectorAll('[data-dropdrug]').forEach(b=>b.onclick=()=>{let [name]=carried[+b.dataset.dropdrug]; dropDrug(name,+$('vdrug-'+b.dataset.dropdrug).value||0);}); document.querySelectorAll('[data-takedrug]').forEach(b=>b.onclick=()=>{let [name]=stored[+b.dataset.takedrug]; fromVaultDrug(name,+$('tdrug-'+b.dataset.takedrug).value||0);}); document.querySelectorAll('[data-takealldrug]').forEach(b=>b.onclick=()=>{let [name,q]=stored[+b.dataset.takealldrug]; fromVaultDrug(name,q);}); document.querySelectorAll('[data-storeweapon]').forEach(b=>b.onclick=()=>{let [name]=cWeapons[+b.dataset.storeweapon]; toVaultWeapon(name,+$('vweapon-'+b.dataset.storeweapon).value||0);}); document.querySelectorAll('[data-storeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=cWeapons[+b.dataset.storeallweapon]; toVaultWeapon(name,q);}); document.querySelectorAll('[data-dropweapon]').forEach(b=>b.onclick=()=>{let [name]=cWeapons[+b.dataset.dropweapon]; dropWeapon(name,+$('vweapon-'+b.dataset.dropweapon).value||0);}); document.querySelectorAll('[data-takeweapon]').forEach(b=>b.onclick=()=>{let [name]=vWeapons[+b.dataset.takeweapon]; fromVaultWeapon(name,+$('tweapon-'+b.dataset.takeweapon).value||0);}); document.querySelectorAll('[data-takeallweapon]').forEach(b=>b.onclick=()=>{let [name,q]=vWeapons[+b.dataset.takeallweapon]; fromVaultWeapon(name,q);});},0);}
-function v14SelfTest(){console.log('NOIR MARKET V1.4 checks: uppercase smooth ticker, police/spiked batch stories, top-layer notifications, revised hustle informants, coming soon businesses, storage spacing and new MP3 music active.');}
+function v16IconSelfTest(){console.log('NOIR MARKET V1.7 checks: uppercase smooth ticker, police/spiked batch stories, top-layer notifications, revised hustle informants, coming soon businesses, storage spacing and new MP3 music active.');}
+
+/* Noir Market V1.7 proportional loan interest override */
+function loanPayoff(l){
+  if(!l)return 0;
+  if(l.principal === undefined && l.repay !== undefined)return Math.max(0,Math.round(+l.repay||0));
+  const principal=Math.max(0,Math.round(+l.principal||0));
+  const rate=Math.max(0,+l.interestRate||0);
+  const term=Math.max(1,Math.round(+l.termDays||Math.max(1,(+l.due||s.day)-(+l.startDay||s.day))));
+  const elapsed=Math.max(0,Math.round((+s.day||1)-(+l.startDay||+s.day||1)));
+  const progress=Math.min(1,elapsed/term);
+  const fullInterest=Math.round(principal*rate);
+  const minimumInterest=fullInterest>0?Math.max(1,Math.round(fullInterest*0.10)):0;
+  const interestDue=elapsed<=0?minimumInterest:Math.max(minimumInterest,Math.round(fullInterest*progress));
+  return principal+Math.min(fullInterest,interestDue);
+}
+function loanFullRepay(l){
+  if(!l)return 0;
+  if(l.principal === undefined && l.repay !== undefined)return Math.max(0,Math.round(+l.repay||0));
+  return Math.max(0,Math.round((+l.principal||0)*(1+(+l.interestRate||0))));
+}
+function normaliseLoans(){
+  if(!s)return;
+  if(!Array.isArray(s.loans))s.loans=[];
+  s.loans=s.loans.map((l,idx)=>{
+    if(l && l.principal !== undefined){
+      l.id=l.id||`loan_${s.day||1}_${idx}_${Math.floor(Math.random()*100000)}`;
+      l.principal=Math.max(0,Math.round(+l.principal||0));
+      l.interestRate=Math.max(0,+l.interestRate||0);
+      l.startDay=Math.max(1,Math.round(+l.startDay||(+s.day||1)));
+      l.termDays=Math.max(1,Math.round(+l.termDays||Math.max(1,(+l.due||s.day)-l.startDay)));
+      l.due=Math.max(l.startDay,Math.round(+l.due||l.startDay+l.termDays));
+      l.name=l.name||'Shady Lender';
+      return l;
+    }
+    return {
+      id:`legacy_${s.day||1}_${idx}_${Math.floor(Math.random()*100000)}`,
+      name:l?.name||'Shady Lender',
+      principal:Math.max(0,Math.round(+l?.repay||0)),
+      interestRate:0,
+      startDay:+s.day||1,
+      due:Math.round(+l?.due||(+s.day||1)),
+      termDays:Math.max(1,Math.round((+l?.due||(+s.day||1))-(+s.day||1)))
+    };
+  });
+  s.debt=activeDebtTotal();
+}
+function activeDebtTotal(){
+  if(!s||!Array.isArray(s.loans))return 0;
+  return s.loans.reduce((a,l)=>a+loanPayoff(l),0);
+}
+function ensureStats(){
+  s.stats=s.stats||{};
+  const defaults={tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:0,arrests:0,jailDays:0,bribes:0,informants:0};
+  Object.entries(defaults).forEach(([k,v])=>{if(typeof s.stats[k] !== 'number')s.stats[k]=v;});
+  s.travelFares=s.travelFares||{};
+  s.reputation=clamp(s.reputation??50,0,100);
+  ensureVaults(); ensureVaultLevels(); ensureEconomy(); ensureRankState(); normaliseLoans();
+}
+function baseState(){return{version:'1.6',reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0}}}
+function save(){ensureStats(); s.version='1.6'; localStorage.setItem('noir_market_v1_6',JSON.stringify(s));}
+function load(){let x=localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.6'; setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
+function chooseLoan(i){
+  let l=lenders[i], name=l[0], max=adjustedLenderMax(l), days=l[2], interest=l[3];
+  modal(name,`<p>${lenderBio(name)}</p><p class="subtle">Borrow up to <strong>${money(max)}</strong>. Full-term interest is <strong>${Math.round(interest*100)}%</strong> by day <strong>${s.day+days}</strong>. Pay early to reduce the interest charged.</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${max}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
+  setTimeout(()=>{const btn=$('confirmLoan'); if(!btn)return; btn.onclick=()=>{sound('negative'); haptic('error'); let raw=+$('loanAmount').value||0; if(!raw){errorMsg('ENTER AN AMOUNT');return;} if(raw>max){modal('Loan Declined',`<p><strong>${name} declines.</strong></p><p>You asked for ${money(raw)}, but ${name} will only lend up to ${money(max)}.</p><button type="button" id="backToLender">Try a lower amount</button>`); setTimeout(()=>{const b=$('backToLender'); if(b)b.onclick=()=>chooseLoan(i);},0); return;} let amt=Math.max(1,Math.floor(raw)); ensureStats(); s.stats.loansTaken++; const loan={id:`loan_${Date.now()}_${Math.floor(Math.random()*100000)}`,name,principal:amt,interestRate:interest,startDay:s.day,due:s.day+days,termDays:days}; s.cash+=amt; s.loans.push(loan); s.debt=activeDebtTotal(); const fullRepay=loanFullRepay(loan); s.notice=`Borrowed ${money(amt)} from ${name}. Full-term repayment is ${money(fullRepay)} by day ${s.day+days}; early settlement is cheaper.`; $('modal').close(); save(); draw(); toast(`LOAN ACCEPTED: ${money(amt)}`,'bad');};},0);
+}
+function bank(){
+  ensureStats();
+  let openLoans=s.loans.length?s.loans.map((l,idx)=>{let days=l.due-s.day, urgent=days<=5, payoff=loanPayoff(l), fullRepay=loanFullRepay(l); return `<div class="loan-row ${urgent?'urgent-loan':''}"><div><span>${l.name}</span><strong>${money(payoff)}</strong><em>${days>0?'due in '+days+' day'+(days===1?'':'s'):'DUE NOW'} · full term ${money(fullRepay)}</em></div><button type="button" data-payloan="${idx}">Pay</button></div>`}).join(''):'<p class="subtle">No active loans.</p>';
+  modal('Finances',`<p class="subtle">Bank balance only changes when you deposit or withdraw. Reputation 51+ improves lender limits. Loan settlement reduces when paid early and reaches full interest at term.</p><input id="amount" inputmode="numeric" type="number" placeholder="Amount"><div class="bank-grid"><button type="button" id="deposit">Deposit</button><button type="button" id="withdraw">Withdraw</button><button type="button" class="full" id="payDebt">Pay General Debt</button></div><h4>Loans</h4>${openLoans}<div class="loan-list compact">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>Borrow up to ${money(adjustedLenderMax(l))} · ${Math.round(l[3]*100)}% full-term interest · due in ${l[2]} days</button>`).join('')}</div>`);
+  setTimeout(()=>{let amt=()=>+$('amount').value||0; $('deposit').onclick=()=>{let a=Math.min(amt(),s.cash); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.cash-=a;s.bank+=a;success('Deposit complete');done()}; $('withdraw').onclick=()=>{let a=Math.min(amt(),s.bank); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.bank-=a;s.cash+=a;success('Withdrawal complete');done()}; $('payDebt').onclick=()=>{let a=Math.min(amt(),s.cash,activeDebtTotal()); if(a<=0){errorMsg('NO DEBT PAYMENT MADE');return;} payDebtAmount(a);}; document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); document.querySelectorAll('[data-payloan]').forEach(b=>b.onclick=()=>paySpecificLoan(b.dataset.payloan));},0);
+}
+function payDebtAmount(amount){
+  normaliseLoans(); let remaining=Math.min(s.cash,Math.max(0,Math.floor(amount)));
+  if(remaining<=0){errorMsg('NO DEBT PAYMENT MADE');return;}
+  s.cash-=remaining;
+  for(let i=0;i<s.loans.length && remaining>0;i++){
+    let payoff=loanPayoff(s.loans[i]);
+    if(remaining>=payoff){remaining-=payoff; s.loans.splice(i,1); i--; continue;}
+    s.loans[i].principal=Math.max(0,Math.round((+s.loans[i].principal||0)-remaining));
+    s.loans[i].startDay=s.day;
+    if(s.loans[i].principal<=0)s.loans.splice(i,1);
+    remaining=0;
+  }
+  s.debt=activeDebtTotal(); save(); draw(); success('Debt payment made'); done();
+}
+function paySpecificLoan(idx){
+  idx=+idx; normaliseLoans(); let loan=s.loans[idx]; if(!loan)return; let amount=loanPayoff(loan);
+  if(s.cash<amount){s.notice=`You need ${money(amount)} cash to clear ${loan.name}.`; save(); draw(); errorMsg('INSUFFICIENT FUNDS'); return;}
+  s.cash-=amount; s.loans.splice(idx,1); s.debt=activeDebtTotal(); rep(5); s.notice=`Paid ${loan.name}. Loan cleared for ${money(amount)}.`; success('DEBT CLEARED'); save(); draw(); done();
+}
+function payDueLoan(loan){
+  normaliseLoans(); let idx=s.loans.indexOf(loan); if(idx<0)idx=s.loans.findIndex(l=>l.id&&loan.id&&l.id===loan.id); if(idx<0)return; let amount=loanPayoff(s.loans[idx]);
+  if(s.cash<amount){s.notice=`You need ${money(amount)} cash to pay ${s.loans[idx].name}.`; save(); draw(); handleDueLoans(); return;}
+  s.cash-=amount; s.notice=`Paid ${s.loans[idx].name}. Loan cleared for ${money(amount)}.`; s.loans.splice(idx,1); s.debt=activeDebtTotal(); rep(5); save(); draw(); $('modal').close(); handleDueLoans();
+}
+function debtReminderHtml(){if(!s.loans.length)return '<p class="subtle">No active loan debt.</p>'; normaliseLoans(); return '<div class="debt-reminder"><strong>DEBT REMINDER</strong>'+s.loans.map(l=>{let days=l.due-s.day; let dueText=days>0?`due in ${days} day${days===1?'':'s'}`:'DUE NOW'; return `<div><span>${l.name}</span><b>${money(loanPayoff(l))}</b><em>${dueText} · full term ${money(loanFullRepay(l))}</em></div>`}).join('')+'</div>'}
+function handleDueLoans(){normaliseLoans(); let due=s.loans.filter(l=>l.due<=s.day); if(!due.length){maybeFight();return;} modal('DEBT DUE',`<p class="subtle">Your lender wants payment today. Pay it now or the balance rises by 25%, your health drops by 15%, and the same debt is chased again tomorrow.</p>${due.map((l,i)=>`<div class="loan-row"><div><span>${l.name}</span><strong>${money(loanPayoff(l))} due now</strong></div><button type="button" data-duepay="${i}">PAY OFF DEBT</button></div>`).join('')}<button type="button" class="sell" id="missDebt">Do not pay</button>`); setTimeout(()=>{document.querySelectorAll('[data-duepay]').forEach(b=>b.onclick=()=>payDueLoan(due[+b.dataset.duepay])); $('missDebt').onclick=missDueLoans;},0)}
+function missDueLoans(){
+  normaliseLoans(); let due=s.loans.filter(l=>l.due<=s.day), added=0;
+  due.forEach(l=>{let payoff=loanPayoff(l), penalty=Math.round(payoff*0.25); l.principal=payoff+penalty; l.interestRate=0.25; l.startDay=s.day; l.termDays=1; l.due=s.day+1; added+=penalty;});
+  s.debt=activeDebtTotal(); s.health=Math.max(1,s.health-15); s.heat=Math.min(100,s.heat+10); rep(-10); if(netWorth()<-(s.debt*.5))rep(-25); s.notice=`Debt unpaid. You are roughed up, health drops 15%, reputation falls, and the debt increases by ${money(added)}.`; save(); draw(); $('modal').close(); maybeFight();
+}
+function nextDay(base,showRumour){
+  ensureStats(); let old={rumour:s.rumour,true:!!(s.rumour&&s.rumour.accurate)}; s.day++; s.debt=activeDebtTotal(); s.heat=Math.min(100,Math.max(0,s.heat+rand(-8,13))); rep(1); genPrices(old); newRumour(); randomEvent(base); updateRankProgress(); s.debt=activeDebtTotal(); if(s.day>s.maxDay)return endGame(); save(); draw(); let rumourBlock=showRumour?`<h4>Rumour Result</h4><p><strong>${old.true?'TRUE':'FALSE'}</strong> · ${old.rumour?.text||'No rumour was active.'}</p>`:''; const title=showRumour?'Stay Here':'Travel Result', body=`<p>${s.notice}</p>${rumourBlock}<h4>Loan Status</h4>${debtReminderHtml()}`; const arrest=maybeArrest(showRumour?'stay':'travel'); if(arrest)return showArrestModal(arrest,title,body,rumourBlock); modal(title,`${body}<button type="button" id="continueEvent">Continue</button>`); setTimeout(()=>$('continueEvent').onclick=()=>{$('modal').close();handleDueLoans();},0);
+}
+function v16SelfTest(){console.log('NOIR MARKET V1.7 checks: proportional loan interest, early settlement discount, full-term interest, missed-payment penalty and V1.4 save migration active.');}
+setTimeout(v16SelfTest,140);
+
+
+/* Noir Market V1.7 shipping and travel override */
+function ensureShipping(){
+  if(!Array.isArray(s.shipments))s.shipments=[];
+  s.stats=s.stats||{};
+  if(typeof s.stats.shipmentsExported!=='number')s.stats.shipmentsExported=0;
+  if(typeof s.stats.shipmentsImported!=='number')s.stats.shipmentsImported=0;
+}
+function shipmentItemCount(items){return Object.values(items||{}).reduce((a,b)=>a+(+b||0),0);}
+function shipmentItemsText(items){return Object.entries(items||{}).filter(([,q])=>q>0).map(([k,q])=>`${q} ${k}`).join(', ')||'nothing';}
+function shippingValue(name,qty){return Math.max(0,Math.round((s.prices?.[name]||0)*(+qty||0)));}
+function shippingCostFor(value){return Math.ceil((+value||0)*0.05)+200;}
+function showTravelFlights(){
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<div class="travel-head"><p class="subtle">Select a UK or Ireland city. Prices change daily and airport security is not your mate.</p><button type="button" id="stayFromTravel">STAY HERE</button></div><div class="travel-list">${places.map((p,i)=>`<button type="button" data-city="${i}" ${i===s.city?'disabled':''}><strong>${p[0]} <em>${money(travelFare(i))}</em></strong><span>${p[1]} · ${p[3]}</span></button>`).join('')}</div>`;
+  let st=$('stayFromTravel'); if(st)st.onclick=()=>{sound('positive');haptic(); ensureStats(); s.stats.stays++; $('modal').close(); nextDay(`You stay in ${places[s.city][0]}.`,true)};
+  document.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{let i=+b.dataset.city, fare=travelFare(i); if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;} airportWarning(i,fare);});
+}
+function showShippingHub(){
+  ensureShipping();
+  const city=places[s.city][0];
+  const incoming=s.shipments.filter(x=>x.to===city).length;
+  const outbound=s.shipments.filter(x=>x.from===city).length;
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<div class="shipping-card"><p class="subtle">Shipping moves stock between cities without carrying it through airport security. Export it first, fly over, then import it into that city’s vault storage.</p><div class="shipping-summary"><p><span>Current city</span><strong>${city}</strong></p><p><span>Incoming</span><strong>${incoming}</strong></p><p><span>Sent from here</span><strong>${outbound}</strong></p></div><div class="travel-tabs secondary"><button type="button" id="exportStockBtn">EXPORT</button><button type="button" id="importStockBtn">IMPORT</button></div><p class="subtle">Cost: 5% of shipment value plus £200 admin. The £200 covers a bloke called Kev, a van with one working brake light, and no paperwork.</p></div>`;
+  $('exportStockBtn').onclick=showShippingExport;
+  $('importStockBtn').onclick=showShippingImport;
+}
+function showShippingExport(){
+  ensureShipping(); setActiveCityMarket();
+  const from=places[s.city][0];
+  const carried=Object.entries(s.inv).filter(([,q])=>q>0);
+  const destOptions=places.map((p,i)=>`<option value="${i}" ${i===s.city?'disabled':''}>${p[0]}${i===s.city?' (current city)':''}</option>`).join('');
+  const rows=carried.map(([name,q],i)=>{let value=shippingValue(name,q), cost=shippingCostFor(value); return `<div class="shipping-row"><div><strong>${name}</strong><span>Carried: ${q} · max shipment cost ${money(cost)}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="shipqty-${i}"><button type="button" data-exportdrug="${i}">EXPORT</button></div>`;}).join('');
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<button type="button" class="back-mini" id="backShipHub">BACK TO SHIPPING</button><div class="modal-money"><span>Exporting from</span><strong>${from}</strong><em>Cash ${money(s.cash)}</em></div><label class="shipping-label">Destination</label><select id="shippingDestination">${destOptions}</select><p class="subtle">Export removes stock from your carried inventory. It will wait in the destination city until you import it.</p>${carried.length?`<div class="shipping-list">${rows}</div>`:'<p class="subtle">No carried drugs available to ship.</p>'}`;
+  $('backShipHub').onclick=showShippingHub;
+  document.querySelectorAll('[data-exportdrug]').forEach(btn=>btn.onclick=()=>{
+    const idx=+btn.dataset.exportdrug;
+    const [name,maxQty]=carried[idx]||[];
+    const toIdx=+$('shippingDestination').value;
+    const to=places[toIdx]?.[0];
+    const qty=Math.floor(+$('shipqty-'+idx).value||0);
+    if(!name||!to){errorMsg('SELECT DESTINATION');return;}
+    if(toIdx===s.city){errorMsg('SELECT ANOTHER CITY');return;}
+    if(qty<1){errorMsg('ENTER QUANTITY');return;}
+    if(qty>(s.inv[name]||0)){errorMsg('NOT ENOUGH STOCK');return;}
+    const value=shippingValue(name,qty), cost=shippingCostFor(value);
+    if(s.cash<cost){errorMsg('INSUFFICIENT FUNDS');return;}
+    s.cash-=cost; s.inv[name]-=qty;
+    s.shipments.push({id:`ship_${Date.now()}_${Math.floor(Math.random()*100000)}`,from,to,items:{[name]:qty},value,cost,day:s.day});
+    ensureStats(); s.stats.shipmentsExported++;
+    s.notice=`Exported ${qty} ${name} from ${from} to ${to}. Shipping cost ${money(cost)}.`;
+    save(); draw(); success('SHIPMENT EXPORTED'); showShippingExport();
+  });
+}
+function showShippingImport(){
+  ensureShipping(); ensureVaults(); ensureVaultLevels();
+  const city=places[s.city][0], incoming=s.shipments.filter(x=>x.to===city);
+  const rows=incoming.map((sh,i)=>`<div class="shipment-row"><div><strong>${shipmentItemsText(sh.items)}</strong><span>From ${sh.from} · sent day ${sh.day} · value ${money(sh.value||0)}</span></div><button type="button" data-importship="${i}">IMPORT</button></div>`).join('');
+  const cap=vaultCapacity(city), free=Math.max(0,cap-vaultUsed(city));
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<button type="button" class="back-mini" id="backShipHub">BACK TO SHIPPING</button><div class="modal-money"><span>${city} vault space</span><strong>${free}</strong><em>${vaultUsed(city)}/${cap}</em></div><p class="subtle">Import adds the shipment into this city’s vault storage. Upgrade the vault if there is not enough space.</p>${incoming.length?`<div class="shipping-list">${rows}</div>`:'<p class="subtle">No shipments are waiting in this city.</p>'}`;
+  $('backShipHub').onclick=showShippingHub;
+  document.querySelectorAll('[data-importship]').forEach(btn=>btn.onclick=()=>{
+    const localIdx=+btn.dataset.importship;
+    const sh=incoming[localIdx]; if(!sh)return;
+    const needed=shipmentItemCount(sh.items), freeSpace=vaultCapacity(city)-vaultUsed(city);
+    if(needed>freeSpace){errorMsg('VAULT FULL');return;}
+    Object.entries(sh.items||{}).forEach(([name,qty])=>{s.vaults[city][name]=(s.vaults[city][name]||0)+(+qty||0);});
+    const globalIdx=s.shipments.findIndex(x=>x.id===sh.id);
+    if(globalIdx>=0)s.shipments.splice(globalIdx,1);
+    ensureStats(); s.stats.shipmentsImported++;
+    s.notice=`Imported shipment into the ${city} vault: ${shipmentItemsText(sh.items)}.`;
+    save(); draw(); success('SHIPMENT IMPORTED'); showShippingImport();
+  });
+}
+function travel(){
+  ensureStats(); ensureShipping();
+  modal('Travel',`<div class="travel-tabs primary"><button type="button" id="travelModeBtn" class="active">TRAVEL</button><button type="button" id="shippingModeBtn">SHIPPING</button></div><div id="travelPanel"></div>`);
+  setTimeout(()=>{
+    const travelBtn=$('travelModeBtn'), shipBtn=$('shippingModeBtn');
+    function activate(which){travelBtn.classList.toggle('active',which==='travel'); shipBtn.classList.toggle('active',which==='shipping'); if(which==='travel')showTravelFlights(); else showShippingHub();}
+    travelBtn.onclick=()=>activate('travel'); shipBtn.onclick=()=>activate('shipping'); activate('travel');
+  },0);
+}
+function baseState(){return{version:'1.7',reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function ensureStats(){
+  s.stats=s.stats||{};
+  const defaults={tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:0,arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0};
+  Object.entries(defaults).forEach(([k,v])=>{if(typeof s.stats[k] !== 'number')s.stats[k]=v;});
+  s.travelFares=s.travelFares||{};
+  s.reputation=clamp(s.reputation??50,0,100);
+  ensureVaults(); ensureVaultLevels(); ensureEconomy(); ensureRankState(); normaliseLoans(); ensureShipping();
+}
+function save(){ensureStats(); s.version='1.7'; localStorage.setItem('noir_market_v1_7',JSON.stringify(s));}
+function load(){let x=localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x); ensureStats(); s.version='1.7'; setActiveCityMarket(); updateRankProgress(); save(); draw(); return false;} newGame(false); return true;}
+function v17SelfTest(){console.log('NOIR MARKET V1.7 checks: travel/shipping mode, export/import shipments, 5 percent plus 200 shipping cost, city vault import and V1.6 save migration active.');}
+setTimeout(v17SelfTest,160);
