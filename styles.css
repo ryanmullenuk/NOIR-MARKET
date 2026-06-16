@@ -132,3 +132,35 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .splash h1{text-shadow:0 0 28px rgba(255,255,255,.12)}
 @media(min-width:700px){#dust1,#dust2,#dust3{left:calc(50% - 215px)}}
 @media(prefers-reduced-motion:reduce){#dust1,#dust2,#dust3{animation:none}}
+
+/* v15 visible splash dust and welcome flow */
+.splash{background:radial-gradient(circle at 50% 42%,rgba(32,32,32,.86),rgba(0,0,0,.96) 68%,#000 100%)!important;overflow:hidden;}
+.live-dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+.live-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 10px rgba(255,255,255,.42);filter:blur(.25px);animation:liveDustRise linear infinite;}
+@keyframes liveDustRise{0%{transform:translate3d(0,0,0) scale(.75);opacity:0}12%{opacity:.75}70%{opacity:.55}100%{transform:translate3d(var(--drift),-118vh,0) scale(1.25);opacity:0}}
+.splash .dust-bg{z-index:1!important;opacity:.95!important;}
+.splash .splash-vignette{z-index:3!important;}
+.splash .baggie,.splash h1,.splash p{z-index:4!important;}
+#visitLoansBtn,#startCleanBtn{width:100%;margin-top:10px;}
+
+
+/* v16: stronger visible dust on splash and main game */
+.splash{
+  background: radial-gradient(circle at 50% 42%, rgba(18,18,18,.98), rgba(2,2,2,.995) 62%, #000 100%) !important;
+  overflow:hidden !important;
+}
+.splash .dust-bg{opacity:1!important;z-index:1!important;filter:contrast(1.25) brightness(1.35)}
+.live-dust{z-index:2!important;opacity:1!important;mix-blend-mode:screen;}
+.live-dust i{
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 0 12px rgba(255,255,255,.85), 0 0 2px rgba(255,255,255,1)!important;
+  filter:blur(.08px)!important;
+}
+.splash .splash-vignette{z-index:3!important;background:radial-gradient(circle at center,rgba(0,0,0,.04) 0 38%,rgba(0,0,0,.22) 68%,rgba(0,0,0,.78) 100%)!important;}
+.splash .baggie,.splash h1,.splash p{z-index:4!important;}
+.game-dust{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;mix-blend-mode:screen;opacity:.78;}
+.game-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.68);box-shadow:0 0 8px rgba(255,255,255,.32);filter:blur(.25px);animation:liveDustRise linear infinite;}
+.app{position:relative;z-index:3;}
+#particles{z-index:0!important;opacity:.42!important;}
+.modal{z-index:10;}
+@keyframes liveDustRise{0%{transform:translate3d(0,20vh,0);opacity:0}8%{opacity:var(--dust-opacity,1)}80%{opacity:var(--dust-opacity,1)}100%{transform:translate3d(var(--drift,0),-120vh,0);opacity:0}}
