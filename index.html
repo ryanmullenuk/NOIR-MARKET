@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Noir Market v22</title>
+  <title>Noir Market v1.3</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,6 +17,7 @@
     <p>Tap to enter.</p>
   </div>
   <main class="app">
+    <section class="news-ticker card"><span>NEWS</span><marquee id="newsTicker" behavior="scroll" direction="left">Markets are quiet.</marquee></section>
     <header class="topbar">
       <button class="icon-btn" id="menuBtn" aria-label="Menu">☰</button>
       <div>
@@ -28,7 +29,7 @@
 
     <section class="stats cards">
       <div><span>Cash</span><strong id="cash">£0</strong></div>
-      <div><span>Bank</span><strong id="bank">£0</strong></div>
+      <div><span>Finances</span><strong id="bank">£0</strong></div>
       <div><span>Debt</span><strong class="bad" id="debt">£0</strong></div>
       <div><span>Health</span><strong id="health">100%</strong></div>
     </section>
@@ -68,9 +69,10 @@
         <button class="buy" id="buyBtn">Buy</button>
         <button class="sell" id="sellBtn">Sell</button>
         <button id="dumpBtn">Storage</button>
-        <button id="bankBtn">Bank</button>
+        <button id="bankBtn">Finances</button>
         <button id="travelBtn">Travel</button>
-        <button id="shopBtn">Shop</button>
+        <button id="shopBtn">Black Market</button>
+        <button id="hustleBtn">Hustle</button>
         <button id="stayBtn">Stay Here</button>
       </div>
     </section>
@@ -81,6 +83,8 @@
       <div class="status-grid">
         <p><span>Location</span><strong id="statusLocation"></strong></p>
         <p><span>Rank</span><strong id="rank"></strong></p>
+        <p><span>Days Held</span><strong id="rankDays">0/5</strong></p>
+        <p><span>Reputation</span><strong id="reputation">50/100</strong></p>
         <p><span>Storage</span><strong id="space"></strong></p>
         <p><span>Heat</span><strong id="heat"></strong></p>
       </div>
@@ -97,7 +101,6 @@
     </form>
   </dialog>
 
-  <audio id="bgMusic" loop preload="auto" playsinline><source src="assets/music/Music.mp3" type="audio/mpeg"></audio>
   <script src="game.js"></script>
 </body>
 </html>

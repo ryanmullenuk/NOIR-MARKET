@@ -8,11 +8,11 @@
 @media (min-width:760px){.app{grid-template-columns:1.45fr .95fr}.topbar,.stats,.location,.notice{grid-column:1/-1}.market,.status{grid-column:1}.pocket,.actions{grid-column:2}.pocket{grid-row:5}.actions{grid-row:6}}
 @media (max-width:560px){.app{padding-left:10px;padding-right:10px}.topbar h1{font-size:24px}.cards{grid-template-columns:repeat(2,1fr)}.cards div:nth-child(2){border-right:0}.cards div:nth-child(-n+2){border-bottom:1px solid var(--line)}.location{grid-template-columns:58px 1fr}.market-info{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);padding:12px 0 0}.row{grid-template-columns:1.45fr .55fr .9fr .35fr;padding:10px;font-size:14px}.trend{font-size:22px}.button-grid{grid-template-columns:1fr}.status-grid{grid-template-columns:1fr}.place h2{font-size:26px}}
 
-/* Noir Market v4 refinements */
+/* Noir Market v1.3 refinements  */
 body{background:#020202;overflow-x:hidden}.app{position:relative;z-index:2}.topbar h1{font-size:28px;letter-spacing:4px}.card,.cards,.modal-card{border-radius:18px;border-color:rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(24,24,24,.84),rgba(8,8,8,.84));backdrop-filter:blur(14px);box-shadow:0 18px 48px rgba(0,0,0,.38)}.cards{border-radius:16px}.row{border-bottom-color:rgba(255,255,255,.055)}button{border-radius:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:none;color:#e8e8e8}button.buy{border-color:rgba(67,215,54,.65);background:linear-gradient(180deg,rgba(67,215,54,.16),rgba(67,215,54,.045));color:var(--green)}button.sell{border-color:rgba(255,81,72,.65);background:linear-gradient(180deg,rgba(255,81,72,.15),rgba(255,81,72,.04));color:var(--red)}.modal-card input,.modal-card select{border-radius:12px;border-color:rgba(255,255,255,.14);background:#080808}.price.down{color:var(--red)}.muted{color:var(--muted);font-size:13px;line-height:1.4}.modal-card h4{margin:14px 0 8px;color:#ddd;text-transform:uppercase;letter-spacing:1px}#particles{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 35%,rgba(80,80,80,.18),transparent 32%),radial-gradient(circle at top,rgba(255,255,255,.06),transparent 45%)}.splash{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(25,25,25,.96),rgba(0,0,0,.98));transition:opacity .45s ease,visibility .45s ease}.splash.hide{opacity:0;visibility:hidden}.splash h1{margin:22px 0 6px;font-size:34px;letter-spacing:5px}.splash p{margin:0;color:var(--muted);text-transform:uppercase;font-size:12px;letter-spacing:2px}.baggie{width:150px;height:190px;border:2px solid rgba(255,255,255,.38);border-radius:14px 14px 22px 22px;position:relative;background:linear-gradient(140deg,rgba(255,255,255,.18),rgba(255,255,255,.035));box-shadow:inset 10px 0 28px rgba(255,255,255,.06),0 24px 70px rgba(0,0,0,.65);overflow:hidden}.baggie:before{content:"";position:absolute;inset:15px;border:1px solid rgba(255,255,255,.20);border-radius:10px 10px 18px 18px}.zip{position:absolute;left:0;right:0;top:36px;height:6px;border-top:2px solid rgba(255,255,255,.42);border-bottom:2px solid rgba(255,255,255,.25)}.powder{position:absolute;left:24px;right:24px;bottom:24px;height:55px;background:radial-gradient(circle at 35% 15%,#fff,#e7e7e7 35%,#bfbfbf 70%);clip-path:polygon(0 100%,8% 45%,25% 32%,42% 12%,59% 38%,76% 24%,100% 68%,100% 100%);filter:blur(.2px)}.bag-label{position:absolute;left:16px;right:16px;top:66px;border:1px solid rgba(255,255,255,.32);border-radius:9px;padding:10px 4px;text-align:center;font-weight:900;letter-spacing:2px;font-size:12px;background:rgba(0,0,0,.28)}@media(max-width:560px){.card,.cards{border-radius:16px}.topbar h1{font-size:22px}.splash h1{font-size:28px}.baggie{width:130px;height:166px}}
 
 
-/* Noir Market v5 splash and powder motion */
+/* Noir Market v1.3 splash and powder motion  */
 .splash{z-index:20}
 .baggie{transform:rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg));transition:transform .12s linear}
 .powder{left:20px;right:20px;bottom:20px;height:62px;background:radial-gradient(circle at 28% 28%,rgba(255,255,255,.98) 0 5px,transparent 6px),radial-gradient(circle at 58% 42%,rgba(255,255,255,.95) 0 4px,transparent 5px),radial-gradient(circle at 73% 63%,rgba(235,235,235,.95) 0 3px,transparent 4px),linear-gradient(180deg,#fff 0%,#ededed 45%,#cfcfcf 100%);clip-path:polygon(0 100%,0 62%,7% 54%,18% 48%,31% 37%,45% 28%,59% 36%,71% 42%,84% 50%,100% 64%,100% 100%);box-shadow:inset 0 -7px 13px rgba(0,0,0,.18),0 -1px 8px rgba(255,255,255,.45);transform:translateX(var(--powder-x,0px)) translateY(var(--powder-y,0px)) rotate(var(--powder-r,0deg));transition:transform .12s linear}
@@ -20,7 +20,7 @@ body{background:#020202;overflow-x:hidden}.app{position:relative;z-index:2}.topb
 .bag-label{font-size:16px;letter-spacing:4px}
 
 
-/* Noir Market v6 layout and modal refinements */
+/* Noir Market v1.3 layout and modal refinements  */
 #particle-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:auto;background:radial-gradient(circle at 50% 35%,rgba(70,70,70,.16),transparent 34%),#030303;overflow:hidden}
 #particle-canvas canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 dialog{background:transparent;border:0;padding:0;box-shadow:none;color:var(--text)}
@@ -43,7 +43,7 @@ dialog::backdrop{background:rgba(0,0,0,.68);backdrop-filter:blur(10px)}
 .health-decision>div:first-child{display:flex;justify-content:space-between;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:rgba(255,255,255,.78);margin-bottom:9px}.health-track{height:10px;border-radius:99px;background:rgba(255,255,255,.10);overflow:hidden}.health-track i{display:block;height:100%;background:linear-gradient(90deg,#34c759,#b6ff5c);border-radius:99px}.debt-action{border-top:1px solid rgba(255,255,255,.10);margin-top:22px;padding-top:16px}.debt-action button{width:100%;margin:0}
 .loan-row button,[id^="continueEvent"],#nextFightRound{margin-top:14px}
 
-/* Noir Market v10 native-feel modal and shop layout */
+/* Noir Market v1.3 native-feel modal and shop layout  */
 html,body{width:100%;min-height:100%;overscroll-behavior:none;-webkit-text-size-adjust:100%;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 input,select,textarea{font-size:16px}
 button,input,select{-webkit-tap-highlight-color:transparent}
@@ -55,7 +55,7 @@ dialog{max-width:100vw;max-height:100dvh;overflow:hidden}
 .shop-list{display:grid;gap:8px;margin:8px 0 14px}.shop-item{display:block;width:100%;text-align:left;text-transform:none;letter-spacing:0;min-height:0;padding:10px 12px;border-radius:14px}.shop-item[disabled]{opacity:.45}.shop-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.shop-top strong{font-size:15px;letter-spacing:.2px;text-transform:none}.shop-price{font-size:14px;font-weight:900;color:var(--green);white-space:nowrap}.shop-desc{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.3}.heat-pill{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(255,81,72,.35);color:var(--red);border-radius:999px;padding:3px 7px;font-size:11px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;background:rgba(255,81,72,.06)}.heat-pill.low{border-color:rgba(67,215,54,.35);color:var(--green);background:rgba(67,215,54,.05)}.heat-pill.mid{border-color:rgba(216,184,91,.35);color:var(--amber);background:rgba(216,184,91,.06)}
 @media(max-width:560px){.modal-card{width:92vw;max-height:82dvh;padding:16px}.modal-card button{min-height:40px;font-size:12px}.bank-grid{grid-template-columns:1fr 1fr}.shop-top strong{font-size:14px}.shop-desc{font-size:11.5px}.choice-row{gap:10px}.choice-row button{min-width:104px;padding:14px 12px}.weapon-choice{display:grid;grid-template-columns:1fr;gap:8px}}
 
-/* v12 native trade sheets */
+/* Noir Market v1.3 native trade sheets  */
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-120%);z-index:9999;min-width:min(340px,88vw);padding:13px 16px;border-radius:16px;text-align:center;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;box-shadow:0 18px 60px rgba(0,0,0,.65);transition:transform .22s ease,opacity .22s ease;opacity:0;pointer-events:none}.toast.show{transform:translate(-50%,0);opacity:1}.toast.ok{background:rgba(34,150,61,.94);color:#fff;border:1px solid rgba(130,255,160,.55)}.toast.bad{background:rgba(190,30,35,.96);color:#fff;border:1px solid rgba(255,130,130,.6)}
 .modal-money{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr auto;gap:3px 12px;align-items:end;margin:-4px 0 12px;padding:10px 12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(5,5,5,.88);backdrop-filter:blur(18px)}.modal-money span,.modal-money em{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-style:normal}.modal-money strong{font-size:22px;color:var(--green)}
 .trade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-bottom:72px}.trade-tile{min-width:0;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018))}.trade-title{display:flex;gap:6px;align-items:center;min-height:24px}.trade-title b{font-size:15px}.trade-title strong{font-size:13px;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.trade-tile p{margin:5px 0;color:#d8d8d8;font-size:11.5px;line-height:1.25}.trade-tile p strong,.tile-value b{color:var(--green)}.trade-tile button.buy,.trade-tile button.sell{width:100%;min-height:34px;margin-top:7px;border-radius:12px;font-size:11px;padding:7px}
@@ -64,7 +64,7 @@ dialog{max-width:100vw;max-height:100dvh;overflow:hidden}
 @media(max-width:560px){.modal-card{width:94vw;max-height:84dvh}.trade-grid{gap:7px}.trade-tile{padding:8px;border-radius:14px}.trade-title strong{font-size:12px}.trade-tile p{font-size:10.8px}.qty-control{grid-template-columns:28px 1fr 28px}.qty-control button,.qty-control input{min-height:30px;height:30px}.trade-tile button.buy,.trade-tile button.sell{min-height:32px;font-size:10.5px}.modal-money strong{font-size:19px}}
 
 
-/* Noir Market v13 menu, fixed close buttons and trading refinements */
+/* Noir Market v1.3 menu, fixed close buttons and trading refinements  */
 .icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;font-size:25px;line-height:1}
 .modal-card{padding:0!important;display:flex;flex-direction:column;overflow:hidden!important}
 .modal-header{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:16px 16px 10px;background:rgba(8,8,8,.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.09)}
@@ -81,7 +81,7 @@ dialog{max-width:100vw;max-height:100dvh;overflow:hidden}
 @media(max-width:560px){.modal-card{max-height:86dvh!important}.modal-header{padding:13px 14px 9px}.modal-header h3{font-size:18px!important}#modalBody{padding:12px 14px 0}.modal-card menu{padding-left:14px!important;padding-right:14px!important}.trade-grid{padding-bottom:58px}.trade-tile [data-buymax]{min-height:29px;font-size:10px}.loan-row{gap:12px!important}.icon-btn{width:40px;height:40px;font-size:23px}}
 
 
-/* v13 requested refinements */
+/* Noir Market v1.3 requested refinements  */
 .icon-btn#menuBtn{font-size:20px;line-height:1;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;padding:0;}
 .location{grid-template-columns:1fr 1.6fr;align-items:flex-start;text-align:left;}
 .location .flag{display:none!important;}
@@ -107,7 +107,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 @media (max-width:560px){.location{grid-template-columns:1fr}.market-info{grid-column:1;border-top:1px solid var(--line);}.place h2{font-size:25px}.modal-card{width:94vw;max-height:88vh}.modal-head{padding:12px 14px}#modalBody{padding:14px}}
 
 
-/* v14 splash Dust Particle Effect Background Animation */
+/* Noir Market v1.3 splash Dust Particle Effect Background Animation  */
 #particle-canvas{z-index:0}
 .splash{
   position:fixed;
@@ -133,7 +133,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 @media(min-width:700px){#dust1,#dust2,#dust3{left:calc(50% - 215px)}}
 @media(prefers-reduced-motion:reduce){#dust1,#dust2,#dust3{animation:none}}
 
-/* v15 visible splash dust and welcome flow */
+/* Noir Market v1.3 visible splash dust and welcome flow  */
 .splash{background:radial-gradient(circle at 50% 42%,rgba(32,32,32,.86),rgba(0,0,0,.96) 68%,#000 100%)!important;overflow:hidden;}
 .live-dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
 .live-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 10px rgba(255,255,255,.42);filter:blur(.25px);animation:liveDustRise linear infinite;}
@@ -144,7 +144,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 #visitLoansBtn,#startCleanBtn{width:100%;margin-top:10px;}
 
 
-/* v16: stronger visible dust on splash and main game */
+/* Noir Market v1.3: stronger visible dust on splash and main game  */
 .splash{
   background: radial-gradient(circle at 50% 42%, rgba(18,18,18,.98), rgba(2,2,2,.995) 62%, #000 100%) !important;
   overflow:hidden !important;
@@ -166,7 +166,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 @keyframes liveDustRise{0%{transform:translate3d(0,20vh,0);opacity:0}8%{opacity:var(--dust-opacity,1)}80%{opacity:var(--dust-opacity,1)}100%{transform:translate3d(var(--drift,0),-120vh,0);opacity:0}}
 
 
-/* v17 splash-only dust and logo */
+/* Noir Market v1.3 splash-only dust and logo  */
 #particle-canvas,.game-dust{display:none!important;}
 .splash{background:#000!important; opacity:1!important; overflow:hidden;}
 .splash::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),transparent 34%),#000;z-index:0;}
@@ -177,13 +177,13 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 @keyframes dustRise{0%{transform:translate3d(0,10vh,0) scale(.7);opacity:0;}8%{opacity:.95;}70%{opacity:.75;}100%{transform:translate3d(var(--drift),-118vh,0) scale(1.25);opacity:0;}}
 .howto p{line-height:1.45;margin:10px 0}.disclaimer{color:#858585!important;font-size:12px;margin-top:18px!important}.play-wide{width:100%;margin-top:10px}.loan-choice{display:grid;gap:10px;margin-top:14px}.loan-choice button{width:100%;}
 
-/* v18 splash logo and slower dust */
+/* Noir Market v1.3 splash logo and slower dust  */
 .splash-logo{width:min(82vw,460px)!important;max-height:58vh;object-fit:contain;}
 .splash .live-dust i{animation-duration:30s!important;}
 .game-dust{display:none!important;}
 
 
-/* v19: uploaded transparent splash logo and slower dust */
+/* Noir Market v1.3: uploaded transparent splash logo and slower dust  */
 .splash-logo{width:min(72vw,360px)!important;max-height:58vh!important;object-fit:contain!important;filter:drop-shadow(0 22px 42px rgba(0,0,0,.72)) drop-shadow(0 0 18px rgba(255,255,255,.08));}
 .splash .live-dust i{animation-duration:60s!important;opacity:.68!important;}
 .splash .dust-bg{opacity:.75!important;}
@@ -192,7 +192,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 @media(max-width:560px){.splash-logo{width:min(82vw,330px)!important;max-height:56vh!important;}}
 
 
-/* v20 slower, smaller rising dust across game and menu */
+/* Noir Market v1.3 slower, smaller rising dust across game and menu  */
 #particle-canvas{display:none!important;}
 .game-dust{display:block!important;position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;mix-blend-mode:screen;opacity:.42!important;}
 .game-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.48);box-shadow:0 0 5px rgba(255,255,255,.22);filter:blur(.15px);animation:liveDustRise linear infinite;}
@@ -205,7 +205,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .storage-move button{padding:8px 10px;font-size:11px;letter-spacing:1px;}
 .trade-tile button[data-sellalldrug],.trade-tile button[data-sellallweapon]{margin-top:6px;}
 
-/* v21 dust and vault polish */
+/* Noir Market v1.3 dust and vault polish  */
 .game-dust{display:block!important;opacity:.30!important;z-index:1!important;}
 .game-dust i{width:.7px!important;height:.7px!important;max-width:1.2px;max-height:1.2px;background:rgba(255,255,255,.38)!important;box-shadow:0 0 3px rgba(255,255,255,.18)!important;animation-duration:110s!important;}
 .menu-list,.modal{position:relative;z-index:3;}
@@ -216,7 +216,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .danger-mini{border-color:rgba(255,80,70,.55)!important;color:#ff6b5f!important;background:rgba(255,60,50,.09)!important;}
 @media(max-width:520px){.vault-row{grid-template-columns:1fr 52px 1fr 1fr 1fr}.vault-row button{padding:8px 6px;font-size:10px}.vault-row input{width:52px}}
 
-/* v22: uploaded PNG splash logo and clearer dust behind it */
+/* Noir Market v1.3: uploaded PNG splash logo and clearer dust behind it  */
 .splash{background:#000!important;opacity:1!important;overflow:hidden!important;}
 .splash::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 43%,rgba(255,255,255,.10),transparent 33%),#000;z-index:0;}
 .splash-logo{width:min(88vw,430px)!important;max-height:72vh!important;object-fit:contain!important;position:relative!important;z-index:5!important;filter:drop-shadow(0 0 18px rgba(255,255,255,.12)) drop-shadow(0 22px 52px rgba(0,0,0,.85))!important;margin-bottom:18px!important;}
@@ -226,7 +226,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .splash .dust-bg{opacity:.95!important;filter:brightness(1.25) contrast(1.15)!important;}
 @media(max-width:560px){.splash-logo{width:min(92vw,390px)!important;max-height:70vh!important;}}
 
-/* v25: larger slow rising dust on splash, main screen and menu */
+/* Noir Market v1.3: larger slow rising dust on splash, main screen and menu  */
 #particle-canvas{display:none!important;}
 .game-dust{
   display:block!important;
@@ -279,3 +279,12 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
   82%{opacity:var(--dust-opacity,.75);}
   100%{transform:translate3d(var(--drift,0),-125vh,0);opacity:0;}
 }
+
+#stayBtn{background:#d8b85b;color:#111} 
+/* Noir Market v1.3 UI additions */
+.news-ticker{display:flex;align-items:center;gap:10px;padding:9px 12px;border-color:rgba(216,184,91,.22);background:linear-gradient(180deg,rgba(34,28,12,.72),rgba(8,8,8,.86));}
+.news-ticker span{color:var(--amber);font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+.news-ticker marquee{color:#ececec;font-size:13px;letter-spacing:.2px;}
+.status-grid{grid-template-columns:1fr 1fr 1fr;}
+#reputation,#rankDays{color:var(--amber);}
+@media (max-width:560px){.news-ticker{padding:8px 10px}.status-grid{grid-template-columns:1fr 1fr}.news-ticker marquee{font-size:12px}}
