@@ -225,3 +225,57 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .splash .live-dust i{width:1.05px!important;height:1.05px!important;max-width:1.7px!important;max-height:1.7px!important;background:rgba(255,255,255,.76)!important;box-shadow:0 0 6px rgba(255,255,255,.42)!important;filter:blur(.08px)!important;animation-duration:105s!important;}
 .splash .dust-bg{opacity:.95!important;filter:brightness(1.25) contrast(1.15)!important;}
 @media(max-width:560px){.splash-logo{width:min(92vw,390px)!important;max-height:70vh!important;}}
+
+/* v25: larger slow rising dust on splash, main screen and menu */
+#particle-canvas{display:none!important;}
+.game-dust{
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+  mix-blend-mode:screen!important;
+  opacity:.50!important;
+}
+.game-dust i{
+  width:1.05px!important;
+  height:1.05px!important;
+  max-width:1.8px!important;
+  max-height:1.8px!important;
+  background:rgba(255,255,255,.50)!important;
+  box-shadow:0 0 5px rgba(255,255,255,.28)!important;
+  filter:blur(.12px)!important;
+  animation-name:liveDustRise!important;
+  animation-duration:165s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+.splash .live-dust{
+  display:block!important;
+  z-index:2!important;
+  opacity:1!important;
+  mix-blend-mode:screen!important;
+}
+.splash .live-dust i{
+  width:1.58px!important;
+  height:1.58px!important;
+  max-width:2.55px!important;
+  max-height:2.55px!important;
+  background:rgba(255,255,255,.72)!important;
+  box-shadow:0 0 7px rgba(255,255,255,.44)!important;
+  filter:blur(.08px)!important;
+  animation-name:liveDustRise!important;
+  animation-duration:155s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+.splash .dust-bg{opacity:.95!important;filter:brightness(1.15) contrast(1.1)!important;}
+.menu-list,.modal-card,.modal{position:relative;z-index:4!important;}
+.app{position:relative;z-index:3!important;}
+@keyframes liveDustRise{
+  0%{transform:translate3d(0,28vh,0);opacity:0;}
+  12%{opacity:var(--dust-opacity,.75);}
+  82%{opacity:var(--dust-opacity,.75);}
+  100%{transform:translate3d(var(--drift,0),-125vh,0);opacity:0;}
+}
