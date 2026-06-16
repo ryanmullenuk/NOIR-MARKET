@@ -190,3 +190,17 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .game-dust{display:none!important;}
 #particle-canvas{display:none!important;}
 @media(max-width:560px){.splash-logo{width:min(82vw,330px)!important;max-height:56vh!important;}}
+
+
+/* v20 slower, smaller rising dust across game and menu */
+#particle-canvas{display:none!important;}
+.game-dust{display:block!important;position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;mix-blend-mode:screen;opacity:.42!important;}
+.game-dust i{position:absolute;display:block;border-radius:50%;background:rgba(255,255,255,.48);box-shadow:0 0 5px rgba(255,255,255,.22);filter:blur(.15px);animation:liveDustRise linear infinite;}
+.splash .live-dust i{background:rgba(255,255,255,.62)!important;box-shadow:0 0 4px rgba(255,255,255,.30)!important;animation-duration:80s!important;}
+.modal::backdrop{background:rgba(0,0,0,.70)!important;backdrop-filter:blur(10px);}
+.storage-move-list{display:flex;flex-direction:column;gap:8px;margin:8px 0 14px;}
+.storage-move{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.035);}
+.storage-move div{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.storage-move span{font-size:12px;color:var(--muted);}
+.storage-move button{padding:8px 10px;font-size:11px;letter-spacing:1px;}
+.trade-tile button[data-sellalldrug],.trade-tile button[data-sellallweapon]{margin-top:6px;}
