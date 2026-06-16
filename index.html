@@ -97,9 +97,7 @@
     </form>
   </dialog>
 
+  <audio id="bgMusic" loop preload="auto" playsinline><source src="assets/music/Music.mp3" type="audio/mpeg"></audio>
   <script src="game.js"></script>
-
-<audio id="bgMusic" loop preload="auto"><source src="assets/music/Music.mp3" type="audio/mpeg"></audio>
-<script>const bgMusic=document.getElementById("bgMusic");bgMusic.volume=0.25;function startBG(){if(localStorage.getItem("soundEnabled")!=="0"){bgMusic.play().catch(()=>{});}document.removeEventListener("click",startBG);}document.addEventListener("click",startBG);</script>
 </body>
 </html>

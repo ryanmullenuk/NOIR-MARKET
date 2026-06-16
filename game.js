@@ -256,12 +256,30 @@ function setupTilt(){let splash=$('splash');function setTilt(x,y){let px=Math.ma
 
 
 /* v13 requested refinements and music support */
-const MUSIC_PATH='./assets/music/noir_theme.wav';
+const MUSIC_PATH='./assets/music/Music.mp3';
 let bgMusic=null, musicStarted=false, synthMusicTimer=null, synthMusicOn=false;
+function getBgMusic(){
+  if(!bgMusic){
+    bgMusic=document.getElementById('bgMusic') || new Audio(MUSIC_PATH);
+    bgMusic.loop=true;
+    bgMusic.preload='auto';
+    bgMusic.volume=0.25;
+    bgMusic.setAttribute('playsinline','');
+  }
+  return bgMusic;
+}
 function startBackgroundMusic(){
   if(!soundEnabled)return;
   unlockAudio();
   musicStarted=true;
+  const m=getBgMusic();
+  m.volume=0.25;
+  const playPromise=m.play();
+  if(playPromise && typeof playPromise.catch==='function'){
+    playPromise.catch(()=>{
+      // iOS may still block audio until a second direct tap; keep synth fallback running.
+    });
+  }
   startSynthMusic();
 }
 function stopBackgroundMusic(){
@@ -336,7 +354,9 @@ function startSynthMusic(){if(!soundEnabled||synthMusicOn)return; synthMusicOn=t
 function createGameDust(){if(document.querySelector('.game-dust'))return; const layer=document.createElement('div'); layer.className='game-dust'; const count=110; for(let i=0;i<count;i++){const d=document.createElement('i'); const size=(Math.random()*1.55+0.45).toFixed(2); d.style.left=(Math.random()*100).toFixed(2)+'%'; d.style.bottom=(-12-Math.random()*30).toFixed(2)+'%'; d.style.width=size+'px'; d.style.height=size+'px'; d.style.opacity=(Math.random()*0.35+0.10).toFixed(2); d.style.animationDuration=(38+Math.random()*36).toFixed(2)+'s'; d.style.animationDelay=(-Math.random()*44).toFixed(2)+'s'; d.style.setProperty('--drift',(Math.random()*24-12).toFixed(1)+'px'); layer.appendChild(d);} document.body.prepend(layer)}
 function createSplashDust(){const splash=$('splash'); if(!splash || splash.querySelector('.live-dust'))return; const layer=document.createElement('div'); layer.className='live-dust'; const count=260; for(let i=0;i<count;i++){const d=document.createElement('i'); const size=(Math.random()*1.7+0.55).toFixed(2); d.style.left=(Math.random()*100).toFixed(2)+'%'; d.style.bottom=(-8-Math.random()*18).toFixed(2)+'%'; d.style.width=size+'px'; d.style.height=size+'px'; d.style.opacity=(Math.random()*0.55+0.22).toFixed(2); d.style.animationDuration=(58+Math.random()*48).toFixed(2)+'s'; d.style.animationDelay=(-Math.random()*60).toFixed(2)+'s'; d.style.setProperty('--drift',(Math.random()*34-17).toFixed(1)+'px'); layer.appendChild(d);} splash.prepend(layer)}
 
-$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; sound('positive'); $('splash').classList.add('hide'); setTimeout(()=>{showWelcome();},460)}; setupTilt(); createSplashDust(); createGameDust(); firstFreshGame=load();
+$('buyBtn').onclick=()=>transact('Buy'); $('sellBtn').onclick=()=>transact('Sell'); $('stayBtn').onclick=stay; $('travelBtn').onclick=travel; $('bankBtn').onclick=bank; $('dumpBtn').onclick=dump; $('shopBtn').onclick=shop; $('menuBtn').onclick=showMenu; let firstFreshGame=false; $('splash').onclick=()=>{unlockAudio(); startBackgroundMusic(); musicStarted=true; sound('positive'); $('splash').classList.add('hide'); setTimeout(()=>{showWelcome();},460)};
+['pointerdown','touchstart','click'].forEach(evt=>document.addEventListener(evt,()=>{unlockAudio(); if(soundEnabled)startBackgroundMusic();},{once:true,passive:true}));
+setupTilt(); createSplashDust(); createGameDust(); firstFreshGame=load();
 
 // Native app feel: suppress iOS double-tap and pinch zoom when launched from browser/home screen.
 let __lastTouchEnd=0;
