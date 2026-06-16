@@ -564,45 +564,6 @@ function travel(){
   },0);
 }
 
-/* v24 lender bios, stricter loan declines, dangerous event reinforcement and airport seizure warning */
-const lenderBios = {
-  SPAMMER: `Spammer looks friendly, which is normally the first warning. He lends small, smiles wide, and allegedly keeps a little box labelled “late payment fingers”. Every day you are late, he adds interest and starts looking at your hands like a tapas menu.`,
-  TOMMY: `Tommy wears a tracksuit, calls everyone “chief”, and has never once accepted “I forgot” as a payment plan. His loans are bigger, his patience is smaller, and his dog is somehow on the payroll.`,
-  SMUDGER: `Smudger does not shout. That is the problem. He just nods, writes your name down, and lets compound interest do the violence first. After that, he improvises.`,
-  BAZZER: `BazzER lends like a mate and collects like a horror film. Three days sounds generous until you realise Bazzer counts nights, lunch breaks and awkward silences as separate days.`,
-  GRIFF: `Griff is the last door you knock on when every sensible option has already locked itself. He will lend six figures, but his repayment reminders come with tyre irons and poor spelling.`
-};
-function lenderBio(name){return lenderBios[name]||'A charming local finance professional, if your definition of finance includes threats and dental work.';}
-
-function chooseLoan(i){
-  let l=lenders[i], name=l[0], max=l[1], days=l[2], interest=l[3];
-  modal(name,`<p>${lenderBio(name)}</p><p class="subtle">Borrow up to <strong>${money(max)}</strong>. Repay <strong>${Math.round(interest*100)}%</strong> interest by day <strong>${s.day+days}</strong>.</p><input id="loanAmount" inputmode="numeric" type="number" min="1" max="${max}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`);
-  setTimeout(()=>{
-    const btn=$('confirmLoan'); if(!btn)return;
-    btn.onclick=()=>{
-      sound('negative'); haptic('error');
-      let raw=+$('loanAmount').value||0;
-      if(!raw){errorMsg('ENTER AN AMOUNT');return;}
-      if(raw>max){
-        modal('Loan Declined',`<p><strong>${name} declines.</strong></p><p>You asked for ${money(raw)}, but ${name} will only lend up to ${money(max)}.</p><p class="subtle">Even shady lenders have credit controls. Depressing, but true.</p><button type="button" id="backToLender">Try a lower amount</button>`);
-        setTimeout(()=>{const b=$('backToLender'); if(b)b.onclick=()=>chooseLoan(i);},0);
-        return;
-      }
-      let amt=Math.max(1,Math.floor(raw));
-      let repay=Math.round(amt*(1+interest));
-      ensureStats(); s.stats.loansTaken++;
-      s.cash+=amt; s.debt+=repay; s.loans.push({name,due:s.day+days,repay});
-      s.notice=`Borrowed ${money(amt)} from ${name}. ${money(repay)} due day ${s.day+days}.`;
-      $('modal').close(); save(); draw(); toast(`Loan accepted: ${money(amt)}`,'bad');
-    };
-  },0);
-}
-
-function showLoanIntro(){
-  modal('Shady Loans',`<p class="subtle">You can start clean, but debt gives you buying power. These terms are deliberately bad and missed payments will hurt.</p><div class="loan-list">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>up to ${money(l[1])} · ${Math.round(l[3]*100)}% interest · due in ${l[2]} days<br><span class="subtle">${lenderBio(l[0]).slice(0,92)}...</span></button>`).join('')}</div><button type="button" id="skipLoan">Start without debt</button>`);
-  setTimeout(()=>{document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); const sk=$('skipLoan'); if(sk)sk.onclick=()=>$('modal').close();},0);
-}
-
 function dangerousEventText(){
   const r=Math.random(), d=pickDrug(); ensureStats();
   if(r<.16){
