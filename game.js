@@ -1,8 +1,22 @@
 const drugs=[['Cocaine','⚪',1200,9000],['Crack','🪨',800,5200],['Ecstasy','🟢',200,2800],['Hashish','🧱',300,2500],['Heroin','💉',900,6000],['Ice','💎',700,4200],['Kat','🌿',40,800],['LSD','🎟️',120,1600],['MDA','🟣',200,1800],['Morphine','🧴',500,2600],['Mushrooms','🍄',60,900],['Peyote','🌵',80,1200],['Pot','🍃',80,900],['Speed','▱',160,1800]];
 const places=[['London','UK','🇬🇧','Heathrow / City'],['Manchester','UK','🇬🇧','Manchester Airport'],['Birmingham','UK','🇬🇧','BHX'],['Liverpool','UK','🇬🇧','John Lennon'],['Leeds','UK','🇬🇧','Leeds Bradford'],['Newcastle','UK','🇬🇧','NCL'],['Bristol','UK','🇬🇧','Bristol Airport'],['Cardiff','Wales','🏴','Cardiff Airport'],['Glasgow','Scotland','🏴','GLA'],['Edinburgh','Scotland','🏴','EDI'],['Aberdeen','Scotland','🏴','ABZ'],['Belfast','Northern Ireland','🇬🇧','BFS'],['Dublin','Ireland','🇮🇪','DUB'],['Cork','Ireland','🇮🇪','ORK']];
 const lenders=[['SPAMMER',10000,3,.25],['TOMMY',20000,5,.30],['SMUDGER',50000,5,.50],['BAZZER',75000,3,.50],['GRIFF',100000,3,.70]];
-const shopItems=[['Large Coat',100,50,'person'],['Backpack',50,75,'person'],['Shed',500,250,'offsite'],['Lockup',5000,1000,'offsite'],['Warehouse',25000,50000,'offsite']];
-const weapons=[['Small Knife',50,.10],['Machete',100,.30],['Handgun',500,.60]];
+const shopItems=[['Bigger Backpack',5000,25,'person'],['Sports Bag',20000,50,'person'],['Trunk Upgrade',100000,100,'offsite'],['Warehouse',1000000,500,'offsite']];
+const hospitalTreatments=[['+25% Health',25000,25],['+50% Health',50000,50],['Full Health (100%)',100000,100]];
+const weapons=[
+  {name:'Knife',price:500,escape:.10,win:.18,damage:'Low',notes:'Concealable, low police attention',heat:2,singleUse:false},
+  {name:'Baseball Bat',price:1000,escape:.15,win:.22,damage:'Low-Medium',notes:'Cheap melee weapon',heat:3,singleUse:false},
+  {name:'Machete',price:2500,escape:.30,win:.34,damage:'Medium',notes:'High intimidation',heat:6,singleUse:false},
+  {name:'Revolver',price:7500,escape:.35,win:.40,damage:'Medium',notes:'Reliable but slow',heat:10,singleUse:false},
+  {name:'Handgun',price:12500,escape:.60,win:.52,damage:'Medium',notes:'Standard sidearm',heat:14,singleUse:false},
+  {name:'Sawed-Off Shotgun',price:25000,escape:.65,win:.62,damage:'High',notes:'Powerful at close range',heat:18,singleUse:false},
+  {name:'SMG',price:50000,escape:.72,win:.70,damage:'High',notes:'Good against gangs',heat:22,singleUse:false},
+  {name:'Assault Rifle',price:100000,escape:.78,win:.78,damage:'Very High',notes:'Increases police attention',heat:35,singleUse:false},
+  {name:'Machine Gun',price:250000,escape:.84,win:.84,damage:'Extreme',notes:'Rare item',heat:45,singleUse:false},
+  {name:'Grenade',price:15000,escape:.75,win:.80,damage:'Area Damage',notes:'Single-use',heat:35,singleUse:true},
+  {name:'Molotov Cocktail',price:5000,escape:.55,win:.58,damage:'Fire Damage',notes:'Single-use',heat:25,singleUse:true},
+  {name:'Rocket Launcher',price:1000000,escape:.95,win:.96,damage:'Massive',notes:'Very rare, huge police heat',heat:70,singleUse:false}
+];
 const attackers=[['single addict',.36,2,.25],['small group of lads',.31,10,.35],['small gang',.22,20,.50],['large gang',.11,50,.75]];
 const $=id=>document.getElementById(id), money=n=>'£'+Math.round(n).toLocaleString('en-GB'), rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a, pick=a=>a[rand(0,a.length-1)], pickDrug=()=>pick(drugs)[0];
 let s;
@@ -20,7 +34,14 @@ function rumourHtml(){let r=s.rumour||newRumour(); return `<strong>Market note:<
 function draw(){let p=places[s.city]; $('dayCount').textContent=s.day; $('cash').textContent=money(s.cash); $('bank').textContent=money(s.bank); $('debt').textContent=money(s.debt); $('health').textContent=Math.round(s.health)+'%'; $('healthBar').style.width=Math.max(0,s.health)+'%'; $('city').textContent=p[0]; $('country').textContent=p[1]+' · '+p[3]; $('flag').textContent=p[2]; $('marketInfo').innerHTML=`${p[0]}: ${cityText()}.<br>${rumourHtml()}`; $('noticeText').textContent=s.notice; $('spaceLabel').textContent=`${used()}/${totalSpace()}`; $('statusLocation').textContent=p[0]+', '+p[1]; $('rank').textContent=rank(); $('space').textContent=`${used()}/${totalSpace()}`; $('heat').textContent=s.heat+'%';
 $('marketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span>Trend</span></div>'+drugs.map(([name,icon])=>`<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${s.supply[name]}</span><span class="price ${s.trends[name]?'':'down'}">${money(s.prices[name]||0)}</span><span class="trend ${s.trends[name]?'up':'down'}">${s.trends[name]?'↑':'↓'}</span></div>`).join('');
 let items=Object.entries(s.inv).filter(([,q])=>q>0); $('pocketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*s.prices[k])}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`);}
-function modal(t,h){$('modalTitle').textContent=t; $('modalBody').innerHTML=h; if(!$('modal').open)$('modal').showModal();}
+
+function healthBlock(){return `<div class="health-decision"><div><strong>Health</strong><span>${Math.round(s.health)}%</span></div><div class="health-track"><i style="width:${Math.max(0,s.health)}%"></i></div></div>`}
+function activeDebtTotal(){return s.loans.reduce((a,l)=>a+l.repay,0)}
+function payDebtButton(){return activeDebtTotal()>0?`<div class="debt-action"><button type="button" class="sell" id="modalPayDebt">PAY DEBT ${money(activeDebtTotal())}</button></div>`:''}
+function bindModalDebt(){let b=$('modalPayDebt'); if(!b)return; b.onclick=()=>payAnyDebtFromModal();}
+function modal(t,h){$('modalTitle').textContent=t; $('modalBody').innerHTML=h+payDebtButton(); if(!$('modal').open)$('modal').showModal(); setTimeout(bindModalDebt,0);}
+function payAnyDebtFromModal(){let due=activeDebtTotal(); if(due<=0)return; let pay=Math.min(s.cash,due); if(pay<=0){modal('Debt Payment',`${healthBlock()}<p>You have no cash available to pay the debt.</p>`); return;} s.cash-=pay; s.debt=Math.max(0,s.debt-pay); for(let i=s.loans.length-1;i>=0;i--){let l=s.loans[i]; let x=Math.min(pay,l.repay); l.repay-=x; pay-=x; if(l.repay<=0)s.loans.splice(i,1); if(pay<=0)break;} save(); draw(); modal('Debt Payment',`${healthBlock()}<p>You paid ${money(Math.min(due,activeDebtTotal()+Math.min(s.cash,due)))} towards your debt.</p><p>Remaining debt: <strong>${money(activeDebtTotal())}</strong>.</p><button type="button" id="continueEvent">Continue</button>`); setTimeout(()=>{let c=$('continueEvent'); if(c)c.onclick=()=>done();},0)}
+
 function newGame(showLoans=false){s=baseState(); genPrices(); newRumour(); save(); draw(); if(showLoans) showLoanIntro();}
 function showLoanIntro(){modal('Shady Loans',`<p class="subtle">You can start clean, but debt gives you buying power. These terms are deliberately bad and missed payments will hurt.</p><div class="loan-list">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>up to ${money(l[1])} · ${l[3]*100}% interest · due in ${l[2]} days</button>`).join('')}</div><button type="button" id="skipLoan">Start without debt</button>`); setTimeout(()=>{document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); $('skipLoan').onclick=()=>$('modal').close();},0)}
 function chooseLoan(i){let l=lenders[i]; modal(l[0],`<p>Borrow up to ${money(l[1])}. Repay ${l[3]*100}% interest by day ${s.day+l[2]}.</p><input id="loanAmount" type="number" min="1" max="${l[1]}" placeholder="Amount"><button type="button" class="sell" id="confirmLoan">ARE YOU SURE?</button>`); setTimeout(()=>$('confirmLoan').onclick=()=>{let amt=Math.min(+$('loanAmount').value||0,l[1]); if(!amt)return; let repay=Math.round(amt*(1+l[3])); s.cash+=amt; s.debt+=repay; s.loans.push({name:l[0],due:s.day+l[2],repay}); s.notice=`Borrowed ${money(amt)} from ${l[0]}. ${money(repay)} due day ${s.day+l[2]}.`; $('modal').close(); save(); draw();},0)}
@@ -28,7 +49,8 @@ function transact(type){modal(type,`<select id="drugSel">${drugs.map(d=>`<option
 function bank(){let openLoans=s.loans.length?s.loans.map(l=>`<div class="loan-row"><div><span>${l.name}</span><strong>${money(l.repay)} due day ${l.due}</strong></div><button type="button" data-payloan="${l.name}|${l.due}|${l.repay}">Pay</button></div>`).join(''):'<p class="subtle">No active loans.</p>'; modal('Bank',`<p class="subtle">Bank balance only changes when you deposit or withdraw.</p><input id="amount" type="number" placeholder="Amount"><button type="button" id="deposit">Deposit</button><button type="button" id="withdraw">Withdraw</button><button type="button" id="payDebt">Pay General Debt</button><h4>Loans</h4>${openLoans}<div class="loan-list">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>Borrow up to ${money(l[1])} · ${l[3]*100}% interest · due in ${l[2]} days</button>`).join('')}</div>`); setTimeout(()=>{let amt=()=>+$('amount').value||0; $('deposit').onclick=()=>{let a=Math.min(amt(),s.cash);s.cash-=a;s.bank+=a;done()}; $('withdraw').onclick=()=>{let a=Math.min(amt(),s.bank);s.bank-=a;s.cash+=a;done()}; $('payDebt').onclick=()=>{let a=Math.min(amt(),s.cash,s.debt);s.cash-=a;s.debt-=a;done()}; document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan)); document.querySelectorAll('[data-payloan]').forEach(b=>b.onclick=()=>paySpecificLoan(b.dataset.payloan));},0)}
 
 function paySpecificLoan(token){let [name,due,repay]=token.split('|'), amount=+repay; if(s.cash<amount){s.notice=`You need ${money(amount)} cash to clear ${name}.`; done(); return;} let idx=s.loans.findIndex(l=>l.name===name&&String(l.due)===String(due)&&String(l.repay)===String(repay)); if(idx<0)return; s.cash-=amount; s.debt=Math.max(0,s.debt-amount); s.notice=`Paid ${name}. Loan cleared.`; s.loans.splice(idx,1); done();}
-function shop(){modal('Shop',`<h4>Storage</h4>${shopItems.map((it,i)=>`<button type="button" data-shop="${i}" ${s.owned.includes(it[0])?'disabled':''}>${it[0]} · ${money(it[1])} · 0/${it[2]}</button>`).join('')}<h4>Weapons</h4><p class="muted">Weapons help in fights but are lost when flying.</p>${weapons.map((w,i)=>`<button type="button" data-weapon="${i}">${w[0]} · ${money(w[1])}</button>`).join('')}`); setTimeout(()=>{document.querySelectorAll('[data-shop]').forEach(b=>b.onclick=()=>{let it=shopItems[+b.dataset.shop]; if(s.cash<it[1])return; s.cash-=it[1]; s.owned.push(it[0]); s.notice=`Bought ${it[0]}. Storage increased by ${it[2]}.`; done();}); document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>{let w=weapons[+b.dataset.weapon]; if(s.cash<w[1])return; s.cash-=w[1]; if(!s.weapons.includes(w[0]))s.weapons.push(w[0]); s.notice=`Bought ${w[0]}.`; done();});},0)}
+function shop(){modal('Shop',`<h4>Storage</h4><p class="muted">Storage upgrades add capacity to your total storage.</p>${shopItems.map((it,i)=>`<button type="button" data-shop="${i}" ${s.owned.includes(it[0])?'disabled':''}><strong>${it[0]}</strong><br>${money(it[1])} · +${it[2]} slots</button>`).join('')}<h4>Weapons</h4><p class="muted">Weapons improve fight options. Flying still carries risk and may cost you weapons.</p>${weapons.map((w,i)=>`<button type="button" data-weapon="${i}"><strong>${w.name}</strong><br>${money(w.price)} · ${w.damage}<br><span>${w.notes}</span></button>`).join('')}<h4>Recovery</h4><p class="muted">Use hospital treatment to restore health after trouble.</p>${hospitalTreatments.map((h,i)=>`<button type="button" data-hospital="${i}"><strong>${h[0]}</strong><br>${money(h[1])}</button>`).join('')}`); setTimeout(()=>{document.querySelectorAll('[data-shop]').forEach(b=>b.onclick=()=>{let it=shopItems[+b.dataset.shop]; if(s.cash<it[1])return; s.cash-=it[1]; s.owned.push(it[0]); s.notice=`Bought ${it[0]}. Storage increased by ${it[2]} slots.`; done();}); document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>{let w=weapons[+b.dataset.weapon]; if(s.cash<w.price)return; s.cash-=w.price; s.weapons.push(w.name); s.notice=`Bought ${w.name}.`; done();}); document.querySelectorAll('[data-hospital]').forEach(b=>b.onclick=()=>buyHospital(+b.dataset.hospital));},0)}
+function buyHospital(i){let h=hospitalTreatments[i]; if(!h||s.cash<h[1]||s.health>=100)return; s.cash-=h[1]; s.health=h[2]===100?100:Math.min(100,s.health+h[2]); s.notice=`Hospital treatment purchased: ${h[0]}.`; done();}
 function dump(){let items=Object.entries(s.inv).filter(([,q])=>q>0); modal('Dump Stock',items.length?items.map(([k])=>`<button type="button" data-dump="${k}">${k}</button>`).join(''):'<p>Your storage is empty.</p>'); setTimeout(()=>document.querySelectorAll('[data-dump]').forEach(b=>b.onclick=()=>{s.notice=`Dumped ${s.inv[b.dataset.dump]} units of ${b.dataset.dump}.`;s.inv[b.dataset.dump]=0;done();}),0)}
 function done(){if($('modal').open)$('modal').close(); save(); draw()}
 function stay(){nextDay(`You stay in ${places[s.city][0]}.`,true)}
@@ -42,11 +64,69 @@ function checkLoans(){}
 function takeDrugs(maxPct, personOnly=false){let capacity=personOnly?personSpace():totalSpace(), ratio=Math.min(1, capacity/Math.max(1,totalSpace())), stolen=[]; Object.entries(s.inv).forEach(([k,v])=>{let q=Math.floor(v*(rand(10,maxPct)/100)*(personOnly?ratio:1)); if(q>0){s.inv[k]-=q; stolen.push(`${q} ${k}`)}}); return stolen;}
 function randomEvent(base){let roll=Math.random(),d=pickDrug(); s.notice=base+' '; if(roll<.14){let pct=rand(10,65),lost=Math.floor(s.cash*pct/100),stolen=takeDrugs(35); s.cash-=lost; s.health=Math.max(5,s.health-rand(3,15)); s.notice+=`You are mugged. ${pct}% of your cash is taken (${money(lost)}). ${stolen.length?'Stock stolen: '+stolen.join(', ')+'.':'No stock was taken.'}`;} else if(roll<.24){let q=Math.min(rand(5,80),totalSpace()-used()); if(q>0)s.inv[d]+=q; s.notice+=`A contact gives you ${q} units of ${d}.`;} else if(roll<.36){s.prices[d]*=rand(2,4); s.notice+=`${d} is drying up. Prices spike.`;} else if(roll<.48){s.prices[d]=Math.max(1,Math.round(s.prices[d]*.35)); s.supply[d]+=rand(100,500); s.notice+=`The market is flooded with ${d}. Prices collapse.`;} else if(roll<.60){s.heat=Math.min(100,s.heat+rand(10,25)); s.notice+='Police are visible near transport hubs. Heat rises.';} else s.notice+='A quiet day. The market holds.';}
 function attacker(){let r=Math.random(),a=0; for(let x of attackers){a+=x[1]; if(r<a)return x} return attackers.at(-1)}
-function bestWeapon(){return s.weapons.includes('Handgun')?weapons[2]:s.weapons.includes('Machete')?weapons[1]:s.weapons.includes('Small Knife')?weapons[0]:null}
-function maybeFight(){if(Math.random()>=.20)return; let a=attacker(); s.currentFight={name:a[0],damage:a[2],lootPct:a[3]}; modal('Trouble',`<p>You are confronted by a <strong>${a[0]}</strong>.</p><p>Outcome depends on the threat level and whether you have a weapon.</p><button type="button" id="surrenderBtn">Surrender</button><button type="button" id="runBtn">Run</button><button type="button" class="sell" id="fightBtn">Fight</button>`); setTimeout(()=>{$('surrenderBtn').onclick=()=>resolveFight('surrender');$('runBtn').onclick=()=>resolveFight('run');$('fightBtn').onclick=()=>resolveFight('fight');},0)}
-function resolveFight(choice){let f=s.currentFight, w=bestWeapon(),msg=''; if(choice==='surrender'){let lost=s.cash; s.cash=0; let stolen=takeDrugs(100,true); msg=`You surrender to the ${f.name}. You lose all cash and stock carried on you. ${stolen.length?'Taken: '+stolen.join(', ')+'.':'No stock was on you.'}`;} if(choice==='run'){let chance=.5+(w?w[2]:0), ok=Math.random()<chance; if(ok){msg=`You run from the ${f.name} and get away${w?' using your '+w[0]+' to create distance':''}.`; s.heat=Math.min(100,s.heat+rand(1,6));}else{let lost=Math.floor(s.cash*f.lootPct); s.cash-=lost; s.health=Math.max(1,s.health-f.damage); let stolen=takeDrugs(35,true); msg=`You fail to get away from the ${f.name}. Health drops ${f.damage}%. You lose ${money(lost)}${stolen.length?' and '+stolen.join(', '):''}.`;}} if(choice==='fight'){let chance=w?(f.name==='single addict'?0.75:Math.min(.9,.10+w[2])):.25; let win=Math.random()<chance; if(win){let gain=rand(25,250)*(w?2:1); s.cash+=gain; msg=`You fight the ${f.name} and win. ${w?'Your '+w[0]+' makes the difference.':'No weapon, but you get lucky.'} You take ${money(gain)}.`; s.heat=Math.min(100,s.heat+rand(5,15));}else{let dmg=w?Math.max(1,Math.round(f.damage*(1-w[2]))):f.damage; let lost=Math.floor(s.cash*f.lootPct); s.cash-=lost; s.health=Math.max(1,s.health-dmg); let stolen=takeDrugs(45,true); msg=`You fight the ${f.name} and lose. Health drops ${dmg}%. You lose ${money(lost)}${stolen.length?' and '+stolen.join(', '):''}.`;}} s.notice=msg; s.currentFight=null; done();}
+function ownedWeapons(){return weapons.filter(w=>s.weapons.includes(w.name))}
+function getWeapon(name){return weapons.find(w=>w.name===name)||null}
+function bestWeapon(){let owned=ownedWeapons(); return owned.sort((a,b)=>b.win-a.win)[0]||null}
+function consumeWeapon(w){if(!w||!w.singleUse)return; let idx=s.weapons.indexOf(w.name); if(idx>=0)s.weapons.splice(idx,1)}
+
+function maybeFight(){
+  if(Math.random()>=.20)return;
+  let a=attacker();
+  s.currentFight={name:a[0],damage:a[2],lootPct:a[3],round:1,maxRounds:a[0]==='single addict'?1:(a[0]==='small group of lads'?2:(a[0]==='small gang'?3:4))};
+  showFightChoice(`You are confronted by a <strong>${a[0]}</strong>.`);
+}
+function showFightChoice(intro){
+  let f=s.currentFight, owned=ownedWeapons();
+  modal('Trouble',`${healthBlock()}<p>${intro}</p><p>Threat round ${f.round} of up to ${f.maxRounds}. Choose carefully.</p><div class="choice-row"><button type="button" id="surrenderBtn">SURRENDER</button><button type="button" id="runBtn">RUN</button></div><h4>Fight options</h4><div class="weapon-choice"><button type="button" class="sell" data-fightweapon="">Fists</button>${owned.length?owned.map(w=>`<button type="button" class="sell" data-fightweapon="${w.name}">${w.name}<br><span>${w.damage}</span></button>`).join(''):'<p class="subtle">No weapons available.</p>'}</div>`);
+  setTimeout(()=>{$('surrenderBtn').onclick=()=>resolveFight('surrender');$('runBtn').onclick=()=>resolveFight('run');document.querySelectorAll('[data-fightweapon]').forEach(b=>b.onclick=()=>resolveFight('fight',b.dataset.fightweapon));},0)
+}
+function recoveryOptions(){if(s.health>=100)return ''; return `<h4>Hospital</h4><div class="hospital-list">${hospitalTreatments.map((h,i)=>`<button type="button" data-hospital-modal="${i}" ${s.cash<h[1]?'disabled':''}>${h[0]} · ${money(h[1])}</button>`).join('')}</div>`}
+function bindRecovery(){document.querySelectorAll('[data-hospital-modal]').forEach(b=>b.onclick=()=>{let h=hospitalTreatments[+b.dataset.hospitalModal]; if(!h||s.cash<h[1])return; s.cash-=h[1]; s.health=h[2]===100?100:Math.min(100,s.health+h[2]); save(); draw(); modal('Hospital Treatment',`${healthBlock()}<p>${h[0]} purchased for ${money(h[1])}.</p><button type="button" id="continueEvent">Continue</button>`); setTimeout(()=>{let c=$('continueEvent'); if(c)c.onclick=()=>done();},0)});}
+function fightResult(title,msg,more=false){
+  save(); draw();
+  modal(title,`${healthBlock()}<p>${msg}</p>${recoveryOptions()}${more?'<button type="button" id="nextFightRound">Next Move</button>':'<button type="button" id="continueEvent">Continue</button>'}`);
+  setTimeout(()=>{bindRecovery(); let n=$('nextFightRound'); if(n)n.onclick=()=>showFightChoice('They are still on you.'); let c=$('continueEvent'); if(c)c.onclick=()=>done();},0)
+}
+function resolveFight(choice,weaponName=''){
+  let f=s.currentFight, w=weaponName?getWeapon(weaponName):bestWeapon(), msg='';
+  if(choice==='surrender'){
+    let cashLost=s.cash; s.cash=0;
+    let stolen=takeDrugs(100,true);
+    let hpTxt='';
+    if(Math.random()<.30){let hp=rand(2,18); s.health=Math.max(1,s.health-hp); hpTxt=` They rough you up anyway. Health drops ${hp}%.`;}
+    msg=`You surrender to the ${f.name}. You lose all cash on you (${money(cashLost)}) and anything carried on your person. ${stolen.length?'Stock taken: '+stolen.join(', ')+'.':'No carried stock was taken.'}${hpTxt}`;
+    s.notice=msg; s.currentFight=null; return fightResult('Surrender Outcome',msg,false);
+  }
+  if(choice==='run'){
+    let chance=Math.min(.98,.50+(w?w.escape:0)), ok=Math.random()<chance;
+    if(ok){msg=`You run and lose them.${w?' Your '+w.name+' gives you enough space to get away.':''}`; s.heat=Math.min(100,s.heat+rand(1,6)+(w?w.heat:0)); consumeWeapon(w); s.currentFight=null; s.notice=msg; return fightResult('Run Outcome',msg,false);}
+    let hp=rand(Math.max(2,Math.floor(f.damage/2)),Math.max(3,f.damage));
+    s.health=Math.max(1,s.health-hp);
+    let lost=Math.floor(s.cash*rand(5,Math.round(f.lootPct*100))/100); s.cash-=lost;
+    msg=`You try to run, but they catch you. Health drops ${hp}%. You lose ${money(lost)}.`;
+    if(s.health<=1){msg+=' You barely survive.';}
+    s.notice=msg; s.currentFight=null; return fightResult('Run Outcome',msg,false);
+  }
+  if(choice==='fight'){
+    let base=w?(f.name==='single addict'?0.75:Math.min(.96,.10+w.win)):.25;
+    let win=Math.random()<base;
+    if(win){
+      msg=`You fight back${w?' using your '+w.name:''} and scare them off.`;
+      if(w&&f.name==='single addict')msg=`One hit with the ${w.name} is enough. The addict backs off.`;
+      s.heat=Math.min(100,s.heat+rand(5,15)+(w?w.heat:0)); consumeWeapon(w); s.currentFight=null; s.notice=msg; return fightResult('Fight Outcome',msg,false);
+    }
+    let reduction=w?Math.min(.85,w.escape):0;
+    let hp=rand(Math.max(2,Math.floor((f.damage*(1-reduction))/2)),Math.max(3,Math.round(f.damage*(1-reduction))));
+    s.health=Math.max(0,s.health-hp);
+    consumeWeapon(w);
+    msg=`You fight back${w?' with your '+w.name:''}, but they hit you. Health drops ${hp}%.`;
+    if(s.health<=0){s.notice='You died in the fight.'; s.currentFight=null; return endGame();}
+    if(f.round < f.maxRounds && Math.random()<.65){f.round++; s.notice=msg; return fightResult('Fight Outcome',msg,true);}
+    msg+=' You break away and lose them.'; s.currentFight=null; s.notice=msg; return fightResult('Fight Outcome',msg,false);
+  }
+}
 function endGame(){let score=s.cash+s.bank+Object.entries(s.inv).reduce((a,[k,v])=>a+v*s.prices[k],0)-s.debt; modal('Game Over',`<p>Final net worth: <strong>${money(score)}</strong></p><p>Rank: <strong>${rank()}</strong></p><button type="button" id="again">New Game</button>`); setTimeout(()=>$('again').onclick=()=>{newGame();},0)}
-function save(){localStorage.setItem('noir_market_v6',JSON.stringify(s))} function load(){let x=localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x);draw();return false;} newGame(false);return true;}
+function save(){localStorage.setItem('noir_market_v9',JSON.stringify(s))} function load(){let x=localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4'); if(x){s=JSON.parse(x);draw();return false;} newGame(false);return true;}
 function particles(){
   const holder=$('particle-canvas');
   const canvas=document.createElement('canvas');
