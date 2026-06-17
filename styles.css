@@ -582,3 +582,9 @@ body:not(.modal-open) .app{pointer-events:auto!important;}
 #modal .modal-scroll{background:#050505!important;}
 .news-ticker{z-index:6!important;}
 @media (min-width:760px){.market{grid-column:1!important;grid-row:auto!important}.pocket{grid-column:2!important;grid-row:auto!important}.actions{grid-column:2!important}.status{grid-column:1!important}}
+
+
+/* Noir Market V2.4 Performance Patch: splash-only particles. */
+#particle-canvas,.game-dust{display:none!important;}
+#dust1,#dust2,#dust3{display:none!important;}
+.splash .live-dust i{width:3px;height:3px;}
