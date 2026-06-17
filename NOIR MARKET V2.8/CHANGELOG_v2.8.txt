@@ -1,0 +1,20 @@
+Noir Market V2.8 – Loading Optimisation
+
+Scope: limited startup/loading optimisation only. No gameplay systems were intentionally changed.
+
+Changes:
+- Incremented release version from V2.7 to V2.8.
+- Reduced the forced splash loading wait and made the ENTER state available sooner once the initial UI is ready.
+- Kept the splash loading bar behaviour: black bar, white border, white fill, then ENTER.
+- Preserved 70 enlarged splash particles but prevents unnecessary recreation where possible.
+- Kept particles limited to the splash screen and removes any game-page particles if legacy code attempts to create them.
+- Updated background music setup so the MP3 remains lazy-loaded after user interaction and uses preload=none behaviour.
+- Updated the service worker cache name to V2.8.
+- Kept MP3 excluded from initial service worker caching.
+- Made optional icon caching more defensive so non-critical icon cache issues do not block install.
+- Reduced duplicate startup safety redraw pressure by skipping the delayed draw when the first render has already completed.
+
+Regression focus checked:
+- Market and storage render path preserved.
+- Stay Here and Travel binding path preserved.
+- Shipping, loans, splash entry, music toggle and save migration paths preserved at code level.

@@ -1,0 +1,21 @@
+NOIR MARKET V2.0
+
+Bug fix and UI release built from V1.9.
+
+Changes:
+- Replaced the remaining marquee-based news ticker with a clipped ticker track.
+- News ticker now scrolls across the full available news bar area without overlapping the NEWS label.
+- Added measured ticker animation so scrolling remains smooth across different text lengths and screen sizes.
+- Storage vault upgrade button is now smaller, amber, and aligned to the right of the storage panel.
+- Travel / Shipping export destinations are now displayed as selectable tiles instead of a dropdown list.
+- Shipping export behaviour, costs and shipment logic remain unchanged.
+- Updated app title, manifest version, service worker cache and save version to V2.0.
+- V1.9 and older save migration retained.
+
+Checks:
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- News ticker markup checked.
+- Shipping export tile override checked.
+- ZIP integrity check passed.

@@ -1,0 +1,18 @@
+NOIR MARKET V1.9
+
+Hotfix release.
+
+Fixed:
+- Game no longer freezes on the splash screen.
+- Splash screen tap/click now works correctly.
+- Startup is now delayed until all V1.8 variables, settings and overrides are initialised.
+- V1.8 saves migrate into V1.9 without losing progress.
+
+Retained:
+- V1.8 menu changes.
+- Player name.
+- Sound and music toggles.
+- Updated stats menu.
+- Borrow maximum loan button.
+- Smooth news ticker.
+- Shipping, vaults, dynamic economy, rumours, reputation, proportional loans and all existing game systems.
