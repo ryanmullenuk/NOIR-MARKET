@@ -1330,3 +1330,107 @@ function load(){
 }
 function v20SelfTest(){console.log('NOIR MARKET V2.0 checks: smooth full-bar news ticker, amber vault upgrade button, and tile-based shipping export destinations active.');}
 setTimeout(v20SelfTest,240);
+
+
+/* Noir Market V2.1: market restoration, full-page modals and ticker/dust stability. */
+function ensureMarketSectionV21(){
+  const app=document.querySelector('.app');
+  if(!app)return;
+  let market=document.querySelector('.market');
+  if(!market){
+    market=document.createElement('section');
+    market.className='market card';
+    market.innerHTML='<div class="section-head"><h3>The Market</h3><p><span class="up">↑ Rising</span> <span class="down">↓ Falling</span></p></div><div class="table" id="marketTable"></div>';
+    const pocket=document.querySelector('.pocket');
+    app.insertBefore(market,pocket||document.querySelector('.actions')||null);
+  }
+  market.style.display='block';
+  market.style.visibility='visible';
+  market.style.opacity='1';
+  if(!$('marketTable')){
+    const table=document.createElement('div');
+    table.className='table';
+    table.id='marketTable';
+    market.appendChild(table);
+  }
+}
+function renderMarketTableV21(){
+  ensureMarketSectionV21();
+  if(!s)return;
+  if(typeof setActiveCityMarket==='function')setActiveCityMarket();
+  const table=$('marketTable');
+  if(!table)return;
+  table.innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span></span></div>'+drugs.map(([name,icon])=>{
+    const price=Number.isFinite(+s.prices?.[name])?+s.prices[name]:0;
+    const qty=Number.isFinite(+s.supply?.[name])?+s.supply[name]:0;
+    const up=!!s.trends?.[name];
+    return `<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${qty}</span><span class="price ${up?'':'down'}">${money(price)}</span><span class="trend ${up?'up':'down'}">${up?'↑':'↓'}</span></div>`;
+  }).join('');
+}
+const v21PreviousDraw=draw;
+function draw(){
+  if(typeof v21PreviousDraw==='function')v21PreviousDraw();
+  renderMarketTableV21();
+  syncTickerV21();
+  ensureGameDustV21();
+}
+function syncTickerV21(){
+  const ticker=$('newsTicker');
+  if(!ticker)return;
+  const track=ticker.closest('.ticker-track')||ticker.parentElement;
+  if(!track)return;
+  const text=upperNews(s?.economy?.news?.text||s?.news||'MARKETS ARE QUIET TODAY.');
+  if(ticker.textContent!==text){
+    ticker.textContent=text;
+    ticker.style.animation='none';
+    void ticker.offsetWidth;
+    ticker.style.animation='';
+  }
+  requestAnimationFrame(()=>{
+    const start=Math.max(80,track.clientWidth||320);
+    const width=Math.max(120,ticker.scrollWidth||320);
+    const end=-(width+40);
+    const duration=Math.max(28,Math.min(72,(start+width)/38));
+    ticker.style.setProperty('--ticker-start',start+'px');
+    ticker.style.setProperty('--ticker-end',end+'px');
+    ticker.style.setProperty('--ticker-duration',duration.toFixed(2)+'s');
+  });
+}
+function ensureGameDustV21(){
+  if(!document.querySelector('.game-dust')){
+    if(typeof createGameDust==='function')createGameDust();
+  }
+}
+const v21PreviousModal=modal;
+function modal(t,h){
+  document.body.classList.add('modal-open');
+  const dlg=$('modal');
+  if(!dlg)return;
+  $('modalTitle').textContent=t;
+  $('modalBody').innerHTML=`<div class="modal-head"><h3>${t}</h3><button type="button" class="modal-x" id="modalCloseBtn" aria-label="Close">×</button></div><div class="modal-scroll">${h+payDebtButton()}</div>`;
+  if(!dlg.open)dlg.showModal();
+  setTimeout(()=>{bindModalDebt(); const x=$('modalCloseBtn'); if(x)x.onclick=()=>done();},0);
+}
+function done(){
+  const dlg=$('modal');
+  if(dlg&&dlg.open)dlg.close();
+  document.body.classList.remove('modal-open');
+  save();
+  draw();
+}
+(function bindModalCloseV21(){
+  const dlg=$('modal');
+  if(dlg){
+    dlg.addEventListener('close',()=>document.body.classList.remove('modal-open'));
+    dlg.addEventListener('cancel',()=>document.body.classList.remove('modal-open'));
+  }
+})();
+function save(){ensureStats(); s.version='2.1'; localStorage.setItem('noir_market_v2_1',JSON.stringify(s));}
+function load(){
+  let x=localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  if(x){s=JSON.parse(x); ensureStats(); s.version='2.1'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+  newGame(false); return true;
+}
+function baseState(){return{version:'2.1',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function v21SelfTest(){console.log('NOIR MARKET V2.1 checks: market restored, full-page opaque section views, ticker smoothing and dust across pages active.');}
+setTimeout(v21SelfTest,260);
