@@ -346,3 +346,97 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(10px);}
 .loan-max-row{display:grid;grid-template-columns:1fr;gap:8px;margin:4px 0 12px;}
 #borrowMaxLoan{border-color:rgba(216,184,91,.55);color:var(--amber);background:rgba(216,184,91,.08);}
 @media(max-width:560px){.news-ticker{gap:8px!important}.news-ticker #newsTicker{font-size:12px;animation-duration:28s}.menu-settings{grid-template-columns:1fr}.news-ticker>span{padding-right:10px}.stats-list{padding-bottom:18px}#backMenuBtn{margin-bottom:calc(28px + env(safe-area-inset-bottom));}}
+
+
+/* Noir Market V2.0 UI fixes: ticker, vault upgrade button, shipping destination tiles */
+.news-ticker{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:0!important;
+  overflow:hidden!important;
+  padding:0!important;
+  min-height:38px;
+}
+.news-ticker>span{
+  position:relative!important;
+  z-index:3!important;
+  display:flex!important;
+  align-items:center!important;
+  height:100%!important;
+  padding:0 14px!important;
+  background:linear-gradient(90deg,rgba(34,28,12,1),rgba(34,28,12,.98))!important;
+  border-right:1px solid rgba(216,184,91,.22)!important;
+  color:var(--amber)!important;
+  flex:none!important;
+}
+.news-ticker .ticker-track{
+  position:relative!important;
+  overflow:hidden!important;
+  height:38px!important;
+  min-width:0!important;
+  width:100%!important;
+  display:block!important;
+}
+.news-ticker #newsTicker{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  height:38px!important;
+  line-height:38px!important;
+  display:block!important;
+  white-space:nowrap!important;
+  padding-left:0!important;
+  margin:0!important;
+  color:#ececec!important;
+  font-size:13px!important;
+  letter-spacing:.35px!important;
+  font-weight:800!important;
+  text-transform:uppercase!important;
+  will-change:transform!important;
+  animation:noirTickerV20 var(--ticker-duration,34s) linear infinite!important;
+}
+@keyframes noirTickerV20{
+  from{transform:translate3d(var(--ticker-start,100%),0,0)}
+  to{transform:translate3d(var(--ticker-end,-100%),0,0)}
+}
+#upgradeVault{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:180px!important;
+  margin:10px 0 0 auto!important;
+  padding:8px 12px!important;
+  font-size:11px!important;
+  line-height:1.1!important;
+  border-color:rgba(216,184,91,.75)!important;
+  background:linear-gradient(180deg,#d8b85b,#9d7225)!important;
+  color:#120b02!important;
+  box-shadow:0 6px 18px rgba(216,184,91,.16)!important;
+}
+.ship-destination-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:8px 0 12px;
+}
+.ship-destination-tile{
+  text-align:left;
+  min-height:58px;
+  padding:10px 11px!important;
+  border-radius:14px!important;
+  white-space:normal;
+}
+.ship-destination-tile strong{display:block;font-size:13px;color:#fff;line-height:1.15;}
+.ship-destination-tile span{display:block;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.2;}
+.ship-destination-tile.active{
+  border-color:rgba(216,184,91,.85)!important;
+  background:linear-gradient(180deg,rgba(216,184,91,.28),rgba(216,184,91,.10))!important;
+  box-shadow:0 0 0 1px rgba(216,184,91,.25) inset;
+}
+.ship-destination-tile:disabled{opacity:.42;filter:grayscale(.45);}
+@media(max-width:520px){
+  .ship-destination-grid{grid-template-columns:1fr;}
+  .news-ticker #newsTicker{font-size:12px!important;}
+  #upgradeVault{max-width:150px!important;font-size:10px!important;padding:7px 10px!important;}
+}

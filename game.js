@@ -1253,3 +1253,80 @@ function draw(){
   let wc=weaponCounts(), weaponsRows=Object.entries(wc).map(([k,v])=>`<div class="row storage-weapon"><span>${k}</span><span>${v}</span><span>Weapon</span></div>`).join('');
   if($('pocketTable'))$('pocketTable').innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.slice(0,10).map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*s.prices[k])}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`)+`<div class="row header"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>`+(weaponsRows||'<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
 }
+
+/* Noir Market V2.0: ticker smoothing, vault button polish and tile-based shipping destinations. */
+let selectedShippingDestV20=null;
+function validShipDestV20(){
+  if(selectedShippingDestV20===null || selectedShippingDestV20===undefined || +selectedShippingDestV20===+s.city){
+    const first=places.findIndex((_,i)=>i!==s.city);
+    selectedShippingDestV20=first>=0?first:0;
+  }
+  return +selectedShippingDestV20;
+}
+function shippingDestinationTilesV20(){
+  const selected=validShipDestV20();
+  return `<div class="ship-destination-grid">${places.map((p,i)=>`<button type="button" class="ship-destination-tile ${i===selected?'active':''}" data-shipdest="${i}" ${i===s.city?'disabled':''}><strong>${p[0]}</strong><span>${i===s.city?'Current city':`${p[1]} · ${p[3]}`}</span></button>`).join('')}</div>`;
+}
+function showShippingExport(){
+  ensureShipping(); setActiveCityMarket();
+  const from=places[s.city][0];
+  validShipDestV20();
+  const carried=Object.entries(s.inv).filter(([,q])=>q>0);
+  const rows=carried.map(([name,q],i)=>{let value=shippingValue(name,q), cost=shippingCostFor(value); return `<div class="shipping-row"><div><strong>${name}</strong><span>Carried: ${q} · max shipment cost ${money(cost)}</span></div><input type="number" inputmode="numeric" min="0" max="${q}" value="${q}" id="shipqty-${i}"><button type="button" data-exportdrug="${i}">EXPORT</button></div>`;}).join('');
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<button type="button" class="back-mini" id="backShipHub">BACK TO SHIPPING</button><div class="modal-money"><span>Exporting from</span><strong>${from}</strong><em>Cash ${money(s.cash)}</em></div><label class="shipping-label">Destination</label>${shippingDestinationTilesV20()}<p class="subtle">Export removes stock from your carried inventory. It will wait in the destination city until you import it.</p>${carried.length?`<div class="shipping-list">${rows}</div>`:'<p class="subtle">No carried drugs available to ship.</p>'}`;
+  $('backShipHub').onclick=showShippingHub;
+  document.querySelectorAll('[data-shipdest]').forEach(btn=>btn.onclick=()=>{
+    selectedShippingDestV20=+btn.dataset.shipdest;
+    document.querySelectorAll('[data-shipdest]').forEach(b=>b.classList.toggle('active',+b.dataset.shipdest===selectedShippingDestV20));
+  });
+  document.querySelectorAll('[data-exportdrug]').forEach(btn=>btn.onclick=()=>{
+    const idx=+btn.dataset.exportdrug;
+    const [name,maxQty]=carried[idx]||[];
+    const toIdx=validShipDestV20();
+    const to=places[toIdx]?.[0];
+    const qty=Math.floor(+$('shipqty-'+idx).value||0);
+    if(!name||!to){errorMsg('SELECT DESTINATION');return;}
+    if(toIdx===s.city){errorMsg('SELECT ANOTHER CITY');return;}
+    if(qty<1){errorMsg('ENTER QUANTITY');return;}
+    if(qty>(s.inv[name]||0)){errorMsg('NOT ENOUGH STOCK');return;}
+    const value=shippingValue(name,qty), cost=shippingCostFor(value);
+    if(s.cash<cost){errorMsg('INSUFFICIENT FUNDS');return;}
+    s.cash-=cost; s.inv[name]-=qty;
+    s.shipments.push({id:`ship_${Date.now()}_${Math.floor(Math.random()*100000)}`,from,to,items:{[name]:qty},value,cost,day:s.day});
+    ensureStats(); s.stats.shipmentsExported++;
+    s.notice=`Exported ${qty} ${name} from ${from} to ${to}. Shipping cost ${money(cost)}.`;
+    save(); draw(); success('SHIPMENT EXPORTED'); showShippingExport();
+  });
+}
+function syncTickerV20(){
+  const ticker=$('newsTicker');
+  if(!ticker)return;
+  const track=ticker.closest('.ticker-track') || ticker.parentElement;
+  if(!track)return;
+  const text=upperNews(s?.economy?.news?.text||s?.news||'MARKETS ARE QUIET TODAY.');
+  if(ticker.textContent!==text) ticker.textContent=text;
+  requestAnimationFrame(()=>{
+    const start=Math.max(1,track.clientWidth||300);
+    const end=-Math.max(1,ticker.scrollWidth||300);
+    const distance=start-end;
+    const duration=Math.max(24,Math.min(58,distance/42));
+    ticker.style.setProperty('--ticker-start',start+'px');
+    ticker.style.setProperty('--ticker-end',end+'px');
+    ticker.style.setProperty('--ticker-duration',duration.toFixed(2)+'s');
+  });
+}
+const v20PreviousDraw=draw;
+function draw(){
+  if(typeof v20PreviousDraw==='function')v20PreviousDraw();
+  syncTickerV20();
+}
+function baseState(){return{version:'2.0',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function save(){ensureStats(); s.version='2.0'; localStorage.setItem('noir_market_v2_0',JSON.stringify(s));}
+function load(){
+  let x=localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  if(x){s=JSON.parse(x); ensureStats(); s.version='2.0'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+  newGame(false); return true;
+}
+function v20SelfTest(){console.log('NOIR MARKET V2.0 checks: smooth full-bar news ticker, amber vault upgrade button, and tile-based shipping export destinations active.');}
+setTimeout(v20SelfTest,240);
