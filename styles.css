@@ -595,3 +595,13 @@ body:not(.modal-open) .app{pointer-events:auto!important;}
 .splash .dust-bg{display:none!important;}
 .splash .live-dust{will-change:opacity!important;contain:layout paint!important;}
 .splash .live-dust i{min-width:3px!important;min-height:3px!important;max-width:6px!important;max-height:6px!important;will-change:transform!important;}
+
+
+/* Noir Market V2.7 Splash Loading Patch */
+.splash #splashPrompt{position:relative;z-index:6;margin:0 0 14px!important;color:rgba(255,255,255,.72)!important;text-transform:uppercase;letter-spacing:2px;font-size:12px;}
+.splash-loader{position:relative;z-index:6;width:min(72vw,280px);height:30px;border:2px solid #fff!important;border-radius:999px!important;background:#000!important;color:#fff!important;overflow:hidden;padding:0!important;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(255,255,255,.12)!important;}
+.splash-loader:disabled{opacity:1!important;cursor:default!important;}
+.splash-loader-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:#fff;transition:width .9s cubic-bezier(.18,.84,.25,1);z-index:1;}
+.splash-loader-text{position:relative;z-index:2;font-weight:900;font-size:12px;letter-spacing:2px;color:#fff;mix-blend-mode:difference;}
+.splash .live-dust i{min-width:6px!important;min-height:6px!important;max-width:12px!important;max-height:12px!important;box-shadow:0 0 10px rgba(255,255,255,.45)!important;filter:blur(.12px)!important;}
+@media(max-width:560px){.splash-loader{width:min(76vw,250px);height:28px}.splash-loader-text{font-size:11px}}

@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Noir Market V2.5</title>
+  <title>Noir Market V2.7</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: dark)" href="apple-touch-icon-dark.png" />
+  <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: light)" href="apple-touch-icon-light.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
   <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
   <link rel="stylesheet" href="styles.css" />
@@ -17,7 +19,11 @@
     <div class="splash-vignette" aria-hidden="true"></div>
     <img class="splash-logo" src="assets/logo.png" alt="Noir logo" />
     <h1>NOIR MARKET</h1>
-    <p>Tap to enter.</p>
+    <p id="splashPrompt">Loading.</p>
+    <button type="button" id="splashEnter" class="splash-loader" aria-label="Loading Noir Market" disabled>
+      <span class="splash-loader-fill" id="splashLoaderFill"></span>
+      <span class="splash-loader-text" id="splashLoaderText">LOADING</span>
+    </button>
   </div>
   <main class="app">
     <section class="news-ticker card"><span>NEWS</span><div class="ticker-track"><div id="newsTicker">MARKETS ARE QUIET.</div></div></section>

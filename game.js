@@ -1586,21 +1586,21 @@ function nextDay(base,showRumour){
     try{ if(typeof v22PreviousNextDay==='function')return v22PreviousNextDay(base,showRumour); }catch(err){console.error('Fallback nextDay failed:',err);}
   }
 }
-function save(){ensureStats(); s.version='2.5'; localStorage.setItem('noir_market_v2_5',JSON.stringify(s));}
+function save(){ensureStats(); s.version='2.7'; localStorage.setItem('noir_market_v2_7',JSON.stringify(s));}
 function load(){
-  let x=localStorage.getItem('noir_market_v2_5')||localStorage.getItem('noir_market_v2_4')||localStorage.getItem('noir_market_v2_3')||localStorage.getItem('noir_market_v2_2')||localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
-  if(x){s=JSON.parse(x); ensureStats(); s.version='2.5'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+  let x=localStorage.getItem('noir_market_v2_7')||localStorage.getItem('noir_market_v2_6')||localStorage.getItem('noir_market_v2_5')||localStorage.getItem('noir_market_v2_4')||localStorage.getItem('noir_market_v2_3')||localStorage.getItem('noir_market_v2_2')||localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  if(x){s=JSON.parse(x); ensureStats(); s.version='2.7'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
   newGame(false); return true;
 }
-function baseState(){return{version:'2.5',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function baseState(){return{version:'2.7',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
 function bindMainButtonsV22(){
   const bind=(id,fn)=>{const el=$(id); if(el)el.onclick=fn;};
   bind('buyBtn',()=>transact('Buy')); bind('sellBtn',()=>transact('Sell')); bind('stayBtn',stay); bind('travelBtn',travel); bind('bankBtn',bank); bind('dumpBtn',dump); bind('shopBtn',shop); bind('hustleBtn',hustle); bind('menuBtn',showMenu);
 }
-setTimeout(()=>{bindMainButtonsV22(); ensureMainSectionsV22(); draw(); console.log('NOIR MARKET V2.5 performance patch checks: market/storage restored and stay/travel day advance hotfix active.');},320);
+setTimeout(()=>{bindMainButtonsV22(); ensureMainSectionsV22(); draw(); console.log('NOIR MARKET V2.7 performance patch checks: market/storage restored and stay/travel day advance hotfix active.');},320);
 
 
-/* Noir Market V2.5 Performance Patch: splash-only particles and lighter startup. */
+/* Noir Market V2.7 Icon Patch: splash-only particles and lighter startup. */
 function createSplashDust(){
   const splash=$('splash');
   if(!splash)return;
@@ -1634,12 +1634,12 @@ function recreateDustSlowerSmaller(){
   createSplashDust();
 }
 function v24PerformanceSelfTest(){
-  console.log('NOIR MARKET V2.5 performance patch: WAV removed, splash particles fixed at 100 larger particles, game particles disabled.');
+  console.log('NOIR MARKET V2.7 performance patch: WAV removed, splash particles fixed at 100 larger particles, game particles disabled.');
 }
 setTimeout(()=>{try{document.querySelectorAll('.game-dust').forEach(el=>el.remove()); v24PerformanceSelfTest();}catch(e){}},420);
 
 
-/* Noir Market V2.5 Performance Patch: faster splash startup. */
+/* Noir Market V2.7 Icon Patch: faster splash startup. */
 function createSplashDust(){
   const splash=$('splash');
   if(!splash)return;
@@ -1669,6 +1669,72 @@ function createGameDust(){
 }
 function v25PerformanceSelfTest(){
   const particles=document.querySelectorAll('#splash .live-dust i').length;
-  console.log('NOIR MARKET V2.5 performance patch: splash particles='+particles+', MP3 not precached, startup recreation disabled, logo optimised.');
+  console.log('NOIR MARKET V2.7 performance patch: splash particles='+particles+', MP3 not precached, startup recreation disabled, logo optimised.');
 }
 setTimeout(()=>{try{document.querySelectorAll('.game-dust').forEach(el=>el.remove()); v25PerformanceSelfTest();}catch(e){}},520);
+
+
+/* Noir Market V2.7 Splash Loading Patch: 70 larger particles and enter bar. */
+function createSplashDust(){
+  const splash=$('splash');
+  if(!splash)return;
+  splash.querySelectorAll('.live-dust').forEach(el=>el.remove());
+  const layer=document.createElement('div');
+  layer.className='live-dust';
+  const count=70;
+  const frag=document.createDocumentFragment();
+  for(let i=0;i<count;i++){
+    const d=document.createElement('i');
+    const size=(Math.random()*5.2+6.0).toFixed(2);
+    d.style.left=(Math.random()*100).toFixed(2)+'%';
+    d.style.bottom=(-10-Math.random()*22).toFixed(2)+'%';
+    d.style.width=size+'px';
+    d.style.height=size+'px';
+    d.style.opacity=(Math.random()*0.38+0.32).toFixed(2);
+    d.style.animationDuration=(42+Math.random()*32).toFixed(2)+'s';
+    d.style.animationDelay=(-Math.random()*36).toFixed(2)+'s';
+    d.style.setProperty('--drift',(Math.random()*50-25).toFixed(1)+'px');
+    frag.appendChild(d);
+  }
+  layer.appendChild(frag);
+  splash.prepend(layer);
+}
+function setupSplashLoaderV27(){
+  const splash=$('splash');
+  const enter=$('splashEnter');
+  const fill=$('splashLoaderFill');
+  const text=$('splashLoaderText');
+  const prompt=$('splashPrompt');
+  if(!splash||!enter||!fill||!text)return;
+  let ready=false;
+  function enterGame(){
+    if(!ready)return;
+    unlockAudio();
+    startBackgroundMusic();
+    musicStarted=true;
+    sound('positive');
+    splash.classList.add('hide');
+    setTimeout(()=>{showWelcome();},460);
+  }
+  enter.disabled=true;
+  enter.onclick=enterGame;
+  splash.onclick=(e)=>{
+    if(e.target&&e.target.closest&&e.target.closest('#splashEnter'))return;
+    enterGame();
+  };
+  fill.style.width='0%';
+  text.textContent='LOADING';
+  if(prompt)prompt.textContent='Loading.';
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{fill.style.width='100%';});
+  });
+  setTimeout(()=>{
+    ready=true;
+    enter.disabled=false;
+    text.textContent='ENTER';
+    enter.setAttribute('aria-label','Enter Noir Market');
+    if(prompt)prompt.textContent='Ready.';
+  },920);
+}
+setTimeout(()=>{try{setupSplashLoaderV27();}catch(e){console.error('V2.7 splash loader setup failed:',e);}},40);
+setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+document.querySelectorAll('#splash .live-dust i').length+', loading bar active.');}catch(e){}},980);
