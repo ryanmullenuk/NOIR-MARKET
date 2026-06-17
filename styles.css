@@ -571,3 +571,14 @@ body.modal-open{overflow:hidden!important;position:fixed!important;width:100%!im
   0%{transform:translate3d(var(--ticker-start,100vw),0,0)}
   100%{transform:translate3d(var(--ticker-end,-100vw),0,0)}
 }
+
+/* Noir Market V2.2 visibility and travel hotfix styles */
+.market,.pocket{display:block!important;visibility:visible!important;opacity:1!important;min-height:150px!important;position:relative!important;z-index:4!important;}
+#marketTable,#pocketTable{display:block!important;visibility:visible!important;opacity:1!important;min-height:90px!important;}
+body:not(.modal-open){position:static!important;overflow-x:hidden!important;overflow-y:auto!important;touch-action:auto!important;width:auto!important;inset:auto!important;}
+body.modal-open .app{pointer-events:none!important;}
+body:not(.modal-open) .app{pointer-events:auto!important;}
+#modal[open]{background:#050505!important;}
+#modal .modal-scroll{background:#050505!important;}
+.news-ticker{z-index:6!important;}
+@media (min-width:760px){.market{grid-column:1!important;grid-row:auto!important}.pocket{grid-column:2!important;grid-row:auto!important}.actions{grid-column:2!important}.status{grid-column:1!important}}

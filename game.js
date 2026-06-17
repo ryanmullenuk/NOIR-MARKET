@@ -1434,3 +1434,168 @@ function load(){
 function baseState(){return{version:'2.1',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
 function v21SelfTest(){console.log('NOIR MARKET V2.1 checks: market restored, full-page opaque section views, ticker smoothing and dust across pages active.');}
 setTimeout(v21SelfTest,260);
+
+/* Noir Market V2.2: restore main screen sections and repair stay/travel day advance. */
+function closeModalV22(){
+  const dlg=$('modal');
+  try{ if(dlg && dlg.open) dlg.close(); }catch(e){}
+  document.body.classList.remove('modal-open');
+}
+function ensureMainSectionsV22(){
+  const app=document.querySelector('.app');
+  if(!app)return;
+  let market=document.querySelector('.market');
+  if(!market){
+    market=document.createElement('section');
+    market.className='market card';
+    market.innerHTML='<div class="section-head"><h3>The Market</h3><p><span class="up">↑ Rising</span> <span class="down">↓ Falling</span></p></div><div class="table" id="marketTable"></div>';
+    const pocket=document.querySelector('.pocket')||document.querySelector('.actions');
+    app.insertBefore(market,pocket||null);
+  }
+  let pocket=document.querySelector('.pocket');
+  if(!pocket){
+    pocket=document.createElement('section');
+    pocket.className='pocket card';
+    pocket.innerHTML='<div class="section-head"><h3>Storage <span id="spaceLabel">0/20</span></h3></div><div class="table small" id="pocketTable"></div>';
+    const actions=document.querySelector('.actions');
+    app.insertBefore(pocket,actions||null);
+  }
+  [market,pocket].forEach(el=>{el.style.display='block';el.style.visibility='visible';el.style.opacity='1';el.removeAttribute('hidden');});
+}
+function renderMarketV22(){
+  ensureMainSectionsV22();
+  if(!s)return;
+  if(typeof setActiveCityMarket==='function')setActiveCityMarket();
+  const table=$('marketTable');
+  if(!table)return;
+  table.innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Price</span><span></span></div>'+drugs.map(([name,icon])=>{
+    const price=Number.isFinite(+s.prices?.[name])?+s.prices[name]:0;
+    const qty=Number.isFinite(+s.supply?.[name])?+s.supply[name]:0;
+    const up=!!s.trends?.[name];
+    return `<div class="row"><span class="drug"><b>${icon}</b>${name}</span><span>${qty}</span><span class="price ${up?'':'down'}">${money(price)}</span><span class="trend ${up?'up':'down'}">${up?'↑':'↓'}</span></div>`;
+  }).join('');
+}
+function renderStorageV22(){
+  ensureMainSectionsV22();
+  if(!s)return;
+  const table=$('pocketTable');
+  if(!table)return;
+  const items=Object.entries(s.inv||{}).filter(([,q])=>q>0);
+  const wc=typeof weaponCounts==='function'?weaponCounts():{};
+  const weaponsRows=Object.entries(wc).map(([k,v])=>`<div class="row storage-weapon"><span>${k}</span><span>${v}</span><span>Weapon</span></div>`).join('');
+  table.innerHTML='<div class="row header"><span>Drug</span><span>Qty</span><span>Value</span></div>'+(items.length?items.slice(0,14).map(([k,v])=>`<div class="row"><span>${k}</span><span>${v}</span><span>${money(v*(s.prices?.[k]||0))}</span></div>`).join(''):`<div class="row"><span>Empty</span><span>0</span><span>${money(0)}</span></div>`)+`<div class="row header"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>`+(weaponsRows||'<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
+}
+const v22PreviousDraw=draw;
+function draw(){
+  try{ if(typeof v22PreviousDraw==='function')v22PreviousDraw(); }catch(e){ console.warn('V2.2 previous draw recovered:',e); }
+  try{
+    ensureStats();
+    if(typeof setActiveCityMarket==='function')setActiveCityMarket();
+    const p=places[s.city];
+    const hc=typeof healthClass==='function'?healthClass():'health-good';
+    if($('dayCount'))$('dayCount').textContent=s.day;
+    if($('cash'))$('cash').textContent=money(s.cash);
+    if($('bank'))$('bank').textContent=money(s.bank);
+    if($('debt'))$('debt').textContent=money(s.debt);
+    if($('health')){$('health').textContent=Math.round(s.health)+'%'; $('health').className=hc;}
+    if($('healthBar')){$('healthBar').style.width=Math.max(0,s.health)+'%'; $('healthBar').className=hc;}
+    if($('city'))$('city').textContent=p[0]+' '+p[1];
+    if($('country'))$('country').textContent='';
+    if($('flag'))$('flag').textContent='';
+    if($('marketInfo'))$('marketInfo').innerHTML=`${p[0]}: ${cityText()}.<br>${rumourHtml()}`;
+    if($('noticeText'))$('noticeText').textContent=s.notice;
+    if($('spaceLabel'))$('spaceLabel').innerHTML=`${used()}/${totalSpace()} <span class="storage-type">${storageType()}</span>`;
+    if($('statusLocation'))$('statusLocation').textContent=p[0]+', '+p[1];
+    if($('rank'))$('rank').textContent=typeof updateBestRankV18==='function'?updateBestRankV18():rank();
+    if($('rankDays'))$('rankDays').textContent=typeof rankDaysText==='function'?rankDaysText():'0/5';
+    if($('reputation'))$('reputation').textContent=`${s.reputation??50}/100`;
+    if($('space'))$('space').textContent=`${used()}/${totalSpace()} · ${storageType()}`;
+    if($('heat'))$('heat').textContent=s.heat+'%';
+    renderMarketV22();
+    renderStorageV22();
+    if(typeof syncTickerV21==='function')syncTickerV21();
+    if(typeof ensureGameDustV21==='function')ensureGameDustV21();
+  }catch(e){console.error('V2.2 draw failed:',e);}
+}
+function modal(t,h){
+  const dlg=$('modal');
+  if(!dlg)return;
+  document.body.classList.add('modal-open');
+  $('modalTitle').textContent=t;
+  $('modalBody').innerHTML=`<div class="modal-head"><h3>${t}</h3><button type="button" class="modal-x" id="modalCloseBtn" aria-label="Close">×</button></div><div class="modal-scroll">${h+payDebtButton()}</div>`;
+  try{ if(!dlg.open) dlg.showModal(); }catch(e){ try{dlg.setAttribute('open','');}catch(_){} }
+  setTimeout(()=>{try{bindModalDebt();}catch(e){} const x=$('modalCloseBtn'); if(x)x.onclick=()=>done();},0);
+}
+function done(){closeModalV22(); save(); draw();}
+function performStayV22(){
+  sound('positive'); haptic(); ensureStats(); s.stats.stays=(s.stats.stays||0)+1; closeModalV22(); setTimeout(()=>nextDay(`You stay in ${places[s.city][0]}.`,true),0);
+}
+function performFlightV22(i,fare){
+  sound('travel'); haptic(); ensureStats(); s.stats.flights=(s.stats.flights||0)+1; s.cash-=fare; s.city=i; s.weapons=[]; closeModalV22(); setTimeout(()=>nextDay(`You land in ${places[s.city][0]}. Flight cost ${money(fare)}. Weapons were lost before boarding.`,false),0);
+}
+function boardFlightWithSeizure(i,fare){
+  const hadDrugs=used(), hadWeapons=(s.weapons||[]).length;
+  let seizedDrugs=0, seizedWeapons=0;
+  if(hadDrugs && Math.random()<.92){seizedDrugs=hadDrugs; Object.keys(s.inv).forEach(k=>s.inv[k]=0);}
+  if(hadWeapons && Math.random()<.92){seizedWeapons=hadWeapons; s.weapons=[];}
+  s.heat=Math.min(100,s.heat+((seizedDrugs||seizedWeapons)?rand(12,30):rand(2,8)));
+  s.notice=(seizedDrugs||seizedWeapons)?`Airport security seized ${seizedDrugs} drug units and ${seizedWeapons} weapon${seizedWeapons===1?'':'s'}. Next time, vault first, fly second.`:`Somehow you slip through airport security with your stock intact. Do not make that your business plan.`;
+  performFlightV22(i,fare);
+}
+function showTravelFlights(){
+  const panel=$('travelPanel'); if(!panel)return;
+  panel.innerHTML=`<div class="travel-head"><p class="subtle">Select a UK or Ireland city. Prices change daily and airport security is not your mate.</p><button type="button" id="stayFromTravel">STAY HERE</button></div><div class="travel-list">${places.map((p,i)=>`<button type="button" data-city="${i}" ${i===s.city?'disabled':''}><strong>${p[0]} <em>${money(travelFare(i))}</em></strong><span>${p[1]} · ${p[3]}</span></button>`).join('')}</div>`;
+  const st=$('stayFromTravel'); if(st)st.onclick=performStayV22;
+  document.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{const i=+b.dataset.city, fare=travelFare(i); if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;} airportWarning(i,fare);});
+}
+function stay(){performStayV22();}
+function travel(){
+  ensureStats(); ensureShipping();
+  modal('Travel',`<div class="travel-tabs primary"><button type="button" id="travelModeBtn" class="active">TRAVEL</button><button type="button" id="shippingModeBtn">SHIPPING</button></div><div id="travelPanel"></div>`);
+  setTimeout(()=>{
+    const travelBtn=$('travelModeBtn'), shipBtn=$('shippingModeBtn');
+    if(!travelBtn||!shipBtn)return;
+    function activate(which){travelBtn.classList.toggle('active',which==='travel'); shipBtn.classList.toggle('active',which==='shipping'); if(which==='travel')showTravelFlights(); else showShippingHub();}
+    travelBtn.onclick=()=>activate('travel'); shipBtn.onclick=()=>activate('shipping'); activate('travel');
+  },0);
+}
+const v22PreviousNextDay=nextDay;
+function nextDay(base,showRumour){
+  try{
+    ensureStats();
+    const old={rumour:s.rumour,true:!!(s.rumour&&s.rumour.accurate)};
+    s.day++;
+    if(typeof activeDebtTotal==='function')s.debt=activeDebtTotal();
+    s.heat=Math.min(100,Math.max(0,(s.heat||0)+rand(-8,13)));
+    if(typeof rep==='function')rep(1);
+    if(typeof genPrices==='function')genPrices(old);
+    if(typeof newRumour==='function')newRumour();
+    if(typeof randomEvent==='function')randomEvent(base);
+    if(typeof updateRankProgress==='function')updateRankProgress();
+    if(typeof activeDebtTotal==='function')s.debt=activeDebtTotal();
+    if(s.day>s.maxDay)return endGame();
+    save(); draw();
+    const rumourBlock=showRumour?`<h4>Rumour Result</h4><p><strong>${old.true?'TRUE':'FALSE'}</strong> · ${old.rumour?.text||'No rumour was active.'}</p>`:'';
+    const title=showRumour?'Stay Here':'Travel Result';
+    const body=`<p>${s.notice}</p>${rumourBlock}<h4>Loan Status</h4>${debtReminderHtml()}`;
+    const arrest=typeof maybeArrest==='function'?maybeArrest(showRumour?'stay':'travel'):null;
+    if(arrest&&typeof showArrestModal==='function')return showArrestModal(arrest,title,body,rumourBlock);
+    modal(title,`${body}<button type="button" id="continueEvent">Continue</button>`);
+    setTimeout(()=>{const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalV22(); handleDueLoans();};},0);
+  }catch(e){
+    console.error('V2.2 nextDay recovered:',e);
+    try{ if(typeof v22PreviousNextDay==='function')return v22PreviousNextDay(base,showRumour); }catch(err){console.error('Fallback nextDay failed:',err);}
+  }
+}
+function save(){ensureStats(); s.version='2.2'; localStorage.setItem('noir_market_v2_2',JSON.stringify(s));}
+function load(){
+  let x=localStorage.getItem('noir_market_v2_2')||localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  if(x){s=JSON.parse(x); ensureStats(); s.version='2.2'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+  newGame(false); return true;
+}
+function baseState(){return{version:'2.2',playerName:'',settings:{sound:soundEnabled?'on':'off',music:musicEnabled?'on':'off'},reputation:50,news:'MARKETS ARE QUIET TODAY.',day:1,maxDay:30,cash:1000,bank:0,debt:0,health:100,heat:0,city:0,inv:blankInv(),supply:blankSupply(),prices:{},trends:{},owned:[],weapons:[],loans:[],shipments:[],rumour:null,notice:'You start in London with £1,000 cash, £0 in the bank and a clean slate.',travelFares:{},vaults:{},weaponVaults:{},vaultLevels:{},economy:{cities:{},news:{text:'MARKETS ARE QUIET TODAY.'},history:[]},rankState:{current:'Wannabe',days:0,pending:null,pendingDays:0},stats:{tradesBought:0,tradesSold:0,flights:0,stays:0,fightsWon:0,fightsLost:0,mugged:0,loansTaken:0,largestTrade:0,bestNet:1000,bestRank:'Wannabe',arrests:0,jailDays:0,bribes:0,informants:0,shipmentsExported:0,shipmentsImported:0}}}
+function bindMainButtonsV22(){
+  const bind=(id,fn)=>{const el=$(id); if(el)el.onclick=fn;};
+  bind('buyBtn',()=>transact('Buy')); bind('sellBtn',()=>transact('Sell')); bind('stayBtn',stay); bind('travelBtn',travel); bind('bankBtn',bank); bind('dumpBtn',dump); bind('shopBtn',shop); bind('hustleBtn',hustle); bind('menuBtn',showMenu);
+}
+setTimeout(()=>{bindMainButtonsV22(); ensureMainSectionsV22(); draw(); console.log('NOIR MARKET V2.2 checks: market/storage restored and stay/travel day advance hotfix active.');},320);
