@@ -588,3 +588,10 @@ body:not(.modal-open) .app{pointer-events:auto!important;}
 #particle-canvas,.game-dust{display:none!important;}
 #dust1,#dust2,#dust3{display:none!important;}
 .splash .live-dust i{width:3px;height:3px;}
+
+
+/* Noir Market V2.5 Performance Patch: faster splash only particles. */
+#particle-canvas,.game-dust,#dust1,#dust2,#dust3{display:none!important;}
+.splash .dust-bg{display:none!important;}
+.splash .live-dust{will-change:opacity!important;contain:layout paint!important;}
+.splash .live-dust i{min-width:3px!important;min-height:3px!important;max-width:6px!important;max-height:6px!important;will-change:transform!important;}
