@@ -1435,7 +1435,7 @@ function baseState(){return{version:'2.1',playerName:'',settings:{sound:soundEna
 function v21SelfTest(){console.log('NOIR MARKET V2.1 checks: market restored, full-page opaque section views, ticker smoothing and dust across pages active.');}
 setTimeout(v21SelfTest,260);
 
-/* Noir Market V2.2: restore main screen sections and repair stay/travel day advance. */
+/* Noir Market V2.3: icon refresh only; V2.2 gameplay retained. */
 function closeModalV22(){
   const dlg=$('modal');
   try{ if(dlg && dlg.open) dlg.close(); }catch(e){}
@@ -1587,9 +1587,9 @@ function nextDay(base,showRumour){
     try{ if(typeof v22PreviousNextDay==='function')return v22PreviousNextDay(base,showRumour); }catch(err){console.error('Fallback nextDay failed:',err);}
   }
 }
-function save(){ensureStats(); s.version='2.2'; localStorage.setItem('noir_market_v2_2',JSON.stringify(s));}
+function save(){ensureStats(); s.version='2.3'; localStorage.setItem('noir_market_v2_3',JSON.stringify(s));}
 function load(){
-  let x=localStorage.getItem('noir_market_v2_2')||localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
+  let x=localStorage.getItem('noir_market_v2_3')||localStorage.getItem('noir_market_v2_2')||localStorage.getItem('noir_market_v2_1')||localStorage.getItem('noir_market_v2_0')||localStorage.getItem('noir_market_v1_9')||localStorage.getItem('noir_market_v1_8')||localStorage.getItem('noir_market_v1_7')||localStorage.getItem('noir_market_v1_6')||localStorage.getItem('noir_market_v1_5')||localStorage.getItem('noir_market_v1_4')||localStorage.getItem('noir_market_v1_3')||localStorage.getItem('noir_market_v1_2')||localStorage.getItem('noir_market_v13')||localStorage.getItem('noir_market_v12')||localStorage.getItem('noir_market_v9')||localStorage.getItem('noir_market_v6')||localStorage.getItem('noir_market_v5')||localStorage.getItem('noir_market_v4');
   if(x){s=JSON.parse(x); ensureStats(); s.version='2.2'; setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
   newGame(false); return true;
 }
@@ -1598,4 +1598,4 @@ function bindMainButtonsV22(){
   const bind=(id,fn)=>{const el=$(id); if(el)el.onclick=fn;};
   bind('buyBtn',()=>transact('Buy')); bind('sellBtn',()=>transact('Sell')); bind('stayBtn',stay); bind('travelBtn',travel); bind('bankBtn',bank); bind('dumpBtn',dump); bind('shopBtn',shop); bind('hustleBtn',hustle); bind('menuBtn',showMenu);
 }
-setTimeout(()=>{bindMainButtonsV22(); ensureMainSectionsV22(); draw(); console.log('NOIR MARKET V2.2 checks: market/storage restored and stay/travel day advance hotfix active.');},320);
+setTimeout(()=>{bindMainButtonsV22(); ensureMainSectionsV22(); draw(); console.log('NOIR MARKET V2.3 checks: market/storage restored and stay/travel day advance hotfix active.');},320);
