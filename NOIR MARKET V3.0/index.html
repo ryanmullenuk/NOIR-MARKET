@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Noir Market V3.0</title>
+  <link rel="preload" as="image" href="assets/logo-splash.png" fetchpriority="high" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: dark)" href="apple-touch-icon-dark.png" />
+  <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: light)" href="apple-touch-icon-light.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  
+  <div id="splash" class="splash">
+    <div class="dust-bg" aria-hidden="true"><div id="dust1"></div><div id="dust2"></div><div id="dust3"></div></div>
+    <div class="splash-vignette" aria-hidden="true"></div>
+    <img class="splash-logo" src="assets/logo-splash.png" alt="Noir logo" width="360" height="489" decoding="sync" fetchpriority="high" />
+    <h1>NOIR MARKET</h1>
+    <p id="splashPrompt" aria-hidden="true"></p>
+    <button type="button" id="splashEnter" class="splash-loader" aria-label="Loading Noir Market" disabled>
+      <span class="splash-loader-fill" id="splashLoaderFill"></span>
+      <span class="splash-loader-text" id="splashLoaderText">LOADING</span>
+    </button>
+  </div>
+  <main class="app">
+    <section class="news-ticker card"><span>NEWS</span><div class="ticker-track"><div id="newsTicker">MARKETS ARE QUIET.</div></div></section>
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div>
+        <h1>NOIR MARKET</h1>
+        <p id="headline">Move quietly. Trade fast. Survive the market.</p>
+      </div>
+      <div class="daybox"><span>DAY</span><strong id="dayCount">1</strong><em>/30</em></div>
+    </header>
+
+    <section class="stats cards">
+      <div><span>Cash</span><strong id="cash">£0</strong></div>
+      <div><span>Finances</span><strong id="bank">£0</strong></div>
+      <div><span>Debt</span><strong class="bad" id="debt">£0</strong></div>
+      <div><span>Health</span><strong id="health">100%</strong></div>
+    </section>
+
+    <section class="location card">
+      <div class="flag" id="flag">🇬🇧</div>
+      <div class="place">
+        <h2 id="city">London</h2>
+        <p id="country">UK</p>
+      </div>
+      <div class="market-info" id="marketInfo"></div>
+    </section>
+
+    <section class="notice card">
+      <h3>Information</h3>
+      <p id="noticeText">You start in London with £1,000 cash, £0 in the bank and a clean slate.</p>
+    </section>
+
+    <section class="market card">
+      <div class="section-head">
+        <h3>The Market</h3>
+        <p><span class="up">↑ Rising</span> <span class="down">↓ Falling</span></p>
+      </div>
+      <div class="table" id="marketTable"></div>
+    </section>
+
+    <section class="pocket card">
+      <div class="section-head">
+        <h3>Storage <span id="spaceLabel">0/20</span></h3>
+      </div>
+      <div class="table small" id="pocketTable"></div>
+    </section>
+
+    <section class="actions card">
+      <h3>Action</h3>
+      <div class="button-grid">
+        <button class="buy" id="buyBtn">Buy</button>
+        <button class="sell" id="sellBtn">Sell</button>
+        <button id="dumpBtn">Storage</button>
+        <button id="bankBtn">Finances</button>
+        <button id="travelBtn">Travel</button>
+        <button id="shopBtn">Black Market</button>
+        <button id="hustleBtn">Hustle</button>
+        <button id="stayBtn">Stay Here</button>
+      </div>
+    </section>
+
+    <section class="status card">
+      <h3>Status</h3>
+      <div class="healthbar"><span id="healthBar"></span></div>
+      <div class="status-grid">
+        <p><span>Location</span><strong id="statusLocation"></strong></p>
+        <p><span>Rank</span><strong id="rank"></strong></p>
+        <p><span>Days Held</span><strong id="rankDays">0/5</strong></p>
+        <p><span>Reputation</span><strong id="reputation">50/100</strong></p>
+        <p><span>Storage</span><strong id="space"></strong></p>
+        <p><span>Heat</span><strong id="heat"></strong></p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <form method="dialog" class="modal-card">
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"></div>
+      <menu>
+        <button value="cancel">Close</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="game.js"></script>
+</body>
+</html>
