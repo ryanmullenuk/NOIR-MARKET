@@ -2553,3 +2553,326 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   }
   setTimeout(()=>{try{document.querySelectorAll('.game-dust,.live-dust').forEach(el=>el.remove()); console.log('NOIR MARKET V3.2: splash canvas snow/parallax effect active.');}catch(e){}},320);
 })();
+
+/* Noir Market V3.3: splash snow tuning, sharper city news, price events and timed informant offers. */
+(function(){
+  const VERSION='3.3';
+  const SAVE_KEY='noir_market_v3_3';
+  const FALLBACK_KEYS=['noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+  let informantTimers=[];
+  let informantPopupActive=false;
+
+  function cleanDrug(name){
+    const map={Weed:'Pot',Ketamine:'Kat',MDMA:'Ecstasy'};
+    return map[name]||name;
+  }
+  function marketFor(city){ensureEconomy(); return s.economy.cities[city]||(s.economy.cities[city]=blankCityMarket());}
+  function ensureV33(){
+    ensureStats(); ensureEconomy();
+    s.version=VERSION;
+    s.v33=s.v33||{};
+    s.v33.priceEvents=s.v33.priceEvents||[];
+    s.v33.informantWindows=s.v33.informantWindows||{};
+  }
+  function activeCityNames(){return places.map(p=>p[0]);}
+  function applyPriceModifier(city, product, pct, duration, title, text){
+    const drug=cleanDrug(product), m=marketFor(city);
+    if(!m.prices[drug])return;
+    const factor=1+(pct/100);
+    m.prices[drug]=Math.max(1,Math.round(m.prices[drug]*factor));
+    m.trends[drug]=pct>=0;
+    if(pct>0){
+      m.supply[drug]=Math.max(0,Math.floor((m.supply[drug]||0)*rand(45,78)/100));
+      if(city===places[s.city][0])s.heat=Math.min(100,(s.heat||0)+rand(2,8));
+    }else{
+      m.supply[drug]=Math.min(1600,Math.round((m.supply[drug]||0)*rand(122,172)/100)+rand(30,180));
+      if(city===places[s.city][0])s.heat=Math.max(0,(s.heat||0)-rand(1,5));
+    }
+    s.v33.priceEvents.push({city,drug,pct,durationLeft:duration,title,text});
+    s.v33.priceEvents=s.v33.priceEvents.slice(-12);
+  }
+  const priceEvents=[
+    {title:'Rats in the Shrooms',text:'A dealer’s lock-up had a rat problem. The rats got into a batch of mushrooms and are now apparently having the best night of their lives.',product:'Mushrooms',pct:35,duration:2},
+    {title:'Warehouse Raid',text:'Police hit a local storage unit after someone labelled the boxes “definitely not drugs”. Subtle.',product:'Cocaine',pct:45,duration:3},
+    {title:'Festival Sniffer Dog Sweep',text:'Sniffer dogs were brought into the festival site. Half the crowd suddenly remembered they left something in the car.',product:'Ecstasy',pct:30,duration:2},
+    {title:'Dodgy Batch Warning',text:'Word is there’s a bad batch going round. Nobody knows who made it, but everyone agrees they should probably stop.',product:'Heroin',pct:25,duration:2},
+    {title:'Supplier Van Clamped',text:'A supplier’s van was clamped outside a kebab shop. Stock is trapped, driver is fuming, prices are climbing.',product:'Weed',pct:20,duration:1},
+    {title:'Customs Got Lucky',text:'Customs opened the one crate everyone hoped they wouldn’t. Apparently “ceramic plant pots” was not convincing.',product:'Cocaine',pct:50,duration:3},
+    {title:'Mouldy Stash',text:'Someone stored a big weed stash in a damp garage. It now smells like a wet dog in a compost bin.',product:'Weed',pct:25,duration:2},
+    {title:'Dealer Panic',text:'A paranoid dealer flushed half his stock after seeing a police car. It was just parked outside Greggs.',product:'Ketamine',pct:35,duration:2},
+    {title:'Boat Delay',text:'A shipment is stuck offshore because the skipper got lost, seasick, and emotionally overwhelmed.',product:'Cocaine',pct:40,duration:2},
+    {title:'Loose Lips',text:'Someone bragged too loudly in the pub. Police interest is up and everyone is suddenly “just here for a quiet pint”.',product:'Ecstasy',pct:25,duration:2},
+    {title:'Overstocked Dealer',text:'A local dealer bought too much stock and needs cash fast. Classic business planning.',product:'Weed',pct:-25,duration:1},
+    {title:'Festival Drop-Off',text:'A festival supplier overestimated demand after half the crowd spent their money on £14 noodles.',product:'Ecstasy',pct:-30,duration:2},
+    {title:'Lucky Dock Arrival',text:'A shipment landed clean after customs got distracted by a bloke importing 400 fake designer belts.',product:'Cocaine',pct:-35,duration:2},
+    {title:'Student Loan Day',text:'Students are buying everything in sight, but one supplier has flooded the market early to get ahead.',product:'Ketamine',pct:-20,duration:1},
+    {title:'Grow House Harvest',text:'A grow house had a bumper crop. The neighbours thought the electric bill was just “one of those things”.',product:'Weed',pct:-30,duration:3},
+    {title:'Quiet Police Week',text:'Police are busy dealing with town centre chaos, leaving dealers unusually relaxed and weirdly confident.',product:'Mushrooms',pct:-20,duration:2},
+    {title:'Bad Weather, Big Supply',text:'Rain ruined the weekend trade. Dealers are stuck with stock and blaming the Met Office like everyone else.',product:'Ecstasy',pct:-25,duration:1},
+    {title:'Supplier Clearance',text:'A supplier is clearing stock before disappearing to Spain for “personal reasons”.',product:'Heroin',pct:-30,duration:2},
+    {title:'Wrong Delivery Address',text:'A bulk order went to the wrong flat. The new “owner” is selling cheap before anyone asks questions.',product:'Cocaine',pct:-25,duration:1},
+    {title:'Market Flood',text:'Too many dealers turned up with the same product. Everyone is undercutting each other and pretending it’s strategy.',product:'Weed',pct:-35,duration:2}
+  ];
+  const cityStories={
+    London:['LONDON: POLICE RAID STORAGE UNITS AFTER NEIGHBOURS REPORT “TOO MANY MEN WITH SPORTS BAGS”','LONDON: CLUB NIGHT CANCELLED AFTER DJ FORGETS USB AND EVERYONE BLAMES SECURITY','LONDON: RUMOURS OF CLEAN SHIPMENT LANDING NEAR DOCKS SEND PRICES SLIDING','LONDON: FESTIVAL CROWD SPENDS MORE ON CHIPS THAN PILLS, DEALERS LEFT HOLDING STOCK','LONDON: SNIFFER DOG RETIRES EARLY AFTER “VERY CONFUSING” NIGHT IN SOHO'],
+    Manchester:['MANCHESTER: WAREHOUSE PARTY SHUT DOWN AFTER SOMEONE INVITES THEIR ENTIRE CONTACT LIST','MANCHESTER: POLICE PRESENCE INCREASES AFTER DEALERS START USING BRANDED HOODIES','MANCHESTER: BIG WEEKEND DEMAND EXPECTED AS STUDENTS DECLARE THEMSELVES “ABSOLUTELY FINE”','MANCHESTER: SUPPLIER OVERSTOCKED AFTER MISREADING THE WEATHER AND TRUSTING A BBQ FORECAST','MANCHESTER: LOCAL DEALER LOSES STASH AFTER HIDING IT “SOMEWHERE SAFE”'],
+    Birmingham:['BIRMINGHAM: CUSTOMS TIP-OFF SENDS DEALERS INTO PANIC, MOSTLY VIA BADLY SPELLED GROUP CHATS','BIRMINGHAM: CLUB QUEUE SEARCHES INTENSIFY AFTER DOORMAN FINDS BAGGIE IN SOMEONE’S SOCK','BIRMINGHAM: SUPPLY GLUT REPORTED AFTER TWO CREWS ACCIDENTALLY ORDER THE SAME PRODUCT','BIRMINGHAM: MARKET PRICES SHIFT AFTER MAIN SUPPLIER GETS STUCK ON THE M6','BIRMINGHAM: POLICE HELICOPTER SPOTTED, HALF THE CITY SUDDENLY “JUST OUT FOR MILK”'],
+    Liverpool:['LIVERPOOL: DOCKSIDE RUMOURS SUGGEST NEW SHIPMENT LANDED WITHOUT ANYONE FALLING IN THE MERSEY','LIVERPOOL: POLICE RAID FAILS AFTER SUSPECT HIDES STASH IN DOG FOOD BAG, DOG UNIMPRESSED','LIVERPOOL: WEEKEND DEMAND SPIKES AS EVERYONE CLAIMS THEY’RE ONLY HAVING “A QUIET ONE”','LIVERPOOL: SUPPLIER CUTS PRICES AFTER BUYING TOO MUCH AND DEVELOPING CASHFLOW ISSUES','LIVERPOOL: FAKE PRODUCT WARNING ISSUED AFTER CUSTOMERS DESCRIBE EFFECTS AS “MAINLY DISAPPOINTMENT”'],
+    Bristol:['BRISTOL: FESTIVAL DEMAND RISES AFTER THREE PEOPLE WITH DREADLOCKS DECLARE IT “BASICALLY SUMMER”','BRISTOL: MUSHROOM SUPPLY HIT AFTER LOCK-UP FLOODS AND EVERYTHING STARTS GROWING SOMETHING ELSE','BRISTOL: POLICE PATROLS INCREASE AROUND CLUBS AFTER TIP-OFF FROM AN OVERCONFIDENT TAXI DRIVER','BRISTOL: DEALERS DROP PRICES AFTER RAIN WASHES OUT HALF THE WEEKEND TRADE','BRISTOL: RUMOURS OF NEW SUPPLIER ARRIVING BY VAN, BOAT, OR POSSIBLY JUST VIBES'],
+    Glasgow:['GLASGOW: POLICE RAID DELAYED AFTER OFFICERS ARGUE OVER WHICH CLOSE IS THE RIGHT CLOSE','GLASGOW: DEALERS REPORT STRONG DEMAND AFTER SOMEONE SAYS “WE’LL JUST HAVE ONE”','GLASGOW: BAD BATCH WARNING SPREADS AFTER USERS DESCRIBE PRODUCT AS “A PURE LIBERTY”','GLASGOW: SUPPLIER FLOODS MARKET BEFORE VAN FAILS MOT','GLASGOW: CLUB SEARCHES TIGHTEN AFTER BAGGIE FOUND IN A PIE WRAPPER'],
+    Cardiff:['CARDIFF: MATCH DAY DEMAND SPIKES AS FANS PROMISE THEY’RE “JUST OUT FOR THE RUGBY”','CARDIFF: POLICE WARNING ISSUED AFTER DEALER USES SAME BENCH FOR EVERY MEET','CARDIFF: DOCK RUMOURS DRIVE PRICES DOWN AS NEW STOCK ENTERS THE CITY','CARDIFF: SUPPLIER DELAYED AFTER HIDING GOODS TOO WELL AND FORGETTING WHERE','CARDIFF: CLUB RAID FINDS NOTHING EXCEPT THREE LOST PHONES AND A MAN ASLEEP IN A TOILET'],
+    Leeds:['LEEDS: STUDENT NIGHT DEMAND RISES AFTER LOAN PAYMENTS HIT ACCOUNTS AND COMMON SENSE LEAVES','LEEDS: DEALER CUTS PRICES AFTER ORDERING DOUBLE AND CALLING IT “EXPANSION”','LEEDS: POLICE INCREASE PATROLS AFTER GROUP CHAT SCREENSHOTS START CIRCULATING','LEEDS: SUPPLY SHORTAGE AFTER COURIER GETS LOST AND REFUSES TO ASK FOR DIRECTIONS','LEEDS: CLUB SEARCHES STEPPED UP AFTER DOORMAN FINDS STASH IN A TUB OF HAIR GEL']
+  };
+  function tickExistingEvents(){
+    ensureV33();
+    const kept=[];
+    for(const ev of s.v33.priceEvents){
+      const m=marketFor(ev.city);
+      if(m.prices[ev.drug]){
+        const daily=1+(ev.pct/100)*0.55;
+        m.prices[ev.drug]=Math.max(1,Math.round(m.prices[ev.drug]*daily));
+        m.trends[ev.drug]=ev.pct>=0;
+        if(ev.pct>0)m.supply[ev.drug]=Math.max(0,Math.floor((m.supply[ev.drug]||0)*.72));
+        else m.supply[ev.drug]=Math.min(1600,Math.round((m.supply[ev.drug]||0)*1.18)+60);
+      }
+      ev.durationLeft--;
+      if(ev.durationLeft>0)kept.push(ev);
+    }
+    s.v33.priceEvents=kept;
+  }
+  generateNewsEvent=function(){
+    ensureV33();
+    const cities=activeCityNames();
+    const city=pick(cities);
+    const ev=pick(priceEvents);
+    applyPriceModifier(city,ev.product,ev.pct,ev.duration,ev.title,ev.text);
+    const local=cityStories[city]||[`${city.toUpperCase()}: MARKET RUMOURS MOVE QUICKER THAN COMMON SENSE`];
+    const nearby=pick(cities.filter(c=>c!==city))||city;
+    const stories=[`${city.toUpperCase()}: ${ev.title.toUpperCase()} — ${ev.text}`,pick(local),pick(cityStories[nearby]||local)];
+    const text=formatTicker?formatTicker(stories):stories.join('   •   ').toUpperCase();
+    s.economy.news={text,stories:stories.map(upperNews),day:s.day,priceEvent:ev.title};
+    s.news=text;
+    s.economy.history.unshift(`${ev.title}: ${ev.text}`);
+    s.economy.history=s.economy.history.slice(0,10);
+    setActiveCityMarket();
+    return text;
+  };
+  genPrices=function(force){
+    ensureV33();
+    places.forEach(p=>{
+      const city=p[0], m=marketFor(city);
+      drugs.forEach(([name,,lo,hi])=>{
+        const old=m.prices[name]||rand(lo,hi);
+        const target=rand(lo,hi);
+        let mult=rand(88,118)/100;
+        let crash=m.crashes&&m.crashes[name];
+        if(crash&&crash.days>0){
+          mult*=crash.factor;
+          crash.factor=Math.min(.96,crash.factor+((1-crash.factor)*.38));
+          crash.days--;
+          if(crash.days<=0)delete m.crashes[name];
+        }
+        const pval=Math.max(1,Math.round(((old*2+target)/3)*mult));
+        m.trends[name]=pval>=old;
+        m.prices[name]=pval;
+        m.supply[name]=clamp(Math.round((m.supply[name]||rand(0,1000))*rand(80,120)/100)+rand(-80,90),0,1200);
+      });
+    });
+    if(force&&typeof applyRumourResult==='function')applyRumourResult(force.rumour||force);
+    tickExistingEvents();
+    if(s.reputation>=81){const m=marketFor(places[s.city][0]); drugs.forEach(([name])=>{m.supply[name]=Math.min(1500,Math.round(m.supply[name]*1.12)+25);});}
+    generateNewsEvent();
+    setActiveCityMarket();
+  };
+  function realTip(){
+    const tips=[
+      {name:'Simon the Snitch',text:'London’s dry on coke. Prices are about to climb. Don’t ask how I know, I owe people.',city:'London',product:'Cocaine',pct:28,duration:2},
+      {name:'Loose Lisa',text:'Bristol’s flooded with pills. Everyone bought too much before the rain. Prices are soft.',city:'Bristol',product:'Ecstasy',pct:-24,duration:2},
+      {name:'Pistol Pete',text:'Glasgow’s getting hot. Police are circling ket suppliers. Move carefully.',city:'Glasgow',product:'Ketamine',pct:22,duration:2,heat:10},
+      {name:'Simon the Snitch',text:'Mushrooms in Cardiff are short. Something about damp storage and a very relaxed rat.',city:'Cardiff',product:'Mushrooms',pct:28,duration:2},
+      {name:'Loose Lisa',text:'Weed in Leeds is cheap today. Too many lads, not enough buyers.',city:'Leeds',product:'Weed',pct:-22,duration:1},
+      {name:'Pistol Pete',text:'Liverpool docks just got fresh stock in. Coke price will dip before it snaps back.',city:'Liverpool',product:'Cocaine',pct:-25,duration:1},
+      {name:'Simon the Snitch',text:'Manchester’s clubs are being watched. Pills are risky but prices will jump.',city:'Manchester',product:'Ecstasy',pct:24,duration:2,heat:6},
+      {name:'Loose Lisa',text:'Birmingham’s full of cheap weed after a grow house panic sale.',city:'Birmingham',product:'Weed',pct:-26,duration:2}
+    ];
+    const tip=pick(tips);
+    applyPriceModifier(tip.city,tip.product,tip.pct,tip.duration,'Informant Tip',tip.text);
+    if(tip.heat&&tip.city===places[s.city][0])s.heat=Math.min(100,(s.heat||0)+tip.heat);
+    return `${tip.name} says: “${tip.text}”`;
+  }
+  const falseTips=[
+    'Simon insists coke is about to crash in London. He looks confident, which is usually a bad sign.',
+    'Lisa swears pills are drying up in Bristol. She also swore she once dated Stormzy.',
+    'Pete says Glasgow is safe tonight. The police helicopter overhead suggests otherwise.',
+    'Simon claims weed prices are rising in Leeds. He may have confused Leeds with a dream he had.',
+    'Lisa says Cardiff is flooded with mushrooms. Nobody else has heard this, including Cardiff.',
+    'Pete says Liverpool docks are locked down. Ten minutes later, everyone seems fully stocked.'
+  ];
+  const scamTexts=[
+    'Simon takes the £100, says “back in two minutes”, and is last seen sprinting through a car park.',
+    'Loose Lisa pockets the £250, winks, and gets into a taxi she clearly cannot afford.',
+    'Pistol Pete takes the £10,000, stares at you for three seconds, then says: “Bad investment.” He leaves.',
+    'The informant takes the cash and gives you a tip about horse racing. It is not even today’s race.',
+    'They vanish with your money. You have learned an important lesson about trusting people in alleyways.'
+  ];
+  const vagueTexts=[
+    'Simon says: “Something’s happening somewhere soon.” You are now poorer and none the wiser.',
+    'Lisa says: “I’m hearing movement.” She refuses to explain whether she means stock, police, or her stomach.',
+    'Pete says: “Keep your eyes open.” For £10,000, this feels legally close to robbery.',
+    'The informant tells you to “watch the market”. Useful, if you had never considered looking at the market.',
+    'They say the streets are changing. The streets appear to still be streets.'
+  ];
+  const slapTexts=[
+    'You slap the offer away. The informant looks offended, then asks if you’ve got a spare vape.',
+    'You ignore the tip. The informant mutters something about loyalty and wanders off.',
+    'You send them packing. They shout “your loss” but trip over the kerb.',
+    'You refuse to pay. The informant immediately offers the same tip to someone behind you.',
+    'You slap the offer away. They call you tight and vanish into the bus station.'
+  ];
+  const timedInformants=[
+    {name:'Simon the Snitch',cost:100,tone:'Cheap, nervous and twitchy.'},
+    {name:'Loose Lisa',cost:250,tone:'Gossipy, confident and chaotic.'},
+    {name:'Pistol Pete',cost:10000,tone:'Serious, threatening and expensive.'}
+  ];
+  function canShowInformantPopup(){
+    const splash=$('splash'), dlg=$('modal');
+    if(informantPopupActive)return false;
+    if(document.hidden)return false;
+    if(splash&&!splash.classList.contains('hide'))return false;
+    if(dlg&&dlg.open)return false;
+    return !!s;
+  }
+  function showInformantOffer(){
+    if(!canShowInformantPopup()){setTimeout(showInformantOffer,rand(20,45)*1000);return;}
+    informantPopupActive=true;
+    const info=pick(timedInformants);
+    const afford=(s.cash||0)>=info.cost;
+    modal('INFORMANT OFFER',`<p><strong>${info.name}</strong> has approached you with a tip.</p><p class="subtle">${info.tone}</p><div class="informant-cost"><span>Cost</span><strong>${money(info.cost)}</strong></div><p>Pay for the tip, or slap them away.</p>${afford?'':'<p class="informant-disabled">You cannot afford this tip.</p>'}<div class="informant-choice"><button type="button" class="buy" id="payInformantTimed" ${afford?'':'disabled'}>PAY</button><button type="button" class="sell" id="slapInformantAway">SLAP AWAY</button></div>`);
+    const offerDlg=$('modal');
+    if(offerDlg){
+      const release=()=>{informantPopupActive=false; offerDlg.removeEventListener('close',release);};
+      offerDlg.addEventListener('close',release,{once:true});
+    }
+    setTimeout(()=>{
+      const payBtn=$('payInformantTimed'), slapBtn=$('slapInformantAway');
+      if(payBtn)payBtn.onclick=()=>{
+        if((s.cash||0)<info.cost){errorMsg('INSUFFICIENT FUNDS');return;}
+        s.cash-=info.cost;
+        ensureStats(); s.stats.informants=(s.stats.informants||0)+1;
+        const r=Math.random();
+        let outcome='';
+        if(r<.60){outcome=realTip(); success('TIP PAID');}
+        else if(r<.80){outcome=pick(falseTips);}
+        else if(r<.90){outcome=pick(scamTexts); if(info.name==='Loose Lisa')rep(-1); if(info.name==='Pistol Pete')rep(-2); errorMsg('SCAMMED');}
+        else {outcome=pick(vagueTexts);}
+        s.notice=outcome;
+        save(); draw(); informantPopupActive=false;
+        modal('Informant Tip',`<p>${outcome}</p><button type="button" id="continueEvent">Continue</button>`);
+        setTimeout(()=>{const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalV22();};},0);
+      };
+      if(slapBtn)slapBtn.onclick=()=>{
+        if(info.name==='Loose Lisa')rep(-1);
+        if(info.name==='Pistol Pete')rep(-3);
+        const msg=pick(slapTexts);
+        s.notice=msg;
+        save(); draw(); informantPopupActive=false;
+        modal('Offer Refused',`<p>${msg}</p><button type="button" id="continueEvent">Continue</button>`);
+        setTimeout(()=>{const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalV22();};},0);
+      };
+    },0);
+  }
+  function scheduleInformants(){
+    informantTimers.forEach(clearTimeout); informantTimers=[];
+    const windows=[[90,150],[240,360],[390,510],[1350,1650]];
+    windows.forEach(([a,b],idx)=>{
+      const delay=rand(a,b)*1000;
+      informantTimers.push(setTimeout(()=>{showInformantOffer(); s.v33=s.v33||{}; s.v33.informantWindows[idx]=true;},delay));
+    });
+  }
+  const oldSave=save;
+  save=function(){ensureV33(); s.version=VERSION; localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){
+      s=JSON.parse(x); ensureV33(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;
+    }
+    newGame(false); ensureV33(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v33={priceEvents:[],informantWindows:{}}; return state;};
+  draw=function(){previousDraw(); if(s&&s.economy&&s.economy.news&&$('newsTicker'))syncTickerV21();};
+  function startInstantTopSnow(){
+    const canvas=$('splashSnowCanvas'), splash=$('splash');
+    if(!canvas||!splash)return;
+    if(window.__NOIR_V33_SNOW_RUNNING)return;
+    window.__NOIR_V33_SNOW_RUNNING=true;
+    const ctx=canvas.getContext('2d'); if(!ctx)return;
+    let raf=0, running=true, pointer=0;
+    const count=(window.matchMedia&&window.matchMedia('(max-width:560px)').matches)?190:330;
+    const flakes=[];
+    function resize(){
+      const ratio=Math.min(window.devicePixelRatio||1,2);
+      const w=window.innerWidth, h=window.innerHeight;
+      canvas.width=Math.ceil(w*ratio); canvas.height=Math.ceil(h*ratio);
+      canvas.style.width=w+'px'; canvas.style.height=h+'px';
+      ctx.setTransform(ratio,0,0,ratio,0,0);
+    }
+    function reset(f,initial){
+      const w=window.innerWidth, h=window.innerHeight;
+      f.x=rand(8,Math.max(8,w-8));
+      f.y=initial?rand(-Math.floor(h*.45),8):rand(-90,-8);
+      const z=Math.random();
+      f.r=.65+Math.pow(z,2)*2.9;
+      f.v=1.2+z*4.8;
+      f.a=.22+z*.58;
+      f.s=(Math.random()*1.7)+.35;
+      f.t=Math.random()*Math.PI*2;
+    }
+    function init(){flakes.length=0; for(let i=0;i<count;i++){const f={}; reset(f,true); flakes.push(f);}}
+    function step(){
+      if(!running)return;
+      const w=window.innerWidth,h=window.innerHeight;
+      ctx.clearRect(0,0,w,h);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(0,0,w,h); ctx.clip();
+      for(const f of flakes){
+        f.t+=.018; f.y+=f.v; f.x+=Math.sin(f.t)*f.s+(pointer*.58);
+        if(f.y>h+10)reset(f,false);
+        if(f.x>w-4)f.x=4; if(f.x<4)f.x=w-4;
+        ctx.beginPath();
+        ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+        ctx.shadowBlur=0;
+        ctx.fillStyle='rgba(255,255,255,'+f.a+')';
+        ctx.fill();
+      }
+      ctx.restore();
+      raf=requestAnimationFrame(step);
+    }
+    function onPointer(e){pointer=((e.clientX||window.innerWidth/2)/window.innerWidth)-.5;}
+    function stop(){running=false; if(raf)cancelAnimationFrame(raf); ctx.clearRect(0,0,window.innerWidth,window.innerHeight); window.removeEventListener('pointermove',onPointer); window.removeEventListener('resize',onResize); window.__NOIR_V33_SNOW_RUNNING=false;}
+    function onResize(){resize(); init();}
+    resize(); init(); canvas.classList.add('visible');
+    window.addEventListener('pointermove',onPointer,{passive:true}); window.addEventListener('resize',onResize,{passive:true});
+    window.__NOIR_V33_STOP_SNOW=stop;
+    raf=requestAnimationFrame(step);
+  }
+  createSplashDust=function(){startInstantTopSnow();};
+  setupSplashLoaderV27=function(){
+    const splash=$('splash'), enter=$('splashEnter'), fill=$('splashLoaderFill'), text=$('splashLoaderText'), prompt=$('splashPrompt');
+    if(!splash||!enter||!fill||!text)return;
+    if(splash.dataset.loaderVersion==='3.3')return;
+    splash.dataset.loaderVersion='3.3';
+    let ready=false, entered=false;
+    const markReady=()=>{if(ready)return; ready=true; fill.style.width='100%'; enter.disabled=false; enter.classList.add('ready'); text.textContent='ENTER'; enter.setAttribute('aria-label','Enter Noir Market'); if(prompt)prompt.textContent='';};
+    const enterGame=()=>{if(!ready||entered)return; entered=true; unlockAudio(); sound('positive'); splash.classList.add('hide'); setTimeout(()=>{try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){} showWelcome(); scheduleInformants();},420);};
+    enter.disabled=true; enter.classList.remove('ready'); enter.onclick=enterGame; splash.onclick=(e)=>{if(e.target&&e.target.closest&&e.target.closest('#splashEnter'))return; enterGame();};
+    fill.style.transition='width .2s cubic-bezier(.18,.84,.25,1)'; fill.style.width='0%'; text.textContent='LOADING'; if(prompt)prompt.textContent='';
+    startInstantTopSnow();
+    requestAnimationFrame(()=>{fill.style.width='70%'; requestAnimationFrame(()=>setTimeout(markReady,115));});
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{try{setupSplashLoaderV27();}catch(e){console.error('V3.3 setup failed:',e);}}, {once:true});
+  else setTimeout(()=>{try{setupSplashLoaderV27(); if(s&&s.version!==VERSION){s.version=VERSION; save();}}catch(e){console.error('V3.3 setup failed:',e);}},0);
+  setTimeout(()=>{try{document.title='Noir Market V3.3'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
+})();

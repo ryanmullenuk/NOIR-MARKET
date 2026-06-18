@@ -1,0 +1,30 @@
+NOIR MARKET V3.3 CHANGELOG
+
+Release type: Feature and splash polish release
+Baseline: Noir Market V3.2
+
+Changes made:
+- Updated release version to V3.3.
+- Changed splash snow so it starts immediately from the top of the screen.
+- Kept the splash screen locked full screen with clipped canvas edges to avoid visible snow streaks around the border.
+- Added 20 new random price events: 10 negative supply/risk/quality events and 10 positive supply/glut/heat reduction events.
+- Added short-lived price modifiers with duration handling for event-driven price movement.
+- Added city-specific news ticker stories for London, Manchester, Birmingham, Liverpool, Bristol, Glasgow, Cardiff and Leeds.
+- Updated news generation so ticker lines feel sharper, darker, more British and less generic.
+- Added random timed informant offer popups during active play.
+- Added PAY and SLAP AWAY informant choices.
+- Added Simon the Snitch (£100), Loose Lisa (£250) and Pistol Pete (£10,000) to timed popups.
+- Added hidden informant outcome split: real tip, false tip, scam, or vague harmless tip.
+- Added affordability handling when the player cannot pay for a tip.
+- Added reputation effects for slapping away Lisa/Pete and being scammed by Lisa/Pete.
+- Prevented informant popups from stacking or triggering during splash, inactive play or other modals.
+- Retained MP3-free build.
+- Retained existing gameplay systems, travel, shipping, market, storage, loans, quick navigation and save migration.
+
+Checks completed:
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
+- V3.3 title, manifest version, cache name and save key confirmed.
+- MP3/music asset path confirmed absent from active build files.
+- New price event, city ticker, informant popup and splash snow markers confirmed present.
