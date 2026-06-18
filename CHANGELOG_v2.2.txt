@@ -1,0 +1,18 @@
+NOIR MARKET V2.2 CHANGELOG
+
+Bug fixes:
+- Restored The Market section on the main game screen.
+- Restored Storage section on the main game screen.
+- Added a final safety render so both sections are recreated if missing or hidden.
+- Fixed Stay Here so it advances the day again.
+- Fixed Travel so completed flights advance the day again.
+- Rebound the main action buttons after startup to prevent stale handlers from older overrides.
+- Tightened modal close handling so full-screen pages do not leave the body locked after closing.
+
+Preserved:
+- V2.1 full-screen opaque section behaviour.
+- Travel / Shipping split.
+- Shipping export tile destinations.
+- Dynamic market, rumours and news events.
+- Loans, vaults, hustle, music, particles and home screen icons.
+- Save migration from V2.1 and earlier versions.

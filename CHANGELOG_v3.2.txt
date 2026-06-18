@@ -1,0 +1,10 @@
+Noir Market V3.2 Changelog
+
+- Incremented release version from V3.1 to V3.2.
+- Added a splash-only canvas snow/parallax overlay adapted from the requested CodePen effect.
+- Added depth-based particle sizing, opacity, fall speed, sway and pointer-influenced wind.
+- Kept the effect limited to the splash screen only and stops it after entering the game.
+- Disabled the old DOM live-dust layer on the splash to avoid duplicate particle systems.
+- Kept the larger ENTER text on the loading bar.
+- Updated service worker cache name and manifest version to V3.2.
+- Preserved gameplay systems and save migration from V3.1 and older versions.

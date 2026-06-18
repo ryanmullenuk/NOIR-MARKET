@@ -1,0 +1,22 @@
+Noir Market V3.0 Changelog
+
+- Added a splash-only optimised logo asset at assets/logo-splash.png.
+- Preloaded the splash logo with high fetch priority.
+- Added explicit splash logo width, height, synchronous decode and high fetch priority.
+- Made the loading bar thinner while keeping LOADING and ENTER text proportioned.
+- Removed the MP3 music file from the build.
+- Removed the MP3 path and prevented the browser Audio object from loading the MP3.
+- Retained existing sound effects and music toggle behaviour using the lightweight synth fallback only.
+- Increased splash particle speed by approximately 50%.
+- Kept splash particles at 70 and limited to the splash screen only.
+- Added more random particle sizing while retaining the existing visual direction.
+- Updated release version, save key, manifest version and service worker cache to V3.0.
+
+Regression checks completed:
+- JavaScript syntax check passed.
+- Service worker syntax check passed.
+- ZIP integrity check passed.
+- MP3 file confirmed removed.
+- MP3 runtime file path confirmed removed from the active build logic.
+- Service worker confirmed not to precache MP3.
+- Save migration retained from V2.9 and older versions.
