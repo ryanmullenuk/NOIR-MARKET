@@ -2877,11 +2877,11 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   setTimeout(()=>{try{document.title='Noir Market V3.3'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
 })();
 
-/* Noir Market V3.4: fast modal close, opaque full-screen overlays and travel stop logic. */
+/* Noir Market V3.6: home screen icon refresh. */
 (function(){
-  const VERSION='3.4';
-  const SAVE_KEY='noir_market_v3_4';
-  const FALLBACK_KEYS=['noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const VERSION='3.6';
+  const SAVE_KEY='noir_market_v3_6';
+  const FALLBACK_KEYS=['noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   const previousBaseState=baseState;
   const previousDraw=draw;
 
@@ -2893,6 +2893,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     s.v33.priceEvents=s.v33.priceEvents||[];
     s.v33.informantWindows=s.v33.informantWindows||{};
     s.v34=s.v34||{};
+    s.v35=s.v35||{};
   }
   function carriedDrugUnits(){try{return typeof used==='function'?used():0;}catch(e){return 0;}}
   function carriedWeaponUnits(){return (s&&Array.isArray(s.weapons))?s.weapons.length:0;}
@@ -2923,7 +2924,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
 
   done=function(){
     closeModalFastV34();
-    try{save(); draw();}catch(e){console.warn('V3.4 done redraw recovered:',e);}
+    try{save(); draw();}catch(e){console.warn('V3.5 done redraw recovered:',e);}
   };
 
   closeModalV22=function(){ closeModalFastV34(); };
@@ -3013,7 +3014,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     if(x){s=JSON.parse(x); ensureV34(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
     newGame(false); ensureV34(); save(); return true;
   };
-  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v34={}; return state;};
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v34={}; state.v35={}; return state;};
   draw=function(){previousDraw();};
 
   const dlg=$('modal');
@@ -3021,10 +3022,10 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     dlg.addEventListener('close',()=>{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');});
     dlg.addEventListener('cancel',(e)=>{e.preventDefault();closeModalFastV34();});
   }
-  setTimeout(()=>{try{document.title='Noir Market V3.4'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.4: fast modal close, full-screen opaque overlays and revised airport stop logic active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V3.6'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.6: home screen icon refresh active.');}catch(e){}},320);
 })();
 
-/* Noir Market V3.4 penalty wording correction. */
+/* Noir Market V3.6 penalty wording correction retained. */
 (function(){
   applyArrestPenalty=function(arrest,failedBribe){
     if(typeof rep==='function')rep(-15);
