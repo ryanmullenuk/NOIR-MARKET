@@ -1,0 +1,45 @@
+NOIR MARKET V1.5 CHANGELOG
+
+Release focus: proportional loan interest and early repayment behaviour.
+
+Changes made:
+- Loans now store principal, interest rate, start day, due day and term length.
+- Full advertised interest is only charged when the player reaches the full loan term.
+- Early repayment now charges a proportional amount of interest based on days elapsed.
+- Same-day repayment carries a 10% minimum interest charge on the full interest amount to prevent risk-free borrowing.
+- Loan screens now show the current settlement figure and the full-term repayment figure.
+- Bank loan list now labels full-term interest clearly.
+- Debt due screen now uses the current live settlement value.
+- Missed payments now convert the current settlement value plus a 25% penalty into a new one-day rollover debt.
+- Removed the old daily 2% automatic debt increase from day progression.
+- General debt payment now pays down live loan balances instead of only reducing a detached debt number.
+- V1.4, V1.3, V1.2 and older save loading remains supported.
+- Legacy loans that only stored a fixed repay amount are migrated safely as fixed-value loans.
+
+Preserved:
+- Splash screen logo.
+- Dust particle effects.
+- Background music and looping.
+- Shady lenders.
+- City vault system.
+- Flight seizure warnings.
+- Sell All buttons.
+- Storage/Vault transfer system.
+- Random police raids.
+- Stash discoveries.
+- Supplier arrests.
+- Festival demand spikes.
+- Customs seizures.
+- Rodent events.
+- Weapon seizure mechanics.
+- V1.4 news ticker, hustle informants, police movement news, spiked batch stories and notification layering.
+
+Checks completed:
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- Runtime loan smoke test passed.
+- Early repayment calculation checked.
+- Full-term repayment calculation checked.
+- Legacy V1.4 loan migration checked.
+- ZIP integrity check passed.

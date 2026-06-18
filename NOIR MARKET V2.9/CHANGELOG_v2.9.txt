@@ -1,0 +1,21 @@
+Noir Market V2.9 – Loading Bar and Quick Navigation
+
+Changes:
+- Incremented release version from V2.8 to V2.9.
+- Made the splash loading bar thinner.
+- Removed the separate READY wording above the loading bar.
+- Kept the bar loading behaviour, with the bar text changing to ENTER when ready.
+- Added main screen quick navigation:
+  - CASH tile opens FINANCES.
+  - FINANCES tile opens FINANCES.
+  - DEBT tile opens FINANCES.
+  - HEALTH tile opens BLACK MARKET.
+- Kept the existing FINANCES and BLACK MARKET action buttons working.
+- Added market row navigation so tapping/clicking any drug line in THE MARKET opens BUY.
+
+Preserved:
+- Existing gameplay systems.
+- Splash particles only.
+- MP3 lazy-load behaviour.
+- Market, storage, travel, shipping, loans and splash entry paths.
+- Save migration from V2.8 and older versions.

@@ -1,0 +1,20 @@
+NOIR MARKET V2.7 - SPLASH LOADING PATCH
+
+Changes made:
+- Increased splash particle size by approximately 100%.
+- Reduced splash particle count to 70.
+- Added a small black loading bar with a white border.
+- Loading bar fills white to 100%.
+- Loading text changes to ENTER once ready.
+- Splash entry is gated until the loading bar reaches 100%.
+- Updated app title, manifest version, service worker cache and save version to V2.7.
+
+Not changed:
+- Gameplay.
+- Market.
+- Storage.
+- Travel.
+- Shipping.
+- Loans.
+- Hustle.
+- Economy mechanics.

@@ -1,0 +1,18 @@
+NOIR MARKET V2.1 CHANGELOG
+
+Bug fixes and UI corrections:
+- Restored The Market price table on the main screen.
+- Added a safety render pass so the market table is rebuilt if a previous UI change hides or removes it.
+- Converted modal sections into full-screen opaque pages.
+- Prevented the underlying game screen from scrolling or being interacted with while a section is open.
+- Kept section content scrollable only inside the active page.
+- Improved the news ticker so it runs smoothly across the available news bar width.
+- Prevented ticker text from overlapping the NEWS label.
+- Kept the particle/dust effect visible across the main game and full-screen section pages.
+
+Retained from V2.0:
+- Travel and Shipping system.
+- Tile-based export destinations.
+- Amber compact vault upgrade button.
+- Dynamic economy, rumours, news effects, reputation and ranking systems.
+- Save migration from V2.0 and earlier versions.
