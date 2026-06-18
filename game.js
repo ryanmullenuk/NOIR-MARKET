@@ -2876,3 +2876,179 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   else setTimeout(()=>{try{setupSplashLoaderV27(); if(s&&s.version!==VERSION){s.version=VERSION; save();}}catch(e){console.error('V3.3 setup failed:',e);}},0);
   setTimeout(()=>{try{document.title='Noir Market V3.3'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
 })();
+
+/* Noir Market V3.4: fast modal close, opaque full-screen overlays and travel stop logic. */
+(function(){
+  const VERSION='3.4';
+  const SAVE_KEY='noir_market_v3_4';
+  const FALLBACK_KEYS=['noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function ensureV34(){
+    if(typeof ensureStats==='function')ensureStats();
+    if(typeof ensureEconomy==='function')ensureEconomy();
+    s.version=VERSION;
+    s.v33=s.v33||{priceEvents:[],informantWindows:{}};
+    s.v33.priceEvents=s.v33.priceEvents||[];
+    s.v33.informantWindows=s.v33.informantWindows||{};
+    s.v34=s.v34||{};
+  }
+  function carriedDrugUnits(){try{return typeof used==='function'?used():0;}catch(e){return 0;}}
+  function carriedWeaponUnits(){return (s&&Array.isArray(s.weapons))?s.weapons.length:0;}
+  function closeModalFastV34(){
+    const dlg=$('modal');
+    try{ if(dlg&&dlg.open)dlg.close(); }catch(e){ try{if(dlg)dlg.removeAttribute('open');}catch(_){} }
+    document.body.classList.remove('modal-open');
+    document.documentElement.classList.remove('modal-open');
+  }
+  window.closeModalFastV34=closeModalFastV34;
+
+  function bindFastClose(){
+    const x=$('modalCloseBtn');
+    if(x)x.onclick=(ev)=>{ev.preventDefault(); ev.stopPropagation(); closeModalFastV34();};
+  }
+
+  modal=function(t,h){
+    const dlg=$('modal');
+    if(!dlg)return;
+    document.body.classList.add('modal-open');
+    document.documentElement.classList.add('modal-open');
+    if($('modalTitle'))$('modalTitle').textContent=t;
+    $('modalBody').innerHTML=`<div class="modal-head"><h3>${t}</h3><button type="button" class="modal-x" id="modalCloseBtn" aria-label="Close">×</button></div><div class="modal-scroll">${h+payDebtButton()}</div>`;
+    try{ if(!dlg.open)dlg.showModal(); }catch(e){ try{dlg.setAttribute('open','');}catch(_){} }
+    bindFastClose();
+    try{bindModalDebt();}catch(e){}
+  };
+
+  done=function(){
+    closeModalFastV34();
+    try{save(); draw();}catch(e){console.warn('V3.4 done redraw recovered:',e);}
+  };
+
+  closeModalV22=function(){ closeModalFastV34(); };
+
+  function flightStopRisk(){
+    const last=(s.v34&&s.v34.lastAirport)||{};
+    const hasContraband=!!last.hadContraband;
+    const heatAtBoard=Number.isFinite(+last.heatAtBoard)?+last.heatAtBoard:(s.heat||0);
+    if(!hasContraband && heatAtBoard<=75)return {eligible:false,chance:0,major:false};
+    let chance=hasContraband?.24:.16;
+    if(last.hadDrugs)chance+=.10;
+    if(last.hadWeapons)chance+=.16;
+    if(heatAtBoard>75)chance+=Math.min(.34,(heatAtBoard-75)/70);
+    chance=Math.min(.82,chance);
+    const major=!!last.hadWeapons || heatAtBoard>88 || (last.hadDrugs&&Math.random()<.45);
+    return {eligible:true,chance,major};
+  }
+
+  maybeArrest=function(context){
+    const carrying=carriedDrugUnits()+carriedWeaponUnits();
+    const heat=s.heat||0;
+    if(context==='travel'){
+      const risk=flightStopRisk();
+      if(!risk.eligible)return null;
+      if(Math.random()>risk.chance)return null;
+      const fine=rand(500,5000), jail=rand(1,7);
+      return {major:risk.major,fine,jail,context:'travel',airport:true};
+    }
+    if(!carrying && heat<=75)return null;
+    const chance=.025+(heat>75?((heat-75)/140):0)+(carrying>0?.05:0);
+    if(Math.random()>Math.min(.55,chance))return null;
+    const major=Math.random()<(.22+(heat/300)+(carrying>0?.12:0));
+    return {major,fine:rand(500,5000),jail:rand(1,7),context};
+  };
+
+  const previousApplyArrestPenalty=typeof applyArrestPenalty==='function'?applyArrestPenalty:null;
+  applyArrestPenalty=function(arrest,bribeFail){
+    if(arrest&&arrest.airport){
+      const drugs=carriedDrugUnits(), weapons=carriedWeaponUnits();
+      if(drugs>0){Object.keys(s.inv||{}).forEach(k=>s.inv[k]=0);}
+      if(weapons>0)s.weapons=[];
+      s.notice=`Airport security seized ${drugs} drug unit${drugs===1?'':'s'} and ${weapons} weapon${weapons===1?'':'s'}. ${arrest.major?'You are taken in for a major offence.':'You get hit with a fine and a very judgemental look.'}`;
+    }
+    if(previousApplyArrestPenalty)return previousApplyArrestPenalty(arrest,bribeFail);
+  };
+
+  performFlightV22=function(i,fare){
+    sound('travel'); haptic(); ensureStats();
+    s.stats.flights=(s.stats.flights||0)+1;
+    s.cash-=fare;
+    const from=places[s.city][0], to=places[i][0];
+    s.v34=s.v34||{};
+    s.v34.lastAirport={
+      day:s.day,
+      from,
+      to,
+      hadDrugs:carriedDrugUnits()>0,
+      hadWeapons:carriedWeaponUnits()>0,
+      hadContraband:(carriedDrugUnits()+carriedWeaponUnits())>0,
+      heatAtBoard:s.heat||0
+    };
+    s.city=i;
+    closeModalFastV34();
+    setTimeout(()=>nextDay(`You land in ${places[s.city][0]}. Flight cost ${money(fare)}. ${(!s.v34.lastAirport.hadContraband&&(s.v34.lastAirport.heatAtBoard<=75))?'Clean pockets and low heat. Airport security barely looks up.':'You make it through boarding, but airport security is watching.'}`,false),0);
+  };
+
+  boardFlightWithSeizure=function(i,fare){ performFlightV22(i,fare); };
+
+  airportWarning=function(i,fare){
+    const dest=places[i][0];
+    const drugs=carriedDrugUnits(), weapons=carriedWeaponUnits(), heat=s.heat||0;
+    const clean=(drugs+weapons)===0 && heat<=75;
+    const riskText=clean
+      ? 'You are carrying no drugs or weapons and your heat is not above 75%. You should get through airport security without trouble.'
+      : 'You are carrying contraband or your heat is above 75%. Airport security may stop you, seize stock, fine you, or arrest you.';
+    modal('Airport Check',`<p><strong>Before you board:</strong> ${riskText}</p><p>Destination: <strong>${dest}</strong><br>Flight price: <strong>${money(fare)}</strong></p><div class="warning-stock"><p>Drugs carried: <strong>${drugs}</strong></p><p>Weapons carried: <strong>${weapons}</strong></p><p>Heat: <strong>${heat}%</strong></p></div><p class="subtle">Vault stock stays in the city where you leave it. Carrying clean is the safe option.</p><div class="loan-choice"><button type="button" id="storeBeforeFlight">Store in Vault</button><button type="button" class="sell" id="boardAnyway">Board Anyway</button><button type="button" id="cancelFlight">Cancel</button></div>`);
+    const sv=$('storeBeforeFlight'), ba=$('boardAnyway'), cf=$('cancelFlight');
+    if(sv)sv.onclick=()=>dump();
+    if(ba)ba.onclick=()=>boardFlightWithSeizure(i,fare);
+    if(cf)cf.onclick=()=>travel();
+  };
+
+  save=function(){ensureV34(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV34(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV34(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v34={}; return state;};
+  draw=function(){previousDraw();};
+
+  const dlg=$('modal');
+  if(dlg){
+    dlg.addEventListener('close',()=>{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');});
+    dlg.addEventListener('cancel',(e)=>{e.preventDefault();closeModalFastV34();});
+  }
+  setTimeout(()=>{try{document.title='Noir Market V3.4'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.4: fast modal close, full-screen opaque overlays and revised airport stop logic active.');}catch(e){}},320);
+})();
+
+/* Noir Market V3.4 penalty wording correction. */
+(function(){
+  applyArrestPenalty=function(arrest,failedBribe){
+    if(typeof rep==='function')rep(-15);
+    let seizure='';
+    if(arrest&&arrest.airport){
+      const drugs=typeof used==='function'?used():0;
+      const weapons=(s&&Array.isArray(s.weapons))?s.weapons.length:0;
+      if(drugs>0){Object.keys(s.inv||{}).forEach(k=>s.inv[k]=0);}
+      if(weapons>0)s.weapons=[];
+      seizure=`Airport security seized ${drugs} drug unit${drugs===1?'':'s'} and ${weapons} weapon${weapons===1?'':'s'}. `;
+    }
+    if(arrest&&arrest.major){
+      s.day+=arrest.jail;
+      ensureStats();
+      s.stats.jailDays=(s.stats.jailDays||0)+arrest.jail;
+      s.cash=Math.max(0,s.cash-rand(500,5000));
+      s.notice=`${failedBribe?'Bribe failed. ':''}${seizure}Jailed for ${arrest.jail} day${arrest.jail===1?'':'s'}. Time advances automatically.`;
+    }else{
+      const fine=Math.min(s.cash,(arrest&&arrest.fine)||rand(500,5000));
+      s.cash-=fine;
+      s.notice=`${failedBribe?'Bribe failed. ':''}${seizure}Fined ${money(fine)} for a minor offence.`;
+    }
+    save(); draw();
+    modal('Police Outcome',`<p>${s.notice}</p><button type="button" id="continueEvent">Continue</button>`);
+    const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalFastV34?closeModalFastV34():$('modal').close();handleDueLoans();};
+  };
+})();

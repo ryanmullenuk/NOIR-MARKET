@@ -1,0 +1,10 @@
+NOIR MARKET V3.4 CHANGELOG
+
+- Fixed lag when using the top-right X/back control by adding a fast modal close path that does not save and redraw the full game unnecessarily.
+- Kept action/continue flows intact where game state changes still need to save and redraw.
+- Reinforced all modal/section popups as full-screen opaque overlays so the underlying game screen cannot be seen or interacted with.
+- Updated airport/travel logic so clean travel is safe when the player has no carried drugs/weapons and heat is 75% or below.
+- Airport/police stop risk now applies when the player is carrying drugs, carrying weapons, or has heat above 75%.
+- Removed automatic weapon loss on travel. Weapons/drugs are only seized if an airport stop/arrest outcome occurs.
+- Updated airport warning text to show carried drugs, weapons and heat before boarding.
+- Updated version, manifest and service worker cache to V3.4.
