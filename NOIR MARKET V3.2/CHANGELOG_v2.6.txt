@@ -1,0 +1,21 @@
+NOIR MARKET V2.6 - ICON UPDATE
+
+Changes:
+- Replaced the PWA/home screen icon with the supplied smaller Noir Market icon.
+- Updated icon-192.png and icon-512.png.
+- Updated apple-touch-icon.png.
+- Added apple-touch-icon-dark.png for dark appearance support where recognised by iOS/Safari.
+- Added apple-touch-icon-light.png for light appearance support where recognised by iOS/Safari.
+- Added light-mode icon assets for manifest-supported environments.
+- Updated app title, manifest version and service worker cache to V2.6.
+
+Not changed:
+- Gameplay mechanics.
+- Market, storage, travel, shipping, loans, hustle, economy and save structure.
+
+Checks:
+- Icon dimensions verified.
+- JavaScript syntax check passed.
+- Manifest JSON validation passed.
+- Service worker syntax check passed.
+- ZIP integrity check passed.

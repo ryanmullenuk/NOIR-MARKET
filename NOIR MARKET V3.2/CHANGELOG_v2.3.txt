@@ -1,0 +1,17 @@
+Noir Market V2.3
+
+Icon-only release.
+
+Changes:
+- Replaced the iOS/home screen app icon with the supplied Noir Market bag icon.
+- Updated icon-192.png and icon-512.png from the supplied artwork.
+- Added apple-touch-icon.png at 180x180 for iOS home screen use.
+- Updated manifest version and service worker cache to V2.3 so devices pull the new icon.
+- No gameplay, market, storage, travel, shipping, loan, economy or UI mechanics were changed.
+
+Checks:
+- Icon dimensions verified: 180x180, 192x192 and 512x512.
+- Manifest JSON validated.
+- JavaScript syntax checked.
+- Service worker syntax checked.
+- ZIP integrity checked.
