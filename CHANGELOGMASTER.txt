@@ -1,21 +1,23 @@
 NOIR MARKET CHANGELOGMASTER
-Current release: V3.6
-Baseline: Noir Market V3.5
+Current release: V3.7
+Baseline: Noir Market V3.6
 
-V3.6 Icon Update
-- Changed the home screen icon set to the supplied NOIR bag image.
-- Replaced the following icon files with the new artwork:
-  - icon-192.png
-  - icon-192-light.png
-  - icon-512.png
-  - icon-512-light.png
-  - apple-touch-icon.png
-  - apple-touch-icon-dark.png
-  - apple-touch-icon-light.png
-- Preserved existing manifest icon paths, so the icon swap works without changing app structure.
-- Updated title, manifest version, service worker cache, save key and runtime version to V3.6.
-- Save migration from V3.5 and older versions retained.
-- No gameplay mechanics were intentionally changed in this release.
+V3.7 Gameplay and UI Fixes
+- Fixed debt repayment so full payment clears active loans and resets debt to £0.
+- Rebuilt the finance repayment path so Pay General Debt uses the live settlement figure and cannot deduct funds without reducing or clearing debt.
+- Added rumour validation when travelling into the rumoured city.
+- Added five random true rumour messages and five random false rumour messages.
+- Added a cash carrying warning popup when the player holds more than £15,000 cash.
+- Added five random cash warning phrases.
+- Cash warning popup includes Deposit and Ignore buttons.
+- Deposit opens Finances.
+- Ignore suppresses the warning for 10 in-game days.
+- Changed main action label from Travel to Travel & Shipping.
+- Changed travel modal title to Travel & Shipping.
+- Airport Check now shows BOARD in green when carrying 0 drugs and 0 weapons.
+- Airport Check now shows BOARD ANYWAY in red when drugs or weapons are carried.
+- Updated title, manifest version, service worker cache, save key and runtime version to V3.7.
+- Save migration from V3.6 and older versions retained.
 
 Package File Inventory
 - CHANGELOGMASTER.txt

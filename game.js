@@ -2877,11 +2877,11 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   setTimeout(()=>{try{document.title='Noir Market V3.3'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
 })();
 
-/* Noir Market V3.6: home screen icon refresh. */
+/* Noir Market V3.7: debt clearing, rumour travel result, cash prompt and travel button polish. */
 (function(){
-  const VERSION='3.6';
-  const SAVE_KEY='noir_market_v3_6';
-  const FALLBACK_KEYS=['noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const VERSION='3.7';
+  const SAVE_KEY='noir_market_v3_7';
+  const FALLBACK_KEYS=['noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   const previousBaseState=baseState;
   const previousDraw=draw;
 
@@ -3022,10 +3022,10 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     dlg.addEventListener('close',()=>{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');});
     dlg.addEventListener('cancel',(e)=>{e.preventDefault();closeModalFastV34();});
   }
-  setTimeout(()=>{try{document.title='Noir Market V3.6'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.6: home screen icon refresh active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V3.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.7: debt clearing, rumour travel result, cash prompt and travel button polish active.');}catch(e){}},320);
 })();
 
-/* Noir Market V3.6 penalty wording correction retained. */
+/* Noir Market V3.7 penalty wording correction retained. */
 (function(){
   applyArrestPenalty=function(arrest,failedBribe){
     if(typeof rep==='function')rep(-15);
@@ -3052,4 +3052,221 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     modal('Police Outcome',`<p>${s.notice}</p><button type="button" id="continueEvent">Continue</button>`);
     const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalFastV34?closeModalFastV34():$('modal').close();handleDueLoans();};
   };
+})();
+
+
+/* Noir Market V3.7 feature patch: debt clearing, rumour validation, cash deposit prompt and travel wording. */
+(function(){
+  const VERSION='3.7';
+  const SAVE_KEY='noir_market_v3_7';
+  const FALLBACK_KEYS=['noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function ensureV37(){
+    if(typeof ensureStats==='function')ensureStats();
+    if(typeof ensureEconomy==='function')ensureEconomy();
+    s.version=VERSION;
+    s.v37=s.v37||{};
+    s.v37.cashPromptIgnoreUntil=Number(s.v37.cashPromptIgnoreUntil||0);
+    s.v37.cashPromptLastDay=Number(s.v37.cashPromptLastDay||0);
+    if(typeof activeDebtTotal==='function')s.debt=activeDebtTotal();
+  }
+  function debtTotalV37(){try{return Math.max(0,Math.round(activeDebtTotal()));}catch(e){return Math.max(0,Math.round(+s.debt||0));}}
+  function clearAllDebtV37(){s.loans=[]; s.debt=0;}
+  function currentContrabandV37(){return {drugs:(typeof used==='function'?used():0),weapons:(s&&Array.isArray(s.weapons)?s.weapons.length:0)};}
+  function escapeHtmlV37(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+  function payDebtAmountV37(rawAmount){
+    ensureV37();
+    const total=debtTotalV37();
+    let amount=Math.max(0,Math.floor(+rawAmount||0));
+    if(total<=0){s.debt=0; if(!Array.isArray(s.loans))s.loans=[]; success('NO ACTIVE DEBT'); if(typeof bank==='function')bank(); return;}
+    amount=Math.min(amount,s.cash,total);
+    if(amount<=0){errorMsg('NO DEBT PAYMENT MADE');return;}
+    const before=amount;
+    s.cash-=amount;
+    if(amount>=total){
+      clearAllDebtV37();
+      if(typeof rep==='function')rep(5);
+      s.notice=`Debt cleared in full. ${money(before)} gone, but so are the people texting you skull emojis.`;
+      save(); draw(); success('DEBT CLEARED'); done();
+      return;
+    }
+    if(typeof normaliseLoans==='function')normaliseLoans();
+    for(let i=0;i<s.loans.length && amount>0;i++){
+      let loan=s.loans[i];
+      let payoff=typeof loanPayoff==='function'?loanPayoff(loan):(+loan.repay||+loan.principal||0);
+      if(amount>=payoff){amount-=payoff; s.loans.splice(i,1); i--; continue;}
+      const principal=+loan.principal||0;
+      if(principal>0){
+        const reduction=Math.min(principal,Math.max(1,Math.round(principal*(amount/payoff))));
+        loan.principal=Math.max(0,principal-reduction);
+        loan.startDay=s.day;
+      }else if(loan.repay!==undefined){
+        loan.repay=Math.max(0,(+loan.repay||0)-amount);
+      }
+      amount=0;
+    }
+    s.loans=s.loans.filter(l=>((typeof loanPayoff==='function'?loanPayoff(l):(+l.repay||+l.principal||0))>0));
+    s.debt=debtTotalV37();
+    s.notice=`Paid ${money(before)} towards debt. Remaining debt: ${money(s.debt)}.`;
+    save(); draw(); success('DEBT PAYMENT MADE'); done();
+  }
+  payDebtAmount=payDebtAmountV37;
+
+  paySpecificLoan=function(idx){
+    ensureV37(); if(typeof normaliseLoans==='function')normaliseLoans();
+    idx=+idx; const loan=s.loans[idx]; if(!loan)return;
+    const amount=typeof loanPayoff==='function'?loanPayoff(loan):(+loan.repay||+loan.principal||0);
+    if(s.cash<amount){s.notice=`You need ${money(amount)} cash to clear ${loan.name}.`; save(); draw(); errorMsg('INSUFFICIENT FUNDS'); return;}
+    s.cash-=amount; s.loans.splice(idx,1); s.debt=debtTotalV37(); if(typeof rep==='function')rep(5);
+    s.notice=`Paid ${loan.name}. Loan cleared for ${money(amount)}.`; save(); draw(); success('DEBT CLEARED'); done();
+  };
+
+  payAnyDebtFromModal=function(){
+    ensureV37(); const total=debtTotalV37();
+    if(total<=0){success('NO ACTIVE DEBT');return;}
+    if(s.cash<=0){modal('Debt Payment',`<p>You have no cash available to pay the debt.</p>`);return;}
+    payDebtAmountV37(Math.min(s.cash,total));
+  };
+
+  bank=function(){
+    ensureV37();
+    const openLoans=s.loans.length?s.loans.map((l,idx)=>{const days=(+l.due||s.day)-s.day, urgent=days<=5, payoff=typeof loanPayoff==='function'?loanPayoff(l):(+l.repay||+l.principal||0), fullRepay=typeof loanFullRepay==='function'?loanFullRepay(l):payoff; return `<div class="loan-row ${urgent?'urgent-loan':''}"><div><span>${escapeHtmlV37(l.name||'Shady Lender')}</span><strong>${money(payoff)}</strong><em>${days>0?'due in '+days+' day'+(days===1?'':'s'):'DUE NOW'} · full term ${money(fullRepay)}</em></div><button type="button" data-payloan="${idx}">Pay</button></div>`;}).join(''):'<p class="subtle">No active loans.</p>';
+    modal('Finances',`<p class="subtle">Bank balance only changes when you deposit or withdraw. Loan debt shown here is the live settlement figure.</p><input id="amount" inputmode="numeric" type="number" placeholder="Amount"><div class="bank-grid"><button type="button" id="deposit">Deposit</button><button type="button" id="withdraw">Withdraw</button><button type="button" class="full" id="payDebt">Pay General Debt</button></div><h4>Loans</h4>${openLoans}<div class="loan-list compact">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${l[0]}</strong><br>Borrow up to ${money(typeof adjustedLenderMax==='function'?adjustedLenderMax(l):l[1])} · ${Math.round(l[3]*100)}% full-term interest · due in ${l[2]} days</button>`).join('')}</div>`);
+    setTimeout(()=>{
+      const amt=()=>Math.max(0,Math.floor(+($('amount')?.value||0)));
+      const dep=$('deposit'), wit=$('withdraw'), pay=$('payDebt');
+      if(dep)dep.onclick=()=>{const a=Math.min(amt(),s.cash); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.cash-=a; s.bank+=a; s.notice=`Deposited ${money(a)}. Less mugging bait in your pockets.`; save(); draw(); success('DEPOSIT COMPLETE'); done();};
+      if(wit)wit.onclick=()=>{const a=Math.min(amt(),s.bank); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.bank-=a; s.cash+=a; s.notice=`Withdrew ${money(a)}. Try not to wave it around like a lottery winner.`; save(); draw(); success('WITHDRAWAL COMPLETE'); done();};
+      if(pay)pay.onclick=()=>{let a=amt(); if(!a)a=debtTotalV37(); payDebtAmountV37(a);};
+      document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan));
+      document.querySelectorAll('[data-payloan]').forEach(b=>b.onclick=()=>paySpecificLoan(+b.dataset.payloan));
+    },0);
+  };
+
+  const rumourTrueLines=[
+    r=>`The ${r.drug.toLowerCase()} rumour was true. Seems the people of ${r.city} are clucking for the goods.`,
+    r=>`The ${r.drug.toLowerCase()} rumour was bang on. ${r.city} is moving like payday hit and sense left town.`,
+    r=>`That ${r.drug.toLowerCase()} tip was real. ${r.city} dealers are looking smug and charging accordingly.`,
+    r=>`The street gossip was true. ${r.city} is all over ${r.drug.toLowerCase()} and nobody is acting normal about it.`,
+    r=>`The ${r.drug.toLowerCase()} rumour landed. ${r.city} is twitchier than a man carrying cash through a bus station.`
+  ];
+  const rumourFalseLines=[
+    r=>`The ${r.drug.toLowerCase()} rumour was false. Hope you didn’t spend every penny you had on it.`,
+    r=>`That ${r.drug.toLowerCase()} tip was nonsense. ${r.city} shrugs, and your source belongs in a wheelie bin.`,
+    r=>`The rumour was rubbish. ${r.city} has not heard the news, which is awkward because you travelled for it.`,
+    r=>`False alarm on ${r.drug.toLowerCase()}. Someone in ${r.city} confused market intelligence with pub noise.`,
+    r=>`The ${r.drug.toLowerCase()} rumour was wrong. Your source has the accuracy of a cracked sat nav.`
+  ];
+  function rumourTravelBlockV37(old){
+    const r=old&&old.rumour; if(!r)return '';
+    const current=places[s.city]&&places[s.city][0];
+    const cityMatch=r.city===current;
+    const scarceOrAbundant=r.type==='shortage'||r.type==='collapse'||r.type==='scarce'||r.type==='abundant';
+    if(!cityMatch||!scarceOrAbundant)return '';
+    const line=pick((old.true?rumourTrueLines:rumourFalseLines))(r);
+    const movement=(r.type==='shortage'||r.type==='scarce')?'scarce and more expensive':'abundant and cheaper';
+    return `<h4>Rumour Result</h4><p><strong>${old.true?'TRUE':'FALSE'}</strong> · ${escapeHtmlV37(line)}</p><p class="subtle">Tip checked: ${escapeHtmlV37(r.drug)} was expected to be ${movement} in ${escapeHtmlV37(r.city)}.</p>`;
+  }
+
+  nextDay=function(base,showRumour){
+    try{
+      ensureV37();
+      const old={rumour:s.rumour,true:!!(s.rumour&&s.rumour.accurate)};
+      s.day++;
+      s.debt=debtTotalV37();
+      s.heat=Math.min(100,Math.max(0,(s.heat||0)+rand(-8,13)));
+      if(typeof rep==='function')rep(1);
+      if(typeof genPrices==='function')genPrices(old);
+      if(typeof newRumour==='function')newRumour();
+      if(typeof randomEvent==='function')randomEvent(base);
+      if(typeof updateRankProgress==='function')updateRankProgress();
+      s.debt=debtTotalV37();
+      if(s.day>s.maxDay)return endGame();
+      save(); draw();
+      let rumourBlock='';
+      if(showRumour)rumourBlock=`<h4>Rumour Result</h4><p><strong>${old.true?'TRUE':'FALSE'}</strong> · ${escapeHtmlV37(old.rumour?.text||'No rumour was active.')}</p>`;
+      else rumourBlock=rumourTravelBlockV37(old);
+      const title=showRumour?'Stay Here':'Travel Result';
+      const body=`<p>${escapeHtmlV37(s.notice)}</p>${rumourBlock}<h4>Loan Status</h4>${debtReminderHtml()}`;
+      const arrest=typeof maybeArrest==='function'?maybeArrest(showRumour?'stay':'travel'):null;
+      if(arrest&&typeof showArrestModal==='function')return showArrestModal(arrest,title,body,rumourBlock);
+      modal(title,`${body}<button type="button" id="continueEvent">Continue</button>`);
+      setTimeout(()=>{const c=$('continueEvent'); if(c)c.onclick=()=>{if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22(); handleDueLoans();};},0);
+    }catch(e){console.error('V3.7 nextDay recovered:',e);}
+  };
+
+  const cashPromptLines=[
+    'Cash in pockets is a scumbag magnet. Deposit some and keep it for a rainy day.',
+    'You are carrying mug-me money. Put some in the bank before the local wildlife notices.',
+    'That much cash in your pocket is basically a dinner bell for wrong’uns. Deposit it.',
+    'Walking round with that cash is brave, stupid, or both. Bank it before someone else budgets for you.',
+    'Your pockets are shouting payday. Deposit some before a tracksuit entrepreneur hears them.'
+  ];
+  function maybeCashPromptV37(){
+    try{
+      if(!s||s.cash<=15000)return;
+      if(s.v37&&s.v37.cashPromptIgnoreUntil&&s.day<s.v37.cashPromptIgnoreUntil)return;
+      if(s.v37&&s.v37.cashPromptLastDay===s.day)return;
+      const dlg=$('modal'); if(dlg&&dlg.open)return;
+      s.v37=s.v37||{}; s.v37.cashPromptLastDay=s.day; save();
+      modal('Deposit Warning',`<p>${pick(cashPromptLines)}</p><p>Cash carried: <strong>${money(s.cash)}</strong></p><div class="loan-choice"><button type="button" class="buy" id="cashPromptDeposit">Deposit</button><button type="button" id="cashPromptIgnore">Ignore</button></div>`);
+      const dep=$('cashPromptDeposit'), ign=$('cashPromptIgnore');
+      if(dep)dep.onclick=()=>bank();
+      if(ign)ign.onclick=()=>{s.v37.cashPromptIgnoreUntil=s.day+10; save(); if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22(); toast('Deposit reminder ignored for 10 days','bad');};
+    }catch(e){console.warn('Cash prompt skipped:',e);}
+  }
+
+  airportWarning=function(i,fare){
+    const dest=places[i][0];
+    const held=currentContrabandV37();
+    const heat=s.heat||0;
+    const hasContraband=(held.drugs+held.weapons)>0;
+    const clean=!hasContraband&&heat<=75;
+    const riskText=clean
+      ? 'You are carrying no drugs or weapons and your heat is not above 75%. You should get through airport security without trouble.'
+      : (hasContraband?'You are carrying contraband. Airport security may stop you, seize stock, fine you, or arrest you.':'Your heat is above 75%. Even clean pockets may attract attention.');
+    const boardLabel=hasContraband?'BOARD ANYWAY':'BOARD';
+    const boardClass=hasContraband?'sell':'buy';
+    modal('Airport Check',`<p><strong>Before you board:</strong> ${riskText}</p><p>Destination: <strong>${dest}</strong><br>Flight price: <strong>${money(fare)}</strong></p><div class="warning-stock"><p>Drugs carried: <strong>${held.drugs}</strong></p><p>Weapons carried: <strong>${held.weapons}</strong></p><p>Heat: <strong>${heat}%</strong></p></div><p class="subtle">Vault stock stays in the city where you leave it. Carrying clean is the safe option.</p><div class="loan-choice"><button type="button" id="storeBeforeFlight">Store in Vault</button><button type="button" class="${boardClass}" id="boardAnyway">${boardLabel}</button><button type="button" id="cancelFlight">Cancel</button></div>`);
+    const sv=$('storeBeforeFlight'), ba=$('boardAnyway'), cf=$('cancelFlight');
+    if(sv)sv.onclick=()=>dump();
+    if(ba)ba.onclick=()=>boardFlightWithSeizure(i,fare);
+    if(cf)cf.onclick=()=>travel();
+  };
+
+  showTravelFlights=function(){
+    const panel=$('travelPanel'); if(!panel)return;
+    panel.innerHTML=`<div class="travel-head"><p class="subtle">Select a UK or Ireland city. Prices change daily and airport security is not your mate.</p><button type="button" id="stayFromTravel">STAY HERE</button></div><div class="travel-list">${places.map((p,i)=>`<button type="button" data-city="${i}" ${i===s.city?'disabled':''}><strong>${p[0]} <em>${money(travelFare(i))}</em></strong><span>${p[1]} · ${p[3]}</span></button>`).join('')}</div>`;
+    const st=$('stayFromTravel'); if(st)st.onclick=performStayV22;
+    document.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{const i=+b.dataset.city, fare=travelFare(i); if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;} airportWarning(i,fare);});
+  };
+
+  travel=function(){
+    ensureV37(); if(typeof ensureShipping==='function')ensureShipping();
+    modal('Travel & Shipping',`<div class="travel-tabs primary"><button type="button" id="travelModeBtn" class="active">TRAVEL</button><button type="button" id="shippingModeBtn">SHIPPING</button></div><div id="travelPanel"></div>`);
+    setTimeout(()=>{
+      const travelBtn=$('travelModeBtn'), shipBtn=$('shippingModeBtn'); if(!travelBtn||!shipBtn)return;
+      function activate(which){travelBtn.classList.toggle('active',which==='travel'); shipBtn.classList.toggle('active',which==='shipping'); if(which==='travel')showTravelFlights(); else showShippingHub();}
+      travelBtn.onclick=()=>activate('travel'); shipBtn.onclick=()=>activate('shipping'); activate('travel');
+    },0);
+  };
+
+  draw=function(){
+    previousDraw();
+    const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping';
+    setTimeout(maybeCashPromptV37,80);
+  };
+
+  save=function(){ensureV37(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV37(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV37(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v37={cashPromptIgnoreUntil:0,cashPromptLastDay:0}; return state;};
+  setTimeout(()=>{try{document.title='Noir Market V3.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
 })();
