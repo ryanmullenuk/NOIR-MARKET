@@ -3270,3 +3270,217 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v37={cashPromptIgnoreUntil:0,cashPromptLastDay:0}; return state;};
   setTimeout(()=>{try{document.title='Noir Market V3.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
 })();
+
+
+/* Noir Market V3.8: Burner Phones, Contacts and brokered deal calls. */
+(function(){
+  const VERSION='3.8';
+  const SAVE_KEY='noir_market_v3_8';
+  const FALLBACK_KEYS=['noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function escapeHtmlV38(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function ensureV38(){
+    if(typeof ensureStats==='function')ensureStats();
+    if(typeof ensureEconomy==='function')ensureEconomy();
+    s.version=VERSION;
+    s.v38=s.v38||{};
+    s.v38.burnerPhones=Math.max(0,Math.floor(+s.v38.burnerPhones||0));
+    s.v38.contactCallCooldownUntil=Math.max(0,Math.floor(+s.v38.contactCallCooldownUntil||0));
+    s.v38.nextContactCallAt=Math.max(0,Math.floor(+s.v38.nextContactCallAt||0));
+    s.v38.callActive=!!s.v38.callActive;
+    s.stats=s.stats||{};
+    if(typeof s.stats.burnerPhonesBought!=='number')s.stats.burnerPhonesBought=0;
+    if(typeof s.stats.burnerPhonesUsed!=='number')s.stats.burnerPhonesUsed=0;
+    if(typeof s.stats.contactDeals!=='number')s.stats.contactDeals=0;
+    if(typeof activeDebtTotal==='function')s.debt=activeDebtTotal();
+  }
+  function modalOpenV38(){const dlg=$('modal'); return !!(dlg&&dlg.open);}
+  function splashActiveV38(){const splash=$('splash'); return !!(splash&&!splash.classList.contains('hide'));}
+  function canShowContactCallV38(){return !!s && !splashActiveV38() && !modalOpenV38() && document.visibilityState!=='hidden' && (s.v38?.burnerPhones||0)>0 && !s.v38?.callActive;}
+  function setContactCooldownV38(){s.v38=s.v38||{}; s.v38.contactCallCooldownUntil=s.day+rand(3,5); s.v38.nextContactCallAt=Date.now()+rand(120000,300000);}
+  function bindActionButtonsV38(){
+    const grid=document.querySelector('.actions .button-grid');
+    if(grid&&!$('contactsBtn')){const btn=document.createElement('button'); btn.id='contactsBtn'; btn.type='button'; btn.textContent='Contacts'; const stay=$('stayBtn'); grid.insertBefore(btn,stay||null);}
+    const c=$('contactsBtn'); if(c)c.onclick=contacts;
+  }
+
+  function burnerPhoneCardV38(){
+    return `<h4>Burner Phones</h4><p class="muted">One-time phones for risky contact deals. No warranty, no charger, no questions.</p><div class="shop-list"><button type="button" class="shop-item" data-burner-phone="1"><span class="shop-top"><strong>Burner Phone</strong><span class="shop-price">${money(500)}</span></span><span class="shop-desc"><span>Use once in Contacts to chase high-risk brokered deals.</span><span class="heat-pill mid">one use</span></span></button></div>`;
+  }
+
+  shop=function(){
+    ensureV38();
+    modal('Black Market',`<h4>Storage</h4><p class="muted">Each upgrade adds permanent capacity.</p><div class="shop-list">${shopItems.map((it,i)=>shopItemButton('shop',i,it[0],it[1],`+${it[2]} storage slots`,it[3]==='person'?'<span class="heat-pill low">carried</span>':'<span class="heat-pill mid">off-site</span>',s.owned.includes(it[0]))).join('')}</div><h4>Weapons</h4><p class="muted">Weapons improve fight options but increase heat. Single-use items are consumed in combat.</p><div class="shop-list">${weapons.map((w,i)=>shopItemButton('weapon',i,w.name,w.price,`${w.damage}: ${w.notes}`,`<span class="heat-pill ${heatClass(w.heat)}">Heat +${w.heat}%</span>`)).join('')}</div>${burnerPhoneCardV38()}<h4>Recovery</h4><p class="muted">Hospital treatment restores health after trouble.</p><div class="shop-list">${hospitalTreatments.map((h,i)=>shopItemButton('hospital',i,h[0],h[1],h[2]===100?'restore to full health':`restore ${h[2]}% health`,'' )).join('')}</div>`);
+    setTimeout(()=>{
+      document.querySelectorAll('[data-shop]').forEach(b=>b.onclick=()=>{let it=shopItems[+b.dataset.shop]; if(s.cash<it[1]){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=it[1]; s.owned.push(it[0]); s.notice=`Bought ${it[0]}. Storage increased by ${it[2]} slots.`; success(`Bought ${it[0]}`); done();});
+      document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>{let w=weapons[+b.dataset.weapon]; if(s.cash<w.price){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=w.price; s.weapons.push(w.name); s.heat=Math.min(100,s.heat+Math.ceil(w.heat/3)); s.notice=`Bought ${w.name}. Heat increased slightly.`; success(`Bought ${w.name}`); done();});
+      document.querySelectorAll('[data-hospital]').forEach(b=>b.onclick=()=>buyHospital(+b.dataset.hospital));
+      document.querySelectorAll('[data-burner-phone]').forEach(b=>b.onclick=()=>buyBurnerPhoneV38());
+    },0);
+  };
+
+  function buyBurnerPhoneV38(){
+    ensureV38();
+    if(s.cash<500){errorMsg('INSUFFICIENT FUNDS');return;}
+    s.cash-=500;
+    s.v38.burnerPhones++;
+    s.stats.burnerPhonesBought++;
+    if(!s.v38.nextContactCallAt)s.v38.nextContactCallAt=Date.now()+rand(90000,210000);
+    s.notice='Bought a Burner Phone. It already looks like it has been evidence in two trials.';
+    save(); draw(); success('BURNER PHONE BOUGHT'); done();
+  }
+
+  function contacts(){
+    ensureV38();
+    const count=s.v38.burnerPhones||0;
+    const body=count>0
+      ? `<div class="modal-money"><span>Burner Phones</span><strong>${count}</strong><em>one use each</em></div><p class="subtle">Use a phone to chase a brokered contact deal. You front the money, they move the product, and everyone pretends this is a sensible business model.</p><button type="button" class="buy full" id="useBurnerPhone">Use Burner Phone</button>`
+      : `<div class="modal-money"><span>Burner Phones</span><strong>0</strong><em>none held</em></div><p class="subtle">You need to buy a Burner Phone from the Black Market before any unknown numbers can ruin your afternoon.</p><button type="button" id="openBlackMarketFromContacts">Open Black Market</button>`;
+    modal('Contacts',body);
+    setTimeout(()=>{
+      const use=$('useBurnerPhone'); if(use)use.onclick=()=>useBurnerPhoneV38('manual');
+      const bm=$('openBlackMarketFromContacts'); if(bm)bm.onclick=()=>shop();
+    },0);
+  }
+  window.contacts=contacts;
+
+  function contactIntroV38(deal){
+    return pick([
+      `Unknown number says a lad in ${deal.city} needs ${deal.drug.toLowerCase()} tonight. He sounds rich, panicked, and badly organised.`,
+      `Someone called No Caller ID has a ${deal.drug.toLowerCase()} flip in ${deal.city}. He refuses to explain why he is whispering.`,
+      `A contact says there is quick money in ${deal.city}. He also says it is “basically guaranteed”, which is how disasters introduce themselves.`,
+      `A blocked number reckons ${deal.city} is paying silly money for ${deal.drug.toLowerCase()}. Silly money usually brings silly problems.`,
+      `Some bloke with three names and no surname has a ${deal.drug.toLowerCase()} buyer in ${deal.city}. He keeps saying “trust me”, which is concerning.`
+    ]);
+  }
+
+  function generateContactDealV38(){
+    ensureV38();
+    const drugRow=pick(drugs), drug=drugRow[0], city=pick(places)[0];
+    const market=s.economy?.cities?.[city];
+    const base=Math.max(1,Math.round((market&&market.prices&&market.prices[drug])||rand(drugRow[2],drugRow[3])));
+    let qty=base>6000?rand(2,8):(base>2500?rand(5,18):(base>1000?rand(10,35):rand(25,120)));
+    const buyUnit=Math.max(1,Math.round(base*rand(55,82)/100));
+    let saleUnit=Math.max(buyUnit+1,Math.round(base*rand(115,175)/100));
+    let buyCost=buyUnit*qty, grossSale=saleUnit*qty, contactCut=Math.round(grossSale*.10), projectedProfit=grossSale-buyCost-contactCut;
+    if(projectedProfit<Math.max(250,Math.round(buyCost*.08))){saleUnit=Math.round(buyUnit*1.38); grossSale=saleUnit*qty; contactCut=Math.round(grossSale*.10); projectedProfit=grossSale-buyCost-contactCut;}
+    const deal={drug,city,qty,buyUnit,saleUnit,buyCost,grossSale,contactCut,projectedProfit};
+    deal.intro=contactIntroV38(deal);
+    return deal;
+  }
+
+  function useBurnerPhoneV38(source,existingDeal){
+    ensureV38();
+    if((s.v38.burnerPhones||0)<1){errorMsg('NO BURNER PHONES'); contacts(); return;}
+    s.v38.burnerPhones--;
+    s.stats.burnerPhonesUsed++;
+    s.v38.callActive=false;
+    setContactCooldownV38();
+    const deal=existingDeal||generateContactDealV38();
+    save(); draw();
+    showContactDealV38(deal,source);
+  }
+
+  function dealRowsV38(deal){
+    return `<div class="warning-stock"><p>Product: <strong>${escapeHtmlV38(deal.drug)}</strong></p><p>City: <strong>${escapeHtmlV38(deal.city)}</strong></p><p>Quantity: <strong>${deal.qty}</strong></p><p>Buy-in: <strong>${money(deal.buyCost)}</strong></p><p>Projected sale: <strong>${money(deal.grossSale)}</strong></p><p>Contact cut: <strong>${money(deal.contactCut)}</strong></p><p>Projected profit: <strong>${money(deal.projectedProfit)}</strong></p></div>`;
+  }
+
+  function showContactDealV38(deal,source){
+    const canAfford=s.cash>=deal.buyCost;
+    modal('Contact Deal',`<p>${escapeHtmlV38(deal.intro)}</p>${dealRowsV38(deal)}${canAfford?'':'<p class="bad"><strong>You cannot afford this deal.</strong></p>'}<div class="loan-choice"><button type="button" class="buy" id="takeContactDeal" ${canAfford?'':'disabled'}>TAKE DEAL</button><button type="button" id="hangUpContactDeal">HANG UP</button></div>`);
+    setTimeout(()=>{
+      const take=$('takeContactDeal'), hang=$('hangUpContactDeal');
+      if(take)take.onclick=()=>resolveContactDealV38(deal);
+      if(hang)hang.onclick=()=>{s.notice='You hang up. Somewhere, a man with a cracked phone screen calls you a time-waster.'; save(); draw(); if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22();};
+    },0);
+  }
+
+  function outcomeTypeV38(){
+    const reputation=+s.reputation||0, roll=Math.random();
+    let split=reputation<30?{success:.35,bad:.25,arrest:.20,scam:.15,jackpot:.05}:(reputation>70?{success:.65,bad:.15,arrest:.10,scam:.05,jackpot:.05}:{success:.50,bad:.20,arrest:.15,scam:.10,jackpot:.05});
+    if(roll<split.success)return 'success';
+    if(roll<split.success+split.bad)return 'bad';
+    if(roll<split.success+split.bad+split.arrest)return 'arrest';
+    if(roll<split.success+split.bad+split.arrest+split.scam)return 'scam';
+    return 'jackpot';
+  }
+
+  function resolveContactDealV38(deal){
+    ensureV38();
+    if(s.cash<deal.buyCost){errorMsg('INSUFFICIENT FUNDS');return;}
+    s.cash-=deal.buyCost;
+    s.stats.contactDeals++;
+    const outcome=outcomeTypeV38();
+    let title='Contact Deal Result', html='', net=-deal.buyCost;
+    if(outcome==='success'){
+      const paidBack=deal.grossSale-deal.contactCut; net=deal.projectedProfit; s.cash+=paidBack; if(typeof rep==='function')rep(2);
+      const line=pick([`Deal lands clean. Your contact takes ${money(deal.contactCut)} and acts like he invented maths.`,`The buyer pays up. The contact takes his 10% slice and vanishes before the kettle boils.`,`Clean flip. Nobody gets arrested, which passes for excellent customer service.`]);
+      html=`<p>${escapeHtmlV38(line)}</p>${dealRowsV38(deal)}<p><strong>Net profit: ${money(net)}</strong></p>`;
+    }else if(outcome==='bad'){
+      const actualGross=Math.max(0,Math.round(deal.buyCost*rand(70,112)/100)); const cut=Math.round(actualGross*.10); const returned=Math.max(0,actualGross-cut); net=returned-deal.buyCost; s.cash+=returned; if(net<0&&typeof rep==='function')rep(-1);
+      const line=pick([`Bad tip. The buyer still turns up, but with big “can you do mates rates” energy.`,`The market moves against you. Everyone involved calls it character-building, which is what broke people say.`,`The contact overpromised. Shocking behaviour from a man using a stolen phone.`]);
+      html=`<p>${escapeHtmlV38(line)}</p><div class="warning-stock"><p>Buy-in lost upfront: <strong>${money(deal.buyCost)}</strong></p><p>Actual sale: <strong>${money(actualGross)}</strong></p><p>Contact cut: <strong>${money(cut)}</strong></p><p>Net result: <strong>${money(net)}</strong></p></div>`;
+    }else if(outcome==='arrest'){
+      s.heat=Math.min(100,(s.heat||0)+rand(12,28)); if(typeof rep==='function')rep(-2);
+      const line=pick([`The contact gets lifted before the meet. Your money is now evidence with worse paperwork.`,`Police grab the runner. The product, the cash and your optimism all disappear together.`,`The buyer was real, the contact was real, and unfortunately so were the police.`]);
+      html=`<p>${escapeHtmlV38(line)}</p><p>You lose the buy-in: <strong>${money(deal.buyCost)}</strong></p><p>Heat rises to <strong>${s.heat}%</strong>.</p>`;
+    }else if(outcome==='scam'){
+      if(typeof rep==='function')rep(-2);
+      const line=pick([`The contact says “two minutes” and is last seen moving like he heard boss music.`,`You have been mugged by telecommunications. The number is dead and so is your pride.`,`He takes the buy-in and blocks you. Even the ringtone feels smug.`]);
+      html=`<p>${escapeHtmlV38(line)}</p><p>You lose the buy-in: <strong>${money(deal.buyCost)}</strong></p>`;
+    }else{
+      const jackpotGross=Math.round(deal.grossSale*rand(135,180)/100); const cut=Math.round(jackpotGross*.10); const paidBack=jackpotGross-cut; net=paidBack-deal.buyCost; s.cash+=paidBack; if(typeof rep==='function')rep(4);
+      const line=pick([`Jackpot. The buyer overpays like he has never heard of consequences.`,`The deal goes filthy well. Even your contact sounds surprised, which is never reassuring.`,`A clean run and a fat margin. For once, the bad idea behaves itself.`]);
+      html=`<p>${escapeHtmlV38(line)}</p><div class="warning-stock"><p>Buy-in: <strong>${money(deal.buyCost)}</strong></p><p>Final sale: <strong>${money(jackpotGross)}</strong></p><p>Contact cut: <strong>${money(cut)}</strong></p><p>Net profit: <strong>${money(net)}</strong></p></div>`;
+    }
+    s.notice=`Burner phone deal complete. Result: ${outcome.toUpperCase()}. Net ${money(net)}.`;
+    save(); draw();
+    modal(title,`${html}<button type="button" id="continueContactDeal">Continue</button>`);
+    const c=$('continueContactDeal'); if(c)c.onclick=()=>{if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22();};
+  }
+
+  function showIncomingContactCallV38(){
+    ensureV38();
+    if(!canShowContactCallV38())return false;
+    const deal=generateContactDealV38();
+    s.v38.callActive=true; save();
+    modal('UNKNOWN NUMBER',`<p>${escapeHtmlV38(deal.intro)}</p><p class="subtle">Someone is offering a brokered contact deal through one of your Burner Phones.</p><div class="loan-choice"><button type="button" class="buy" id="answerContactCall">ANSWER</button><button type="button" id="ignoreContactCall">IGNORE</button></div>`);
+    const ans=$('answerContactCall'), ign=$('ignoreContactCall');
+    if(ans)ans.onclick=()=>useBurnerPhoneV38('incoming',deal);
+    if(ign)ign.onclick=()=>{s.v38.callActive=false; setContactCooldownV38(); save(); if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22(); toast('CALL IGNORED','bad');};
+    return true;
+  }
+
+  function scheduleContactCallCheckV38(){
+    if(window.__NOIR_V38_CALL_TIMER)return;
+    window.__NOIR_V38_CALL_TIMER=setTimeout(()=>{
+      window.__NOIR_V38_CALL_TIMER=null;
+      try{
+        ensureV38();
+        if((s.v38.burnerPhones||0)>0){
+          if(!s.v38.nextContactCallAt)s.v38.nextContactCallAt=Date.now()+rand(90000,210000);
+          const cooldownClear=(s.day>=s.v38.contactCallCooldownUntil);
+          const timeClear=(Date.now()>=s.v38.nextContactCallAt);
+          if(cooldownClear&&timeClear&&canShowContactCallV38()){
+            if(Math.random()<0.65)showIncomingContactCallV38();
+            else {s.v38.nextContactCallAt=Date.now()+rand(90000,210000); save();}
+          }
+        }
+      }catch(e){console.warn('V3.8 contact call skipped:',e);}
+      scheduleContactCallCheckV38();
+    },rand(45000,90000));
+  }
+
+  save=function(){ensureV38(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV38(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV38(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v38={burnerPhones:0,contactCallCooldownUntil:0,nextContactCallAt:0,callActive:false}; return state;};
+  draw=function(){previousDraw(); ensureV38(); bindActionButtonsV38(); scheduleContactCallCheckV38();};
+  setTimeout(()=>{try{ensureV38(); document.title='Noir Market V3.8'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
+})();

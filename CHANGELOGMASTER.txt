@@ -1,23 +1,24 @@
 NOIR MARKET CHANGELOGMASTER
-Current release: V3.7
-Baseline: Noir Market V3.6
+Current release: V3.8
+Baseline: Noir Market V3.7
 
-V3.7 Gameplay and UI Fixes
-- Fixed debt repayment so full payment clears active loans and resets debt to £0.
-- Rebuilt the finance repayment path so Pay General Debt uses the live settlement figure and cannot deduct funds without reducing or clearing debt.
-- Added rumour validation when travelling into the rumoured city.
-- Added five random true rumour messages and five random false rumour messages.
-- Added a cash carrying warning popup when the player holds more than £15,000 cash.
-- Added five random cash warning phrases.
-- Cash warning popup includes Deposit and Ignore buttons.
-- Deposit opens Finances.
-- Ignore suppresses the warning for 10 in-game days.
-- Changed main action label from Travel to Travel & Shipping.
-- Changed travel modal title to Travel & Shipping.
-- Airport Check now shows BOARD in green when carrying 0 drugs and 0 weapons.
-- Airport Check now shows BOARD ANYWAY in red when drugs or weapons are carried.
-- Updated title, manifest version, service worker cache, save key and runtime version to V3.7.
-- Save migration from V3.6 and older versions retained.
+V3.8 Burner Phone and Contacts Feature
+- Added Burner Phones to the Black Market at £500 each.
+- Burner Phones are one-time-use consumables and are saved under the V3.8 state.
+- Added Contacts to the Action section.
+- Contacts shows the number of Burner Phones held.
+- Contacts allows manual Burner Phone use when at least one phone is owned.
+- Added brokered contact deals where the player fronts the buy-in cost without needing storage or carrying stock.
+- Contact deal outcomes include success, bad tip, contact arrested, scam and jackpot.
+- Deal reliability is affected by reputation, with better odds at higher reputation.
+- Successful deals deduct a 10% contact cut from gross sale value before calculating player profit.
+- Added random incoming UNKNOWN NUMBER calls while the player has Burner Phones and is actively in the game.
+- Incoming calls do not trigger during splash, existing modals or section overlays.
+- Incoming calls do not stack and use a cooldown after answer, ignore or deal resolution.
+- Added short dark British flavour text for calls, deals and outcomes.
+- Updated app title, manifest version, service worker cache, save key and runtime version to V3.8.
+- Save migration from V3.7 and older versions retained.
+- No existing market, storage, travel, shipping, loans, informants, cash warning, rumour or splash mechanics were intentionally changed.
 
 Package File Inventory
 - CHANGELOGMASTER.txt
