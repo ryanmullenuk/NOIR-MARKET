@@ -865,7 +865,7 @@ function hustle(){
   ensureStats();
   const informants=[
     {id:'simon',name:'Simon the Snitch',cost:100,trust:0.35,bio:'Cheap, twitchy and usually hiding behind the bins. Knows a bit, guesses a lot.'},
-    {id:'lisa',name:'Loose Lisa',cost:250,trust:0.60,bio:'Talks too much, hears too much and occasionally remembers which bit was true.'},
+    {id:'lisa',name:'Lucy Loose Lips',cost:250,trust:0.60,bio:'Talks too much, hears too much and occasionally remembers which bit was true.'},
     {id:'pete',name:'Pistol Pete',cost:10000,trust:0.90,bio:'Expensive, paranoid and oddly well informed. The closest thing to reliable in this business.'}
   ];
   modal('Hustle',`<h4>Informants</h4><p class="subtle">Pay for market information. Any informant has a 10% chance of scamming you and running.</p><div class="hustle-grid">${informants.map(i=>`<div class="hustle-card"><h4>${i.name} · ${money(i.cost)}</h4><p>${i.bio}</p><p class="subtle">Trust level: ${Math.round(i.trust*100)}%</p><button type="button" class="buy" data-informant="${i.id}">Pay ${i.name}</button></div>`).join('')}</div><h4>Businesses</h4><div class="coming-soon"><strong>COMING SOON</strong><p class="subtle">Front companies, dirty laundrettes and other bad decisions will arrive in a later release.</p></div>`);
@@ -2689,13 +2689,13 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   function realTip(){
     const tips=[
       {name:'Simon the Snitch',text:'London’s dry on coke. Prices are about to climb. Don’t ask how I know, I owe people.',city:'London',product:'Cocaine',pct:28,duration:2},
-      {name:'Loose Lisa',text:'Bristol’s flooded with pills. Everyone bought too much before the rain. Prices are soft.',city:'Bristol',product:'Ecstasy',pct:-24,duration:2},
+      {name:'Lucy Loose Lips',text:'Bristol’s flooded with pills. Everyone bought too much before the rain. Prices are soft.',city:'Bristol',product:'Ecstasy',pct:-24,duration:2},
       {name:'Pistol Pete',text:'Glasgow’s getting hot. Police are circling ket suppliers. Move carefully.',city:'Glasgow',product:'Ketamine',pct:22,duration:2,heat:10},
       {name:'Simon the Snitch',text:'Mushrooms in Cardiff are short. Something about damp storage and a very relaxed rat.',city:'Cardiff',product:'Mushrooms',pct:28,duration:2},
-      {name:'Loose Lisa',text:'Weed in Leeds is cheap today. Too many lads, not enough buyers.',city:'Leeds',product:'Weed',pct:-22,duration:1},
+      {name:'Lucy Loose Lips',text:'Weed in Leeds is cheap today. Too many lads, not enough buyers.',city:'Leeds',product:'Weed',pct:-22,duration:1},
       {name:'Pistol Pete',text:'Liverpool docks just got fresh stock in. Coke price will dip before it snaps back.',city:'Liverpool',product:'Cocaine',pct:-25,duration:1},
       {name:'Simon the Snitch',text:'Manchester’s clubs are being watched. Pills are risky but prices will jump.',city:'Manchester',product:'Ecstasy',pct:24,duration:2,heat:6},
-      {name:'Loose Lisa',text:'Birmingham’s full of cheap weed after a grow house panic sale.',city:'Birmingham',product:'Weed',pct:-26,duration:2}
+      {name:'Lucy Loose Lips',text:'Birmingham’s full of cheap weed after a grow house panic sale.',city:'Birmingham',product:'Weed',pct:-26,duration:2}
     ];
     const tip=pick(tips);
     applyPriceModifier(tip.city,tip.product,tip.pct,tip.duration,'Informant Tip',tip.text);
@@ -2712,7 +2712,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   ];
   const scamTexts=[
     'Simon takes the £100, says “back in two minutes”, and is last seen sprinting through a car park.',
-    'Loose Lisa pockets the £250, winks, and gets into a taxi she clearly cannot afford.',
+    'Lucy Loose Lips pockets the £250, winks, and gets into a taxi she clearly cannot afford.',
     'Pistol Pete takes the £10,000, stares at you for three seconds, then says: “Bad investment.” He leaves.',
     'The informant takes the cash and gives you a tip about horse racing. It is not even today’s race.',
     'They vanish with your money. You have learned an important lesson about trusting people in alleyways.'
@@ -2733,7 +2733,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   ];
   const timedInformants=[
     {name:'Simon the Snitch',cost:100,tone:'Cheap, nervous and twitchy.'},
-    {name:'Loose Lisa',cost:250,tone:'Gossipy, confident and chaotic.'},
+    {name:'Lucy Loose Lips',cost:250,tone:'Gossipy, confident and chaotic.'},
     {name:'Pistol Pete',cost:10000,tone:'Serious, threatening and expensive.'}
   ];
   function canShowInformantPopup(){
@@ -2765,7 +2765,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
         let outcome='';
         if(r<.60){outcome=realTip(); success('TIP PAID');}
         else if(r<.80){outcome=pick(falseTips);}
-        else if(r<.90){outcome=pick(scamTexts); if(info.name==='Loose Lisa')rep(-1); if(info.name==='Pistol Pete')rep(-2); errorMsg('SCAMMED');}
+        else if(r<.90){outcome=pick(scamTexts); if(info.name==='Lucy Loose Lips')rep(-1); if(info.name==='Pistol Pete')rep(-2); errorMsg('SCAMMED');}
         else {outcome=pick(vagueTexts);}
         s.notice=outcome;
         save(); draw(); informantPopupActive=false;
@@ -2773,7 +2773,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
         setTimeout(()=>{const c=$('continueEvent'); if(c)c.onclick=()=>{closeModalV22();};},0);
       };
       if(slapBtn)slapBtn.onclick=()=>{
-        if(info.name==='Loose Lisa')rep(-1);
+        if(info.name==='Lucy Loose Lips')rep(-1);
         if(info.name==='Pistol Pete')rep(-3);
         const msg=pick(slapTexts);
         s.notice=msg;
@@ -3483,4 +3483,114 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v38={burnerPhones:0,contactCallCooldownUntil:0,nextContactCallAt:0,callActive:false}; return state;};
   draw=function(){previousDraw(); ensureV38(); bindActionButtonsV38(); scheduleContactCallCheckV38();};
   setTimeout(()=>{try{ensureV38(); document.title='Noir Market V3.8'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
+})();
+
+
+/* Noir Market V3.9: sell carried/vault stock, informant rename and Hustle coming soon expansion. */
+(function(){
+  const VERSION='3.9';
+  const SAVE_KEY='noir_market_v3_9';
+  const FALLBACK_KEYS=['noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function escapeHtmlV39(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function ensureV39(){
+    if(typeof ensureStats==='function')ensureStats();
+    if(typeof ensureEconomy==='function')ensureEconomy();
+    if(typeof ensureVaults==='function')ensureVaults();
+    if(typeof ensureVaultLevels==='function')ensureVaultLevels();
+    s.version=VERSION;
+    s.v39=s.v39||{};
+    s.stats=s.stats||{};
+    if(typeof s.stats.vaultSales!=='number')s.stats.vaultSales=0;
+    if(typeof activeDebtTotal==='function')s.debt=activeDebtTotal();
+  }
+  function currentCityV39(){return (places&&places[s.city]&&places[s.city][0])||'London';}
+  function priceV39(name){return Math.max(0,Math.round((s.prices&&s.prices[name])||0));}
+  function saleCrashV39(name,q,value){try{return typeof depressMarketAfterSale==='function'?depressMarketAfterSale(name,q,value):'';}catch(e){return '';}}
+  function drugIconV39(name){try{const row=drugs.find(d=>d[0]===name); return row?row[1]:'';}catch(e){return '';}}
+
+  function sellCarriedAllV39(name){
+    ensureV39();
+    const qty=Math.max(0,Math.floor((s.inv&&s.inv[name])||0));
+    if(qty<1){errorMsg('NO CARRIED STOCK');return;}
+    const value=qty*priceV39(name);
+    s.cash+=value;
+    s.inv[name]=0;
+    s.stats.tradesSold=(s.stats.tradesSold||0)+qty;
+    s.stats.largestTrade=Math.max(s.stats.largestTrade||0,value);
+    if(typeof rep==='function')rep(1);
+    const crash=saleCrashV39(name,qty,value);
+    s.notice=`Sold all carried ${name}: ${qty} unit${qty===1?'':'s'} for ${money(value)}.${crash}`;
+    save(); draw(); success('SOLD FROM POCKET'); sellModal();
+  }
+
+  function sellVaultAllV39(name){
+    ensureV39();
+    const city=currentCityV39();
+    const vault=(s.vaults&&s.vaults[city])||{};
+    const qty=Math.max(0,Math.floor(+vault[name]||0));
+    if(qty<1){errorMsg('NO SAFE STOCK');return;}
+    const value=qty*priceV39(name);
+    s.cash+=value;
+    vault[name]=0;
+    s.stats.tradesSold=(s.stats.tradesSold||0)+qty;
+    s.stats.vaultSales=(s.stats.vaultSales||0)+qty;
+    s.stats.largestTrade=Math.max(s.stats.largestTrade||0,value);
+    if(typeof rep==='function')rep(1);
+    const crash=saleCrashV39(name,qty,value);
+    s.notice=`Sold all ${city} safe ${name}: ${qty} unit${qty===1?'':'s'} for ${money(value)}.${crash}`;
+    save(); draw(); success('SOLD FROM SAFE'); sellModal();
+  }
+
+  function carriedSellTileV39(name,qty){
+    const price=priceV39(name), value=qty*price, icon=drugIconV39(name);
+    return `<div class="trade-tile"><div class="trade-title"><b>${icon}</b><strong>${escapeHtmlV39(name)}</strong></div><p>In pocket: <strong>${qty}</strong></p><p>Sale price: <strong>${money(price)}</strong> each</p><p>Sell all value: <strong>${money(value)}</strong></p><button type="button" class="sell" data-sellpocketall="${escapeHtmlV39(name)}">SELL ALL</button></div>`;
+  }
+  function vaultSellTileV39(name,qty){
+    const price=priceV39(name), value=qty*price, icon=drugIconV39(name);
+    return `<div class="trade-tile"><div class="trade-title"><b>${icon}</b><strong>${escapeHtmlV39(name)}</strong></div><p>In safe: <strong>${qty}</strong></p><p>Sale price: <strong>${money(price)}</strong> each</p><p>Sell all value: <strong>${money(value)}</strong></p><button type="button" class="sell" data-sellvaultall="${escapeHtmlV39(name)}">SELL ALL FROM SAFE</button></div>`;
+  }
+
+  sellModal=function(){
+    ensureV39();
+    const city=currentCityV39();
+    const vault=(s.vaults&&s.vaults[city])||{};
+    const carried=drugs.map(d=>d[0]).filter(name=>(s.inv&&s.inv[name]>0));
+    const vaulted=drugs.map(d=>d[0]).filter(name=>(vault&&vault[name]>0));
+    let wc=typeof weaponCounts==='function'?weaponCounts():{};
+    let weaponTiles=Object.entries(wc).map(([name,q])=>{let w=getWeapon(name), val=Math.floor((w?.price||0)/2); return `<div class="trade-tile weapon-sale"><div class="trade-title"><strong>${escapeHtmlV39(name)}</strong></div><p>Owned: ${q}</p><p>Resale: <strong>${money(val)}</strong> each</p><p>Sell all: <strong>${money(val*q)}</strong></p>${qtyControl(name,'wsell',q)}<button type="button" class="sell" data-sellweapon="${escapeHtmlV39(name)}">SELL WEAPON</button><button type="button" data-sellallweapon="${escapeHtmlV39(name)}">SELL ALL</button></div>`}).join('');
+    modal('Sell',`<div class="modal-money"><span>Current funds</span><strong>${money(s.cash)}</strong><em>${city} prices</em></div><h4>Carried Stock</h4>${carried.length?`<div class="trade-grid">${carried.map(name=>carriedSellTileV39(name,s.inv[name])).join('')}</div>`:'<p class="subtle">Nothing in your pockets except bad decisions.</p>'}<h4>${escapeHtmlV39(city)} Safe Stock</h4>${vaulted.length?`<div class="trade-grid">${vaulted.map(name=>vaultSellTileV39(name,vault[name])).join('')}</div>`:'<p class="subtle">The safe is empty. Even the spiders look disappointed.</p>'}${weaponTiles?`<h4>Weapons</h4><div class="trade-grid">${weaponTiles}</div>`:''}<div class="trade-footer"><span>Cash ${money(s.cash)}</span><span>City ${escapeHtmlV39(city)}</span></div>`);
+    setTimeout(()=>{
+      if(typeof bindQtyButtons==='function')bindQtyButtons('wsell');
+      document.querySelectorAll('[data-sellpocketall]').forEach(b=>b.onclick=()=>sellCarriedAllV39(b.dataset.sellpocketall));
+      document.querySelectorAll('[data-sellvaultall]').forEach(b=>b.onclick=()=>sellVaultAllV39(b.dataset.sellvaultall));
+      document.querySelectorAll('[data-sellweapon]').forEach(b=>b.onclick=()=>{let name=b.dataset.sellweapon,q=+qtyInput('wsell',name).value||0, w=getWeapon(name), val=Math.floor((w?.price||0)/2); if(q<1){errorMsg('ENTER QUANTITY');return;} let count=weaponCounts()[name]||0; if(q>count){errorMsg('NOT ENOUGH STOCK');return;} for(let i=0;i<q;i++){let idx=s.weapons.indexOf(name); if(idx>=0)s.weapons.splice(idx,1);} s.cash+=q*val; s.notice=`Sold ${q} ${name} for ${money(q*val)}.`; save(); draw(); success(`Sold ${name}`); sellModal();});
+      document.querySelectorAll('[data-sellallweapon]').forEach(b=>b.onclick=()=>{let name=b.dataset.sellallweapon, count=weaponCounts()[name]||0, w=getWeapon(name), val=Math.floor((w?.price||0)/2); if(!count){errorMsg('NOT ENOUGH STOCK');return;} s.weapons=s.weapons.filter(x=>x!==name); s.cash+=count*val; s.notice=`Sold all ${name} for ${money(count*val)}.`; save(); draw(); success(`Sold all ${name}`); sellModal();});
+    },0);
+  };
+
+  hustle=function(){
+    ensureV39();
+    const informants=[
+      {id:'simon',name:'Simon the Snitch',cost:100,trust:0.35,bio:'Cheap, twitchy and usually hiding behind the bins. Knows a bit, guesses a lot.'},
+      {id:'lisa',name:'Lucy Loose Lips',cost:250,trust:0.60,bio:'Gossipy, confident and chaotic. Talks too much, hears too much and occasionally remembers which bit was true.'},
+      {id:'pete',name:'Pistol Pete',cost:10000,trust:0.90,bio:'Expensive, paranoid and oddly well informed. The closest thing to reliable in this business.'}
+    ];
+    const coming=`<h4>Businesses</h4><div class="coming-soon"><strong>COMING SOON</strong><div class="hustle-grid"><div class="hustle-card"><h4>Deliverude</h4><p>A totally unofficial courier outfit for moving bags across town when you’re too busy, too wanted, or too lazy to do it yourself.</p><p class="subtle">Fast delivery, zero paperwork, and a complaints department that is just a woman called Sharon ignoring your calls.</p></div><div class="hustle-card"><h4>Uber Yeats</h4><p>Nobody is bringing noodles and the driver definitely took the long way because he “saw a car that looked at him funny”.</p><p class="subtle">Cheap, chaotic, and occasionally arrives with fewer items than it left with.</p></div><div class="hustle-card"><h4>Karen &amp; Sharon Broker Bitches</h4><p>Karen and Sharon are identical twins, business partners, and the only loan providers in the city who can make a payment reminder feel like a hostage note.</p><p class="subtle">They dress like they’re off to complain to a manager, but operate like they buried the last one.</p><p class="subtle">Their lending model is simple: fast cash, aggressive interest, and weekly check-ins that start polite and end with Sharon describing exactly where your kneecaps are.</p><p class="subtle">Karen handles the paperwork, Sharon handles customer retention, and neither of them has smiled since 1998.</p></div></div></div>`;
+    modal('Hustle',`<h4>Informants</h4><p class="subtle">Pay for market information. Any informant has a 10% chance of scamming you and running.</p><div class="hustle-grid">${informants.map(i=>`<div class="hustle-card"><h4>${i.name} · ${money(i.cost)}</h4><p>${i.bio}</p><p class="subtle">Trust level: ${Math.round(i.trust*100)}%</p><button type="button" class="buy" data-informant="${i.id}">Pay ${i.name}</button></div>`).join('')}</div>${coming}`);
+    setTimeout(()=>{document.querySelectorAll('[data-informant]').forEach(btn=>btn.onclick=()=>{const info=informants.find(i=>i.id===btn.dataset.informant); if(!info)return; if(s.cash<info.cost){errorMsg('INSUFFICIENT FUNDS');return;} s.cash-=info.cost; ensureStats(); s.stats.informants++; if(Math.random()<0.10){s.notice=`${info.name} disappears with your cash and suspiciously expensive trainers.`; errorMsg('SCAMMED'); save(); draw(); hustle(); return;} const city=pick(places)[0], drug=pickDrug(), kind=pick(['shortage','collapse','crackdown','spiked']); const accurate=Math.random()<info.trust; let text=kind==='shortage'?`${drug} shortage likely in ${city}.`:kind==='collapse'?`${drug} prices may collapse in ${city}.`:kind==='spiked'?`Spiked ${drug} batches causing panic in ${city}.`:`Police pressure expected in ${city}.`; if(!accurate){text=pick([`${pickDrug()} shipment rumoured in ${pick(places)[0]}.`,`Police looking the wrong way in ${pick(places)[0]}.`,`Street prices turning weird in ${pick(places)[0]}.`]);} s.notice=`${info.name}: ${text}`; success('INFORMANT PAID'); save(); draw(); hustle();});},0);
+  };
+
+  save=function(){ensureV39(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV39(); setActiveCityMarket(); updateRankProgress(); updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV39(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v39={}; return state;};
+  draw=function(){previousDraw(); ensureV39();};
+  setTimeout(()=>{try{ensureV39(); document.title='Noir Market V3.9'; save(); console.log('NOIR MARKET V3.9: Sell screen safe stock, Lucy Loose Lips and Hustle coming soon entries active.');}catch(e){}},620);
 })();

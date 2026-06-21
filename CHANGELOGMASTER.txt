@@ -1,4 +1,42 @@
 NOIR MARKET CHANGELOGMASTER
+Current release: V3.9
+Baseline: Noir Market V3.8
+
+V3.9 Changes
+- Renamed informant Loose Lisa to Lucy Loose Lips across the active game text and informant popup logic.
+- Reworked the Sell screen to separate Carried Stock and Current City Safe Stock.
+- Added SELL ALL for each carried drug line.
+- Added SELL ALL FROM SAFE for each drug held in the current city vault only.
+- Safe stock sells directly from the current city vault without moving stock into carried inventory.
+- Other city vault stock is not affected by safe selling.
+- Selling from carried inventory or city safe updates cash, quantities, sales stats, reputation and local market impact.
+- Added Deliverude to the Hustle Businesses coming soon section.
+- Added Uber Yeats to the Hustle Businesses coming soon section.
+- Added Karen & Sharon Broker Bitches to the Hustle Businesses coming soon section.
+- Updated app title, manifest version, service worker cache, save key and runtime version to V3.9.
+- Save migration from V3.8 and older versions retained.
+- No separate changelog files added.
+
+Package File Inventory
+- CHANGELOGMASTER.txt
+- apple-touch-icon-dark.png
+- apple-touch-icon-light.png
+- apple-touch-icon.png
+- assets/logo-splash.png
+- assets/logo.png
+- game.js
+- icon-192-light.png
+- icon-192.png
+- icon-512-light.png
+- icon-512.png
+- index.html
+- manifest.json
+- styles.css
+- sw.js
+
+Merged Release History
+
+NOIR MARKET CHANGELOGMASTER
 Current release: V3.8
 Baseline: Noir Market V3.7
 
