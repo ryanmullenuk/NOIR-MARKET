@@ -1,5 +1,5 @@
 NOIR MARKET CHANGELOGMASTER
-Current release: V4.0
+Current release: V4.3
 Baseline: Noir Market V4.0
 
 
@@ -34,6 +34,7 @@ Package File Inventory
 - apple-touch-icon.png
 - assets/logo-splash.png
 - assets/logo.png
+- assets/main-parallax-bg.jpg
 - game.js
 - icon-192-light.png
 - icon-192.png
@@ -815,3 +816,50 @@ Checks completed:
 - game.js syntax check passed.
 - sw.js syntax check passed.
 - manifest.json validation passed.
+
+========================================================================
+CHANGELOG_v4.2.txt
+========================================================================
+NOIR MARKET V4.2 CHANGELOG
+
+Changes made:
+- Added Police Bribe Resolution system for police stop/search/arrest events.
+- Added full-screen bribe modal titled THE OFFICER LOOKS THE OTHER WAY… FOR A PRICE.
+- Added PAY BRIBE and TAKE THE CHARGE options.
+- Added bribe cost calculation based on offence severity, carried stock value, weapon involvement, airport involvement, heat level and recent arrests.
+- Added hidden bribe acceptance calculation based on reputation, heat, weapons, airport context and carried value.
+- Added SUCCESS outcome where accepted bribes deduct cash, reduce heat, increase reputation and release the player with a warning.
+- Added FAILURE outcome where rejected bribes do not deduct cash, advance the game by 1 day, add 1 jail day, increase heat and reduce reputation.
+- Added affordability handling when the player cannot pay the required bribe.
+- Preserved TAKE THE CHARGE behaviour so normal arrest/fine/seizure outcomes resolve without another bribe offer.
+- Updated release version to V4.2.
+- Updated manifest version and service worker cache to V4.2.
+- Preserved migration from V4.1 and earlier save keys.
+
+Checks completed:
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
+
+
+========================================================================
+CHANGELOG_v4.3.txt
+========================================================================
+NOIR MARKET V4.3 CHANGELOG
+
+Changes made:
+- Added the supplied green/blue glow image as a main screen background asset.
+- Added a fixed parallax background layer behind the main app screen.
+- Added lightweight scroll-based parallax movement using requestAnimationFrame.
+- Kept the splash screen separate and unchanged.
+- Added reduced-motion handling so the background remains static when required.
+- Added the background asset to the service worker cache for offline/PWA use.
+- Updated release version to V4.3.
+- Updated manifest version and service worker cache to V4.3.
+- Preserved migration from V4.2 and earlier save keys.
+
+Checks completed:
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
+
