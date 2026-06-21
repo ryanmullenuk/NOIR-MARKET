@@ -3443,7 +3443,10 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     }
     s.notice=`Burner phone deal complete. Result: ${outcome.toUpperCase()}. Net ${money(net)}.`;
     save(); draw();
-    modal(title,`${html}<button type="button" id="continueContactDeal">Continue</button>`);
+    const successOutcomes=['success','jackpot'];
+    const resultLabel=successOutcomes.includes(outcome)?'SUCCESS':'FAILURE';
+    const resultClass=successOutcomes.includes(outcome)?'success':'failure';
+    modal(title,`<div class="deal-result-banner ${resultClass}">${resultLabel}</div>${html}<button type="button" id="continueContactDeal">Continue</button>`);
     const c=$('continueContactDeal'); if(c)c.onclick=()=>{if(typeof closeModalFastV34==='function')closeModalFastV34(); else closeModalV22();};
   }
 
@@ -3599,4 +3602,230 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v40={stabilised:true}; return state;};
   draw=function(){previousDraw(); ensureV39();};
   setTimeout(()=>{try{ensureV39(); document.title='Noir Market V4.0'; save(); console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');}catch(e){}},620);
+})();
+
+
+/* Noir Market V4.1 feature patch: weapons travel risk, finance controls, vault export and contact result banners. */
+(function(){
+  const VERSION='4.1';
+  const SAVE_KEY='noir_market_v4_1';
+  const FALLBACK_KEYS=['noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+  const previousMaybeArrest=typeof maybeArrest==='function'?maybeArrest:null;
+
+  function escV41(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function cityV41(){return places[s.city]&&places[s.city][0]||'Unknown';}
+  function debtTotalV41(){try{return Math.max(0,Math.round(activeDebtTotal()));}catch(e){return Math.max(0,Math.round(+s.debt||0));}}
+  function carriedDrugsV41(){try{return Math.max(0,used());}catch(e){return 0;}}
+  function carriedWeaponsV41(){return Array.isArray(s.weapons)?s.weapons.length:0;}
+  function ensureV41(){
+    if(typeof ensureStats==='function')ensureStats();
+    if(typeof ensureShipping==='function')ensureShipping();
+    if(typeof ensureVaults==='function')ensureVaults();
+    s.version=VERSION;
+    s.v41=s.v41||{};
+    s.bank=Math.max(0,Math.round(+s.bank||0));
+    s.cash=Math.max(0,Math.round(+s.cash||0));
+    s.debt=debtTotalV41();
+  }
+  function closeV41(){if(typeof closeModalFastV34==='function')closeModalFastV34(); else if($('modal'))$('modal').close();}
+  function weaponCountsV41(){let m={}; (s.weapons||[]).forEach(w=>m[w]=(m[w]||0)+1); return m;}
+  function allCarriedWeaponTextV41(){const rows=Object.entries(weaponCountsV41()); return rows.length?rows.map(([k,v])=>`${v} ${k}`).join(', '):'none';}
+  function weaponRiskScoreV41(){
+    return (s.weapons||[]).reduce((total,name)=>{const w=typeof getWeapon==='function'?getWeapon(name):null; return total+(w?(+w.heat||0)+Math.min(35,Math.log10(Math.max(10,+w.price||10))*5):8);},0);
+  }
+  function stashAllWeaponsV41(){
+    ensureV41();
+    const qty=carriedWeaponsV41();
+    if(qty<1){errorMsg('NO WEAPONS HELD');return false;}
+    const city=cityV41();
+    const cap=typeof vaultCapacity==='function'?vaultCapacity(city):100;
+    const usedNow=typeof vaultUsed==='function'?vaultUsed(city):0;
+    if(usedNow+qty>cap){errorMsg('VAULT FULL');return false;}
+    s.weaponVaults=s.weaponVaults||{};
+    s.weaponVaults[city]=s.weaponVaults[city]||{};
+    (s.weapons||[]).forEach(name=>{s.weaponVaults[city][name]=(s.weaponVaults[city][name]||0)+1;});
+    s.weapons=[];
+    s.notice=`Stored ${qty} weapon${qty===1?'':'s'} in the ${city} vault before travelling.`;
+    save(); draw(); success('WEAPONS STASHED');
+    return true;
+  }
+  function ditchAllWeaponsV41(){
+    ensureV41();
+    const qty=carriedWeaponsV41();
+    if(qty<1){errorMsg('NO WEAPONS HELD');return false;}
+    s.weapons=[];
+    s.notice=`Ditched ${qty} weapon${qty===1?'':'s'}. No refund, no receipt, no clever speech.`;
+    save(); draw(); success('WEAPONS DITCHED');
+    return true;
+  }
+  function routeTypeV41(i){
+    const from=places[s.city]||[], to=places[i]||[];
+    if(from[1]!==to[1])return 'airport';
+    return 'road/train';
+  }
+  function weaponTravelOutcomeV41(i){
+    const qty=carriedWeaponsV41();
+    if(qty<1)return {type:'none',text:''};
+    const route=routeTypeV41(i);
+    const heat=+s.heat||0;
+    const score=weaponRiskScoreV41();
+    let risk=(route==='airport'?0.34:0.14)+(qty*0.045)+(score/420)+(heat>75?Math.min(.22,(heat-75)/120):0);
+    risk=Math.max(route==='airport'?0.36:0.18,Math.min(0.88,risk));
+    const roll=Math.random();
+    if(roll>risk){return {type:'clean',route,text:'You move carefully and nobody checks the bag. Lucky, not smart.'};}
+    const severity=Math.random()+Math.min(.35,score/260)+(qty>2?.12:0)+(route==='airport'?.16:0);
+    if(severity>.98){return {type:'arrest',route,major:true,jail:rand(1,7),fine:rand(1000,6500),text:'The weapon is found during a search. This is now very much a police matter.'};}
+    if(severity>.56){const fine=Math.min(s.cash,rand(500,4500)); s.cash-=fine; s.heat=Math.min(100,(s.heat||0)+rand(4,12)); return {type:'fine',route,fine,text:`You are stopped, questioned, fined ${money(fine)}, and sent on your way. Expensive little journey.`};}
+    const seized=allCarriedWeaponTextV41();
+    const count=carriedWeaponsV41();
+    s.weapons=[];
+    s.heat=Math.min(100,(s.heat||0)+rand(6,16));
+    return {type:'seizure',route,count,text:`Police find the weapon${count===1?'':'s'} and take ${count===1?'it':'them'}. You keep your freedom, but lose the hardware. Seized: ${seized}.`};
+  }
+
+  function showAirportCheckV41(i,fare){
+    ensureV41();
+    const dest=places[i][0];
+    const held={drugs:carriedDrugsV41(),weapons:carriedWeaponsV41()};
+    const heat=s.heat||0;
+    const hasContraband=(held.drugs+held.weapons)>0;
+    const clean=!hasContraband&&heat<=75;
+    const riskText=clean
+      ? 'You are carrying no drugs or weapons and your heat is not above 75%. You should get through security without trouble.'
+      : (hasContraband?'You are carrying contraband. Security may stop you, seize stock, fine you, or arrest you.':'Your heat is above 75%. Even clean pockets may attract attention.');
+    const boardLabel=hasContraband?'BOARD ANYWAY':'BOARD';
+    const boardClass=hasContraband?'sell':'buy';
+    modal('Airport Check',`<p><strong>Before you board:</strong> ${riskText}</p><p>Destination: <strong>${escV41(dest)}</strong><br>Travel price: <strong>${money(fare)}</strong></p><div class="warning-stock"><p>Drugs carried: <strong>${held.drugs}</strong></p><p>Weapons carried: <strong>${held.weapons}</strong></p><p>Heat: <strong>${heat}%</strong></p></div><p class="subtle">Vault stock stays in the city where you leave it. Carrying clean is the safe option.</p><div class="loan-choice"><button type="button" id="storeBeforeFlight">Store in Vault</button><button type="button" class="${boardClass}" id="boardAnyway">${boardLabel}</button><button type="button" id="cancelFlight">Cancel</button></div>`);
+    const sv=$('storeBeforeFlight'), ba=$('boardAnyway'), cf=$('cancelFlight');
+    if(sv)sv.onclick=()=>{s.v41=s.v41||{}; s.v41.carryWeaponsOnNextTravel=false; save(); dump();};
+    if(ba)ba.onclick=()=>boardFlightWithSeizure(i,fare);
+    if(cf)cf.onclick=()=>travel();
+  }
+
+  function showWeaponTravelWarningV41(i,fare){
+    ensureV41();
+    const city=cityV41(), dest=places[i][0], qty=carriedWeaponsV41();
+    modal('YOU ARE CARRYING WEAPONS',`<p>Moving with weapons increases your chance of being stopped, searched, fined, arrested, or having items seized.</p><p>Destination: <strong>${escV41(dest)}</strong><br>Travel price: <strong>${money(fare)}</strong></p><div class="warning-stock"><p>Weapons carried: <strong>${qty}</strong></p><p>Held: <strong>${escV41(allCarriedWeaponTextV41())}</strong></p><p>Current city vault: <strong>${escV41(city)}</strong></p></div><div class="loan-choice"><button type="button" class="sell" id="carryWeaponsTravel">CARRY THEM</button><button type="button" class="buy" id="stashWeaponsTravel">STASH IN CURRENT CITY</button><button type="button" id="ditchWeaponsTravel">DITCH WEAPONS</button><button type="button" id="cancelWeaponsTravel">CANCEL TRAVEL</button></div>`);
+    const carry=$('carryWeaponsTravel'), stash=$('stashWeaponsTravel'), ditch=$('ditchWeaponsTravel'), cancel=$('cancelWeaponsTravel');
+    if(carry)carry.onclick=()=>{s.v41=s.v41||{}; s.v41.carryWeaponsOnNextTravel=true; save(); showAirportCheckV41(i,fare);};
+    if(stash)stash.onclick=()=>{if(stashAllWeaponsV41()){s.v41.carryWeaponsOnNextTravel=false; showAirportCheckV41(i,fare);}};
+    if(ditch)ditch.onclick=()=>{if(ditchAllWeaponsV41()){s.v41.carryWeaponsOnNextTravel=false; showAirportCheckV41(i,fare);}};
+    if(cancel)cancel.onclick=()=>travel();
+  }
+
+  airportWarning=function(i,fare){
+    ensureV41();
+    if(carriedWeaponsV41()>0)return showWeaponTravelWarningV41(i,fare);
+    s.v41.carryWeaponsOnNextTravel=false;
+    showAirportCheckV41(i,fare);
+  };
+
+  performFlightV22=function(i,fare){
+    ensureV41();
+    sound('travel'); haptic(); ensureStats();
+    const from=cityV41(), to=places[i][0], heatAtBoard=s.heat||0;
+    const hadDrugs=carriedDrugsV41()>0;
+    const hadWeapons=carriedWeaponsV41()>0;
+    let outcome={type:'none',text:''};
+    if(hadWeapons&&s.v41&&s.v41.carryWeaponsOnNextTravel){outcome=weaponTravelOutcomeV41(i);}
+    if(outcome.type==='arrest'){
+      s.v41.forceTravelArrest={major:true,fine:outcome.fine,jail:outcome.jail,context:'travel',airport:true,v41WeaponTravel:true};
+    }
+    s.stats.flights=(s.stats.flights||0)+1;
+    s.cash-=fare;
+    s.v34=s.v34||{};
+    s.v34.lastAirport={
+      day:s.day,
+      from,
+      to,
+      hadDrugs,
+      hadWeapons: outcome.type==='arrest',
+      hadContraband: hadDrugs || outcome.type==='arrest',
+      heatAtBoard
+    };
+    s.city=i;
+    s.v41.carryWeaponsOnNextTravel=false;
+    save(); draw(); closeV41();
+    const cleanLine=(!hadDrugs && outcome.type==='none' && heatAtBoard<=75)?'Clean pockets and low heat. Security barely looks up.':'';
+    const riskLine=outcome.text||cleanLine||'You make it through boarding, but security is watching.';
+    setTimeout(()=>nextDay(`You land in ${places[s.city][0]}. Travel cost ${money(fare)}. ${riskLine}`,false),0);
+  };
+  boardFlightWithSeizure=function(i,fare){performFlightV22(i,fare);};
+
+  maybeArrest=function(context){
+    if(context==='travel'&&s&&s.v41&&s.v41.forceTravelArrest){const a=s.v41.forceTravelArrest; delete s.v41.forceTravelArrest; return a;}
+    return previousMaybeArrest?previousMaybeArrest(context):null;
+  };
+
+  bank=function(){
+    ensureV41();
+    const loans=Array.isArray(s.loans)?s.loans:[];
+    const openLoans=loans.length?loans.map((l,idx)=>{const days=(+l.due||s.day)-s.day, urgent=days<=5, payoff=typeof loanPayoff==='function'?loanPayoff(l):(+l.repay||+l.principal||0), fullRepay=typeof loanFullRepay==='function'?loanFullRepay(l):payoff; return `<div class="loan-row ${urgent?'urgent-loan':''}"><div><span>${escV41(l.name||'Shady Lender')}</span><strong>${money(payoff)}</strong><em>${days>0?'due in '+days+' day'+(days===1?'':'s'):'DUE NOW'} · full term ${money(fullRepay)}</em></div><button type="button" data-payloan="${idx}">Pay</button></div>`;}).join(''):'<p class="subtle">No active loans.</p>';
+    modal('Finances',`<div class="modal-money"><span>Cash held</span><strong>${money(s.cash)}</strong><em>in pocket</em></div><div class="modal-money"><span>Bank balance</span><strong>${money(s.bank)}</strong><em>protected funds</em></div><p class="subtle">Move cash into the bank to keep it away from muggers. Withdraw when you need working money.</p><input id="amount" inputmode="numeric" type="number" placeholder="Amount"><div class="bank-grid"><button type="button" id="deposit">Deposit</button><button type="button" id="withdraw">Withdraw</button><button type="button" class="buy" id="depositAll">Deposit All</button><button type="button" id="withdrawAll">Withdraw All</button><button type="button" class="full" id="payDebt">Pay General Debt</button></div><h4>Loans</h4>${openLoans}<div class="loan-list compact">${lenders.map((l,i)=>`<button type="button" data-loan="${i}"><strong>${escV41(l[0])}</strong><br>Borrow up to ${money(typeof adjustedLenderMax==='function'?adjustedLenderMax(l):l[1])} · ${Math.round(l[3]*100)}% full-term interest · due in ${l[2]} days</button>`).join('')}</div>`);
+    setTimeout(()=>{
+      const amt=()=>Math.max(0,Math.floor(+($('amount')?.value||0)));
+      const refresh=(msg)=>{save(); draw(); if(msg)success(msg); bank();};
+      const dep=$('deposit'), wit=$('withdraw'), depAll=$('depositAll'), witAll=$('withdrawAll'), pay=$('payDebt');
+      if(dep)dep.onclick=()=>{const a=Math.min(amt(),s.cash); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.cash-=a; s.bank+=a; s.notice=`Deposited ${money(a)}. Less mugging bait in your pockets.`; refresh('DEPOSIT COMPLETE');};
+      if(wit)wit.onclick=()=>{const a=Math.min(amt(),s.bank); if(a<=0){errorMsg('ENTER AMOUNT');return;} s.bank-=a; s.cash+=a; s.notice=`Withdrew ${money(a)}. Try not to wave it around like a lottery winner.`; refresh('WITHDRAWAL COMPLETE');};
+      if(depAll)depAll.onclick=()=>{const a=s.cash; if(a<=0){errorMsg('NO CASH TO DEPOSIT');return;} s.cash=0; s.bank+=a; s.notice=`Deposited all cash: ${money(a)}. Your pockets are finally less stupid.`; refresh('DEPOSITED ALL');};
+      if(witAll)witAll.onclick=()=>{const a=s.bank; if(a<=0){errorMsg('NO BANK FUNDS');return;} s.bank=0; s.cash+=a; s.notice=`Withdrew all bank funds: ${money(a)}. This feels like the start of a bad idea.`; refresh('WITHDREW ALL');};
+      if(pay)pay.onclick=()=>{let a=amt(); if(!a)a=debtTotalV41(); if(typeof payDebtAmount==='function')payDebtAmount(a); else errorMsg('NO DEBT HANDLER');};
+      document.querySelectorAll('[data-loan]').forEach(b=>b.onclick=()=>chooseLoan(+b.dataset.loan));
+      document.querySelectorAll('[data-payloan]').forEach(b=>b.onclick=()=>paySpecificLoan(+b.dataset.payloan));
+    },0);
+  };
+
+  showShippingExport=function(){
+    ensureV41(); setActiveCityMarket();
+    const from=cityV41();
+    if(typeof validShipDestV20==='function')validShipDestV20();
+    const vault=(s.vaults&&s.vaults[from])||{};
+    const carried=Object.entries(s.inv||{}).filter(([,q])=>q>0).map(([name,q])=>({source:'carried',name,qty:q,label:'Carried'}));
+    const vaulted=Object.entries(vault).filter(([,q])=>q>0).map(([name,q])=>({source:'vault',name,qty:q,label:`${from} Vault`}));
+    const rows=[...carried,...vaulted];
+    function rowHtmlV41(list,offset){return list.map((r,j)=>{const i=offset+j, value=shippingValue(r.name,r.qty), cost=shippingCostFor(value); return `<div class="shipping-row"><div><strong>${escV41(r.name)}</strong><span>${escV41(r.label)}: ${r.qty} · max shipment cost ${money(cost)}</span></div><input type="number" inputmode="numeric" min="0" max="${r.qty}" value="${r.qty}" id="shipqty-v41-${i}"><button type="button" data-exportdrug-v41="${i}">EXPORT</button></div>`;}).join('');}
+    const panel=$('travelPanel'); if(!panel)return;
+    const carriedBlock=carried.length?`<h4>Carried Stock</h4>${rowHtmlV41(carried,0)}`:'';
+    const vaultBlock=vaulted.length?`<h4>${escV41(from)} Vault Stock</h4>${rowHtmlV41(vaulted,carried.length)}`:'';
+    panel.innerHTML=`<button type="button" class="back-mini" id="backShipHub">BACK TO SHIPPING</button><div class="modal-money"><span>Exporting from</span><strong>${escV41(from)}</strong><em>Cash ${money(s.cash)}</em></div><label class="shipping-label">Destination</label>${typeof shippingDestinationTilesV20==='function'?shippingDestinationTilesV20():''}<p class="subtle">Export can now ship either carried stock or stock held in this city’s vault. Shipments wait in the destination city until imported into that city’s vault.</p>${rows.length?`<div class="shipping-list">${carriedBlock}${vaultBlock}</div>`:'<p class="subtle">No carried or vault stock available to ship.</p>'}`;
+    const back=$('backShipHub'); if(back)back.onclick=showShippingHub;
+    document.querySelectorAll('[data-shipdest]').forEach(btn=>btn.onclick=()=>{selectedShippingDestV20=+btn.dataset.shipdest; document.querySelectorAll('[data-shipdest]').forEach(b=>b.classList.toggle('active',+b.dataset.shipdest===selectedShippingDestV20));});
+    document.querySelectorAll('[data-exportdrug-v41]').forEach(btn=>btn.onclick=()=>{
+      const idx=+btn.dataset.exportdrugV41;
+      const row=rows[idx];
+      const toIdx=typeof validShipDestV20==='function'?validShipDestV20():0;
+      const to=places[toIdx]&&places[toIdx][0];
+      const qty=Math.floor(+$('shipqty-v41-'+idx).value||0);
+      if(!row||!to){errorMsg('SELECT DESTINATION');return;}
+      if(toIdx===s.city){errorMsg('SELECT ANOTHER CITY');return;}
+      if(qty<1){errorMsg('ENTER QUANTITY');return;}
+      if(row.source==='carried'){
+        if(qty>(s.inv[row.name]||0)){errorMsg('NOT ENOUGH CARRIED STOCK');return;}
+      }else{
+        if(qty>(vault[row.name]||0)){errorMsg('NOT ENOUGH VAULT STOCK');return;}
+      }
+      const value=shippingValue(row.name,qty), cost=shippingCostFor(value);
+      if(s.cash<cost){errorMsg('INSUFFICIENT FUNDS');return;}
+      s.cash-=cost;
+      if(row.source==='carried')s.inv[row.name]-=qty; else vault[row.name]-=qty;
+      s.shipments.push({id:`ship_${Date.now()}_${Math.floor(Math.random()*100000)}`,from,to,source:row.source,items:{[row.name]:qty},value,cost,day:s.day});
+      ensureStats(); s.stats.shipmentsExported=(s.stats.shipmentsExported||0)+1;
+      s.notice=`Exported ${qty} ${row.name} from ${row.source==='vault'?from+' vault':'carried stock'} to ${to}. Shipping cost ${money(cost)}.`;
+      save(); draw(); success('SHIPMENT EXPORTED'); showShippingExport();
+    });
+  };
+
+  save=function(){ensureV41(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV41(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV41(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v41={carryWeaponsOnNextTravel:false}; return state;};
+  draw=function(){previousDraw(); try{ensureV41();}catch(e){} };
+  setTimeout(()=>{try{ensureV41(); document.title='Noir Market V4.1'; save(); console.log('NOIR MARKET V4.1: weapons travel risk, finance deposit/withdraw all, vault export and contact result banners active.');}catch(e){console.warn('V4.1 startup skipped:',e);}},720);
 })();

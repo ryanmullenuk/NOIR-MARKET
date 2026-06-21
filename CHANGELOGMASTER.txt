@@ -791,3 +791,27 @@ NOIR MARKET V3.4 CHANGELOG
 - Removed automatic weapon loss on travel. Weapons/drugs are only seized if an airport stop/arrest outcome occurs.
 - Updated airport warning text to show carried drugs, weapons and heat before boarding.
 - Updated version, manifest and service worker cache to V3.4.
+
+========================================================================
+CHANGELOG_v4.1.txt
+========================================================================
+NOIR MARKET V4.1 CHANGELOG
+
+Changes made:
+- Added Weapons Travel Risk system before travelling while carrying weapons.
+- Added full-screen weapon warning modal with CARRY THEM, STASH IN CURRENT CITY, DITCH WEAPONS and CANCEL TRAVEL options.
+- Added weapon travel outcomes: clean travel, weapon seizure, fine/warning, and arrest/jail risk.
+- Added weapon stashing into the current city weapon vault before travel.
+- Added weapon ditching before travel with no cash return.
+- Updated Finances modal to show Cash Held and Bank Balance clearly.
+- Added Deposit All and Withdraw All options to Finances.
+- Updated Shipping Export so the player can export carried stock or current-city vault stock.
+- Added large full-width SUCCESS / FAILURE banner to Contact Deal Result modal.
+- Updated release version to V4.1.
+- Updated manifest version and service worker cache to V4.1.
+- Preserved migration from V4.0 and earlier save keys.
+
+Checks completed:
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
