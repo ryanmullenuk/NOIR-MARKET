@@ -1,3 +1,12 @@
+
+## V5.0
+- Stability and release polish pass from V4.9.
+- No gameplay feature changes.
+- Updated version labels, manifest version and service worker cache to V5.0.
+- Added V5.0 save key with migration from V4.9 and earlier saves.
+- Adjusted splash-screen INSTRUCTIONS position so it sits fully visible on phone screens.
+- Added small responsive splash layout refinements for shorter mobile screens.
+
 NOIR MARKET CHANGELOGMASTER
 Current release: V4.3
 Baseline: Noir Market V4.0

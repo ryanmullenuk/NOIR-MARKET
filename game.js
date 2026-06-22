@@ -4178,11 +4178,11 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
 })();
 
 
-/* Noir Market V4.9: staged splash fade and HOW TO PLAY instructions button. */
+/* Noir Market V5.0: staged splash fade and HOW TO PLAY instructions button. */
 (()=>{
-  const VERSION='4.9';
-  const SAVE_KEY='noir_market_v4_9';
-  const FALLBACK_KEYS=['noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const VERSION='5.0';
+  const SAVE_KEY='noir_market_v5_0';
+  const FALLBACK_KEYS=['noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   const previousBaseState=baseState;
   const previousDraw=draw;
 
@@ -4266,5 +4266,5 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   draw=function(){previousDraw(); try{ensureV49();}catch(e){} };
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',revealMainSplashAfterSnowV49,{once:true}); else revealMainSplashAfterSnowV49();
-  setTimeout(()=>{try{ensureV49(); document.title='Noir Market V4.9'; save(); console.log('NOIR MARKET V4.9: staged snow-first splash reveal and HOW TO PLAY instructions button active.');}catch(e){console.warn('V4.9 startup skipped:',e);}},1500);
+  setTimeout(()=>{try{ensureV49(); document.title='Noir Market V5.0'; save(); console.log('NOIR MARKET V5.0: staged snow-first splash reveal and HOW TO PLAY instructions button active.');}catch(e){console.warn('V5.0 startup skipped:',e);}},1500);
 })();
