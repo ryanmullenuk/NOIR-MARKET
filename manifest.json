@@ -2,7 +2,7 @@
   "name": "Noir Market",
   "short_name": "Noir Market",
   "description": "Noir Market browser game",
-  "version": "5.2",
+  "version": "5.5",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "./index.html",
