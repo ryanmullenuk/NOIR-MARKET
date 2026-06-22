@@ -7854,3 +7854,143 @@ catch (e) { } }, 980);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV66, { once: true }); else initV66();
 })();
+
+
+/* Noir Market V6.7: splash-to-HOW TO PLAY transition fix and Hustle coming soon restore. */
+(function () {
+    var VERSION = '6.7';
+    var SAVE_KEY = 'noir_market_v6_7';
+    var FALLBACK_KEYS = ['noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var previousBaseStateV67 = baseState;
+    var previousLoadV67 = load;
+    var previousSaveV67 = save;
+    var previousHustleV67 = hustle;
+    var previousShowWelcomeV67 = showWelcome;
+    var previousNewGameV67 = newGame;
+
+    baseState = function () {
+        var state = previousBaseStateV67();
+        state.version = VERSION;
+        return state;
+    };
+
+    save = function () {
+        ensureStats();
+        s.version = VERSION;
+        localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    };
+
+    load = function () {
+        var x = localStorage.getItem(SAVE_KEY);
+        if (!x) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                x = localStorage.getItem(FALLBACK_KEYS[i]);
+                if (x) break;
+            }
+        }
+        if (x) {
+            s = JSON.parse(x);
+            ensureStats();
+            s.version = VERSION;
+            if (typeof setActiveCityMarket === 'function') setActiveCityMarket();
+            if (typeof updateRankProgress === 'function') updateRankProgress();
+            if (typeof updateBestRankV18 === 'function') updateBestRankV18();
+            save();
+            draw();
+            return false;
+        }
+        newGame(false);
+        return true;
+    };
+
+    function openHowToPlayBeforePaintV67() {
+        try { previousShowWelcomeV67(); }
+        catch (e) { try { showWelcome(); } catch (ignored) {} }
+    }
+
+    newGame = function (showHowTo) {
+        previousNewGameV67(false);
+        if (showHowTo) {
+            try { if (typeof selectedStartingCityIndex !== 'undefined') selectedStartingCityIndex = null; } catch (e) {}
+            openHowToPlayBeforePaintV67();
+        }
+    };
+
+    setupSplashLoaderV27 = function () {
+        var splash = $('splash'), enter = $('splashEnter'), fill = $('splashLoaderFill'), text = $('splashLoaderText'), prompt = $('splashPrompt');
+        if (!splash || !enter || !fill || !text) return;
+        if (splash.dataset.loaderVersion === '6.7') return;
+        splash.dataset.loaderVersion = '6.7';
+        var ready = false, entered = false;
+        var markReady = function () {
+            if (ready) return;
+            ready = true;
+            fill.style.width = '100%';
+            enter.disabled = false;
+            enter.classList.add('ready');
+            text.textContent = 'ENTER';
+            enter.setAttribute('aria-label', 'Enter Noir Market');
+            if (prompt) prompt.textContent = '';
+        };
+        var enterGame = function () {
+            if (!ready || entered) return;
+            entered = true;
+            unlockAudio();
+            try { startBackgroundMusic(); musicStarted = true; } catch (e) {}
+            sound('positive');
+            openHowToPlayBeforePaintV67();
+            requestAnimationFrame(function () {
+                splash.classList.add('hide');
+                setTimeout(function () {
+                    try { if (window.__NOIR_V33_STOP_SNOW) window.__NOIR_V33_STOP_SNOW(); } catch (e) {}
+                    try { if (typeof scheduleInformants === 'function') scheduleInformants(); } catch (e) {}
+                }, 460);
+            });
+        };
+        enter.disabled = true;
+        enter.classList.remove('ready');
+        enter.onclick = enterGame;
+        splash.onclick = function (e) {
+            if (e.target && e.target.closest && e.target.closest('#splashEnter')) return;
+            enterGame();
+        };
+        fill.style.transition = 'width .2s cubic-bezier(.18,.84,.25,1)';
+        fill.style.width = '0%';
+        text.textContent = 'LOADING';
+        if (prompt) prompt.textContent = '';
+        try { startInstantTopSnow(); } catch (e) { try { createSplashDust(); } catch (ignored) {} }
+        requestAnimationFrame(function () { fill.style.width = '70%'; requestAnimationFrame(function () { return setTimeout(markReady, 115); }); });
+    };
+
+    hustle = function () {
+        previousHustleV67();
+        setTimeout(function () {
+            var modalBody = document.getElementById('modalBody');
+            if (!modalBody) return;
+            var scroll = modalBody.querySelector('.modal-scroll') || modalBody;
+            var existing = scroll.querySelector('.coming-soon');
+            if (existing) return;
+            var oldBusinessCard = null;
+            var cards = scroll.querySelectorAll('.hustle-card');
+            for (var i = 0; i < cards.length; i++) {
+                if (/Businesses/i.test(cards[i].textContent || '') && /COMING SOON/i.test(cards[i].textContent || '')) oldBusinessCard = cards[i];
+            }
+            if (oldBusinessCard && oldBusinessCard.parentNode) oldBusinessCard.parentNode.removeChild(oldBusinessCard);
+            var sectionTitle = document.createElement('h4');
+            sectionTitle.textContent = 'Businesses';
+            var coming = document.createElement('div');
+            coming.className = 'coming-soon';
+            coming.innerHTML = '<strong>COMING SOON</strong><p class="subtle">Front companies, dirty laundrettes and other bad decisions will arrive in a later release.</p>';
+            scroll.appendChild(sectionTitle);
+            scroll.appendChild(coming);
+        }, 0);
+    };
+
+    function initV67() {
+        document.title = 'Noir Market V6.7';
+        try { save(); } catch (e) {}
+        try { setupSplashLoaderV27(); } catch (e) {}
+        console.log('NOIR MARKET V6.7: splash modal pre-open fix and Hustle COMING SOON section restored.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV67, { once: true }); else initV67();
+})();

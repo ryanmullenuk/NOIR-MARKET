@@ -1271,3 +1271,9 @@ body.preintro-running .splash-vignette{
   .preintro,body.preintro-running .preintro{animation:redheadIntroOverlayFadeV66 1.35s ease forwards!important;}
   .preintro-logo,body.preintro-running .preintro-logo{animation:redheadIntroLogoFadeV66 1.2s ease forwards!important;}
 }
+
+
+/* Noir Market V6.7 Hustle coming soon restore */
+.coming-soon{margin-top:10px;border:1px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.035);border-radius:14px;padding:14px;text-align:center;}
+.coming-soon strong{display:block;letter-spacing:1.8px;color:#f4c25b;font-size:14px;margin-bottom:6px;}
+.coming-soon p{margin:0;}

@@ -1,4 +1,12 @@
 
+NOIR MARKET V6.7
+- Fixed splash ENTER transition so HOW TO PLAY is opened before the splash layer fades out, preventing a brief flash of the main game screen.
+- Kept music loading after user interaction on ENTER.
+- Fixed NEW GAME confirmation route to open HOW TO PLAY synchronously without a visible main-screen flash.
+- Restored the Hustle Businesses COMING SOON section using the previous visible coming-soon styling.
+- Updated versioning, save key, service worker cache name and save migration from V6.6.
+
+
 ## V6.6
 - Hardened the Redhead Games opening logo so it renders immediately above splash and snow layers while the splash screen prepares.
 - Updated Hustle informants with dynamic tip pricing based on desperation and likely tip quality.
