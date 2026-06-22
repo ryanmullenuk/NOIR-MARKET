@@ -1,3 +1,13 @@
+# Noir Market V5.1
+
+- No gameplay features changed.
+- Updated splash tagline cycle to RISK. / SURVIVE. / TRADE.
+- Updated music start behaviour to fade in after entering the game at a reduced volume level.
+- Removed the green image-based main screen parallax effect from the active UI.
+- Added a lightweight canvas particle-network background inspired by the requested CodePen reference.
+- Updated title, manifest version, service worker cache and save key to V5.1.
+- Preserved migration from V5.0 and older saves.
+
 
 ## V5.0
 - Stability and release polish pass from V4.9.

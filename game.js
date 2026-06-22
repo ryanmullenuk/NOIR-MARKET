@@ -4268,3 +4268,215 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',revealMainSplashAfterSnowV49,{once:true}); else revealMainSplashAfterSnowV49();
   setTimeout(()=>{try{ensureV49(); document.title='Noir Market V5.0'; save(); console.log('NOIR MARKET V5.0: staged snow-first splash reveal and HOW TO PLAY instructions button active.');}catch(e){console.warn('V5.0 startup skipped:',e);}},1500);
 })();
+
+
+/* Noir Market V5.1: splash tagline order, reduced fade-in music and main canvas particle background. */
+(()=>{
+  const VERSION='5.1';
+  const SAVE_KEY='noir_market_v5_1';
+  const FALLBACK_KEYS=['noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function ensureV51(){
+    if(typeof ensureV49==='function')ensureV49();
+    else if(typeof ensureV47==='function')ensureV47();
+    else if(typeof ensureV46==='function')ensureV46();
+    if(typeof ensureStats==='function')ensureStats();
+    if(!s)return;
+    s.version=VERSION;
+    s.v51=s.v51||{taglineOrder:'RISK_SURVIVE_TRADE',reducedMusicFade:true,canvasParticleBackground:true};
+  }
+
+  function startSplashTaglineV51(){
+    const current=document.getElementById('splashTagline');
+    if(!current)return;
+    let el=current;
+    if(el.dataset.v51Active!=='1'){
+      const replacement=el.cloneNode(true);
+      replacement.dataset.active='0';
+      replacement.dataset.v51Active='1';
+      el.replaceWith(replacement);
+      el=replacement;
+    }
+    if(el.dataset.v51Started==='1')return;
+    el.dataset.v51Started='1';
+    const words=['RISK.','SURVIVE.','TRADE.'];
+    let i=0;
+    el.textContent=words[0];
+    const next=()=>{
+      if(!document.body.contains(el))return;
+      el.classList.add('fade-out');
+      setTimeout(()=>{
+        if(!document.body.contains(el))return;
+        i=(i+1)%words.length;
+        el.textContent=words[i];
+        el.classList.remove('fade-out');
+      },360);
+    };
+    setInterval(next,1450);
+  }
+
+  function setupMainParticleBackgroundV51(){
+    const container=document.getElementById('mainParallaxBg');
+    if(!container || container.dataset.v51Particles==='1')return;
+    container.dataset.v51Particles='1';
+    container.className='main-particle-bg';
+    container.innerHTML='';
+    const canvas=document.createElement('canvas');
+    canvas.id='mainParticleCanvas';
+    canvas.setAttribute('aria-hidden','true');
+    container.appendChild(canvas);
+    const ctx=canvas.getContext('2d',{alpha:true});
+    if(!ctx)return;
+
+    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let width=0,height=0,dpr=1,particles=[],mouse=null,raf=0;
+    const isSmall=()=>Math.min(window.innerWidth||0,window.innerHeight||0)<620;
+    const targetCount=()=>reduced?(isSmall()?28:42):(isSmall()?48:82);
+
+    function resize(){
+      dpr=Math.min(2,window.devicePixelRatio||1);
+      width=container.clientWidth||window.innerWidth||320;
+      height=container.clientHeight||window.innerHeight||640;
+      canvas.width=Math.max(1,Math.floor(width*dpr));
+      canvas.height=Math.max(1,Math.floor(height*dpr));
+      canvas.style.width=width+'px';
+      canvas.style.height=height+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      const count=targetCount();
+      if(particles.length<count){
+        for(let i=particles.length;i<count;i++)particles.push(makeParticle());
+      }else if(particles.length>count){
+        particles.length=count;
+      }
+    }
+    function makeParticle(){
+      const speed=reduced?0:(Math.random()*0.18+0.06);
+      const angle=Math.random()*Math.PI*2;
+      return {
+        x:Math.random()*Math.max(width,1),
+        y:Math.random()*Math.max(height,1),
+        vx:Math.cos(angle)*speed,
+        vy:Math.sin(angle)*speed,
+        r:Math.random()*1.25+0.55,
+        a:Math.random()*0.28+0.18
+      };
+    }
+    function drawParticle(p){
+      ctx.beginPath();
+      ctx.fillStyle='rgba(170,170,170,'+p.a.toFixed(3)+')';
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    }
+    function updateParticle(p){
+      if(reduced)return;
+      p.x+=p.vx;
+      p.y+=p.vy;
+      if(p.x<-20)p.x=width+20;
+      if(p.x>width+20)p.x=-20;
+      if(p.y<-20)p.y=height+20;
+      if(p.y>height+20)p.y=-20;
+    }
+    function drawLines(){
+      const maxDist=isSmall()?92:118;
+      for(let i=0;i<particles.length;i++){
+        const a=particles[i];
+        for(let j=i+1;j<particles.length;j++){
+          const b=particles[j];
+          const dx=a.x-b.x,dy=a.y-b.y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<maxDist){
+            const alpha=(1-dist/maxDist)*(isSmall()?0.11:0.16);
+            ctx.beginPath();
+            ctx.strokeStyle='rgba(150,150,150,'+alpha.toFixed(3)+')';
+            ctx.lineWidth=0.7;
+            ctx.moveTo(a.x,a.y);
+            ctx.lineTo(b.x,b.y);
+            ctx.stroke();
+          }
+        }
+        if(mouse){
+          const dx=a.x-mouse.x,dy=a.y-mouse.y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<maxDist*1.05){
+            const alpha=(1-dist/(maxDist*1.05))*0.18;
+            ctx.beginPath();
+            ctx.strokeStyle='rgba(190,190,190,'+alpha.toFixed(3)+')';
+            ctx.lineWidth=0.75;
+            ctx.moveTo(a.x,a.y);
+            ctx.lineTo(mouse.x,mouse.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    function render(){
+      ctx.clearRect(0,0,width,height);
+      ctx.fillStyle='#030303';
+      ctx.fillRect(0,0,width,height);
+      for(const p of particles){updateParticle(p); drawParticle(p);}
+      drawLines();
+      raf=requestAnimationFrame(render);
+    }
+    window.addEventListener('resize',resize,{passive:true});
+    window.addEventListener('mousemove',e=>{mouse={x:e.clientX,y:e.clientY};},{passive:true});
+    window.addEventListener('mouseleave',()=>{mouse=null;},{passive:true});
+    resize();
+    if(raf)cancelAnimationFrame(raf);
+    render();
+  }
+
+  startSynthMusic=function(){
+    if(!musicEnabled||synthMusicOn)return;
+    synthMusicOn=true;
+    unlockAudio();
+    const started=Date.now();
+    const fadeMs=9000;
+    const bass=[55,55,55,49,49,52,52,46,46,49,55,55,41,41,49,49];
+    const tones=[110,0,98,0,82,0,73,0,98,0,92,0,82,0,73,0];
+    let i=0;
+    synthMusicTimer=setInterval(()=>{
+      if(!musicEnabled){stopSynthMusic();return;}
+      const level=Math.min(.5,(Date.now()-started)/fadeMs*.5);
+      const b=bass[i%bass.length];
+      tone(b,1.05,'sine',.016*level,0);
+      tone(b/2,1.20,'triangle',.012*level,.04);
+      if(i%4===0)tone(27.5,.85,'sine',.014*level,.02);
+      const t=tones[i%tones.length];
+      if(t)tone(t,.16,'square',.006*level,.12);
+      if(i%16===15)tone(98,.12,'square',.005*level,.18);
+      i++;
+    },1250);
+  };
+
+  startBackgroundMusic=function(){
+    if(!musicEnabled)return;
+    unlockAudio();
+    musicStarted=true;
+    startSynthMusic();
+  };
+
+  save=function(){ensureV51(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV51(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV51(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v51={taglineOrder:'RISK_SURVIVE_TRADE',reducedMusicFade:true,canvasParticleBackground:true}; return state;};
+  draw=function(){previousDraw(); try{ensureV51(); setupMainParticleBackgroundV51();}catch(e){}};
+
+  function initV51(){
+    try{
+      startSplashTaglineV51();
+      setupMainParticleBackgroundV51();
+      ensureV51();
+      document.title='Noir Market V5.1';
+      save();
+      console.log('NOIR MARKET V5.1: RISK/SURVIVE/TRADE splash, reduced fade-in music and canvas particle background active.');
+    }catch(e){console.warn('V5.1 startup skipped:',e);}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV51,{once:true}); else initV51();
+  setTimeout(initV51,1850);
+})();
