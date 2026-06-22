@@ -1,3 +1,24 @@
+# CHANGELOGMASTER
+
+## V5.9 - Corrected starting city map and tappable dots
+- Repositioned all starting city dots against the supplied UK/Ireland map asset.
+- Increased city dot tap targets for iPhone Safari and desktop.
+- Added robust click, pointer and touch handlers for selecting starting cities.
+- Kept PLAY behaviour tied to the selected starting city.
+- No gameplay systems changed.
+
+NOIR MARKET V5.9
+- Adjusted HOW TO PLAY starting city map dot positions to better align with the supplied UK/Ireland outline map.
+- Corrected dot placement for London, Manchester, Birmingham, Liverpool, Bristol, Glasgow, Cardiff, Leeds, Newcastle, Edinburgh, Aberdeen, Belfast, Dublin and Cork.
+- No gameplay features changed.
+- Updated app version, manifest and service worker cache to V5.9.
+
+NOIR MARKET V5.7
+- Replaced the stylised starting city SVG map with the supplied white outline UK/Ireland map asset.
+- Added tappable city dots over the supplied map for all playable starting locations.
+- Kept starting city selector behaviour from V5.6 with no gameplay changes.
+- Updated app version, manifest and service worker cache to V5.7.
+
 
 ## V5.0
 - Stability and release polish pass from V4.9.
@@ -940,3 +961,32 @@ Changes made:
 - Removed stale preload reference to deleted main parallax image.
 - Changed service worker to safer network-first behaviour and removed MP3 from required install cache.
 - Updated cache and manifest to V5.5.
+
+
+## V5.6 - HOW TO PLAY starting city selector
+- Added a compact white outline UK/Ireland map selector to the HOW TO PLAY screen under the INSTRUCTIONS button.
+- Added tappable city dots for every playable city in the current game list.
+- Added selected starting city label and green highlight for the active city.
+- PLAY now starts a new mission from the selected city while preserving existing save behaviour.
+- No unrelated gameplay systems changed.
+- Updated cache and manifest to V5.6.
+
+
+V6.0
+- Rebuilt the HOW TO PLAY starting city selector using an inline SVG overlay for reliable mobile tapping.
+- Repositioned all city dots against the supplied UK/Ireland map.
+- Increased invisible hit areas around city dots without changing the visual style.
+- City selection now updates the Starting City label and green selected marker using SVG event delegation.
+- PLAY starts from the selected city.
+- No gameplay systems changed.
+
+
+V6.1
+- Replaced the map-dot starting city selector with a simpler two-column layout.
+- Map now displays on the right only as a visual reference, with no dots.
+- Added city selection buttons on the left for London, Manchester, Birmingham, Liverpool, Bristol, Glasgow, Cardiff, Leeds, Newcastle, Edinburgh, Aberdeen, Belfast, Dublin and Cork.
+- Player must select a city before PLAY is enabled.
+- Selected city button turns amber.
+- PLAY remains green and starts the mission from the selected city.
+- No gameplay systems changed.
+- Updated cache and manifest to V6.1.
