@@ -931,3 +931,12 @@ Changes made:
 - HOW TO PLAY Instructions button opens the full in-game instructions and can return back to HOW TO PLAY.
 - Updated app version, manifest and service worker cache to V4.9.
 - Preserved save migration from V4.8 and older builds.
+
+V5.2 - Music, Splash Word Sequence and Main Background Clean-Up
+- Added supplied NoirMarket Music MP3 as assets/music/noir_market_music.mp3.
+- Background music now starts after entering the main game and fades in to 50% volume.
+- Confirmed splash tagline sequence as RISK. / SURVIVE. / TRADE. with fade-through animation.
+- Removed the old main screen image/parallax background asset from the build.
+- Replaced the main screen background with a local CodePen-style canvas particle network inspired by Julian Laval's KpLXOO particle canvas.
+- No gameplay features changed.
+
