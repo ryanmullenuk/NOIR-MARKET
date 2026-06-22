@@ -1,4 +1,4 @@
-const CACHE_NAME='noir-market-v4.3';
+const CACHE_NAME='noir-market-v4.4';
 const CORE_ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./assets/logo-splash.png','./assets/logo.png','./assets/main-parallax-bg.jpg'];
 const OPTIONAL_ASSETS=['./icon-192.png','./icon-512.png','./apple-touch-icon.png','./apple-touch-icon-dark.png','./apple-touch-icon-light.png','./icon-192-light.png','./icon-512-light.png'];
 self.addEventListener('install',event=>{

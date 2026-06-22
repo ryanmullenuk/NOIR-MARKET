@@ -1,5 +1,26 @@
 NOIR MARKET CHANGELOGMASTER
-Current release: V4.3
+Current release: V4.4
+
+CHANGELOG_v4.4.txt
+====================
+NOIR MARKET V4.4 CHANGELOG
+
+Splash screen update:
+- Replaced the previous splash presentation with a full-screen black splash screen.
+- Added the new Noir Market logo asset with transparent background.
+- Added subtle canvas snow behind the splash UI, inspired by particles.js snow styling.
+- Added animated tagline sequence: TRADE. / RISK. / SURVIVE.
+- Retained the existing loading bar behaviour, including white fill to 100% and ENTER state.
+- Added instructions below the loading bar: INSTRUCTIONS / For a better gaming experience, click share and add to homescreen.
+- Tuned snow particle count for mobile and desktop performance.
+- Preserved splash isolation so no game content is visible behind it.
+
+Versioning:
+- Updated game version to V4.4.
+- Updated manifest version to 4.4.
+- Updated service worker cache to noir-market-v4.4.
+- Added save migration from V4.3 and older versions.
+
 Baseline: Noir Market V4.0
 
 

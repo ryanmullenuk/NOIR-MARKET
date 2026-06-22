@@ -4031,3 +4031,156 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupMainParallaxV43,{once:true}); else setupMainParallaxV43();
   setTimeout(()=>{try{ensureV43(); setupMainParallaxV43(); document.title='Noir Market V4.3'; save(); console.log('NOIR MARKET V4.3: Main screen parallax background active.');}catch(e){console.warn('V4.3 startup skipped:',e);}},900);
 })();
+
+
+/* Noir Market V4.4: new black snow splash, logo, animated tagline and instructions */
+(()=>{
+  const VERSION='4.4';
+  const SAVE_KEY='noir_market_v4_4';
+  const FALLBACK_KEYS=['noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function ensureV44(){
+    if(!s)return;
+    s.version=VERSION;
+    s.v44=s.v44||{newSplash:true};
+  }
+
+  function stopSplashSnowV44(){
+    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
+    if(window.__NOIR_V44_STOP_SNOW){try{window.__NOIR_V44_STOP_SNOW();}catch(e){}}
+  }
+
+  function startSplashSnowV44(){
+    const canvas=$('splashSnowCanvas'), splash=$('splash');
+    if(!canvas||!splash)return;
+    if(window.__NOIR_V44_SNOW_RUNNING)return;
+    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
+    window.__NOIR_V44_SNOW_RUNNING=true;
+    const ctx=canvas.getContext('2d'); if(!ctx)return;
+    let raf=0, running=true, pointer=0;
+    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const count=reduced?0:((window.matchMedia&&window.matchMedia('(max-width:560px)').matches)?90:150);
+    const flakes=[];
+    function resize(){
+      const ratio=Math.min(window.devicePixelRatio||1,2);
+      const w=window.innerWidth, h=window.innerHeight;
+      canvas.width=Math.ceil(w*ratio); canvas.height=Math.ceil(h*ratio);
+      canvas.style.width=w+'px'; canvas.style.height=h+'px';
+      ctx.setTransform(ratio,0,0,ratio,0,0);
+    }
+    function reset(f,initial){
+      const w=window.innerWidth, h=window.innerHeight;
+      f.x=8+Math.random()*Math.max(8,w-16);
+      f.y=initial?Math.random()*h:-10-Math.random()*80;
+      const z=Math.random();
+      f.r=.55+Math.pow(z,2)*2.1;
+      f.v=.65+z*2.2;
+      f.a=.18+z*.48;
+      f.s=.18+Math.random()*.95;
+      f.t=Math.random()*Math.PI*2;
+    }
+    function init(){flakes.length=0; for(let i=0;i<count;i++){const f={}; reset(f,true); flakes.push(f);}}
+    function step(){
+      if(!running)return;
+      const w=window.innerWidth,h=window.innerHeight;
+      ctx.clearRect(0,0,w,h);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(0,0,w,h); ctx.clip();
+      for(const f of flakes){
+        f.t+=.012; f.y+=f.v; f.x+=Math.sin(f.t)*f.s+(pointer*.26);
+        if(f.y>h+10)reset(f,false);
+        if(f.x>w-6)f.x=6; if(f.x<6)f.x=w-6;
+        ctx.beginPath();
+        ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+        ctx.shadowBlur=f.r>1.8?3:0;
+        ctx.shadowColor='rgba(255,255,255,.22)';
+        ctx.fillStyle='rgba(255,255,255,'+f.a+')';
+        ctx.fill();
+      }
+      ctx.restore();
+      raf=requestAnimationFrame(step);
+    }
+    function onPointer(e){pointer=((e.clientX||window.innerWidth/2)/window.innerWidth)-.5;}
+    function onResize(){resize(); init();}
+    function stop(){
+      running=false;
+      if(raf)cancelAnimationFrame(raf);
+      ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+      window.removeEventListener('pointermove',onPointer);
+      window.removeEventListener('resize',onResize);
+      window.__NOIR_V44_SNOW_RUNNING=false;
+      window.__NOIR_V44_STOP_SNOW=null;
+    }
+    resize(); init(); canvas.classList.add('visible');
+    window.addEventListener('pointermove',onPointer,{passive:true});
+    window.addEventListener('resize',onResize,{passive:true});
+    window.__NOIR_V44_STOP_SNOW=stop;
+    raf=requestAnimationFrame(step);
+  }
+
+  function startTaglineV44(){
+    const el=$('splashTagline');
+    if(!el||el.dataset.v44==='1')return;
+    el.dataset.v44='1';
+    const words=['TRADE.','RISK.','SURVIVE.'];
+    let i=0;
+    el.textContent=words[i];
+    function cycle(){
+      if(!document.body.contains(el))return;
+      el.classList.add('fade-out');
+      setTimeout(()=>{
+        i=(i+1)%words.length;
+        el.textContent=words[i];
+        el.classList.remove('fade-out');
+      },300);
+    }
+    const id=setInterval(cycle,1650);
+    window.__NOIR_V44_STOP_TAGLINE=()=>clearInterval(id);
+  }
+
+  createSplashDust=function(){startSplashSnowV44();};
+
+  setupSplashLoaderV27=function(){
+    const splash=$('splash'), enter=$('splashEnter'), fill=$('splashLoaderFill'), text=$('splashLoaderText'), prompt=$('splashPrompt');
+    if(!splash||!enter||!fill||!text)return;
+    if(splash.dataset.loaderVersion==='4.4')return;
+    splash.dataset.loaderVersion='4.4';
+    let ready=false, entered=false;
+    const markReady=()=>{if(ready)return; ready=true; fill.style.width='100%'; enter.disabled=false; enter.classList.add('ready'); text.textContent='ENTER'; enter.setAttribute('aria-label','Enter Noir Market'); if(prompt)prompt.textContent='';};
+    const enterGame=()=>{
+      if(!ready||entered)return;
+      entered=true;
+      try{unlockAudio(); if(typeof startBackgroundMusic==='function')startBackgroundMusic(); musicStarted=true;}catch(e){}
+      try{sound('positive');}catch(e){}
+      splash.classList.add('hide');
+      setTimeout(()=>{try{stopSplashSnowV44(); if(window.__NOIR_V44_STOP_TAGLINE)window.__NOIR_V44_STOP_TAGLINE();}catch(e){} showWelcome(); if(typeof scheduleInformants==='function')scheduleInformants();},420);
+    };
+    enter.disabled=true;
+    enter.classList.remove('ready');
+    enter.onclick=enterGame;
+    splash.onclick=(e)=>{if(e.target&&e.target.closest&&e.target.closest('#splashEnter'))return; enterGame();};
+    fill.style.transition='width .28s cubic-bezier(.18,.84,.25,1)';
+    fill.style.width='0%';
+    text.textContent='LOADING';
+    if(prompt)prompt.textContent='';
+    startSplashSnowV44();
+    startTaglineV44();
+    requestAnimationFrame(()=>{fill.style.width='68%'; requestAnimationFrame(()=>setTimeout(markReady,180));});
+  };
+
+  save=function(){ensureV44(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV44(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV44(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v44={newSplash:true}; return state;};
+  draw=function(){previousDraw(); try{ensureV44();}catch(e){} };
+
+  const init=()=>{try{setupSplashLoaderV27(); startTaglineV44(); document.title='Noir Market V4.4'; if(s){ensureV44(); save();}}catch(e){console.warn('V4.4 splash init skipped:',e);}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true}); else setTimeout(init,0);
+  setTimeout(()=>{try{document.title='Noir Market V4.4'; console.log('NOIR MARKET V4.4: new snow splash, animated tagline and install instructions active.');}catch(e){}},940);
+})();
