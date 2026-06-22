@@ -2880,7 +2880,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{try{setupSplashLoaderV27();}catch(e){console.error('V3.3 setup failed:',e);}}, {once:true});
   else setTimeout(()=>{try{setupSplashLoaderV27(); if(s&&s.version!==VERSION){s.version=VERSION; save();}}catch(e){console.error('V3.3 setup failed:',e);}},0);
-  setTimeout(()=>{try{document.title='Noir Market V4.7'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V4.8'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
 })();
 
 /* Noir Market V3.7: debt clearing, rumour travel result, cash prompt and travel button polish. */
@@ -3028,7 +3028,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     dlg.addEventListener('close',()=>{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');});
     dlg.addEventListener('cancel',(e)=>{e.preventDefault();closeModalFastV34();});
   }
-  setTimeout(()=>{try{document.title='Noir Market V4.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.7: debt clearing, rumour travel result, cash prompt and travel button polish active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V4.8'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.7: debt clearing, rumour travel result, cash prompt and travel button polish active.');}catch(e){}},320);
 })();
 
 /* Noir Market V3.7 penalty wording correction retained. */
@@ -3274,7 +3274,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     newGame(false); ensureV37(); save(); return true;
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v37={cashPromptIgnoreUntil:0,cashPromptLastDay:0}; return state;};
-  setTimeout(()=>{try{document.title='Noir Market V4.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
+  setTimeout(()=>{try{document.title='Noir Market V4.8'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
 })();
 
 
@@ -3491,7 +3491,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v38={burnerPhones:0,contactCallCooldownUntil:0,nextContactCallAt:0,callActive:false}; return state;};
   draw=function(){previousDraw(); ensureV38(); bindActionButtonsV38(); scheduleContactCallCheckV38();};
-  setTimeout(()=>{try{ensureV38(); document.title='Noir Market V4.7'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
+  setTimeout(()=>{try{ensureV38(); document.title='Noir Market V4.8'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
 })();
 
 
@@ -3601,7 +3601,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v40={stabilised:true}; return state;};
   draw=function(){previousDraw(); ensureV39();};
-  setTimeout(()=>{try{ensureV39(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');}catch(e){}},620);
+  setTimeout(()=>{try{ensureV39(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');}catch(e){}},620);
 })();
 
 
@@ -3827,7 +3827,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v41={carryWeaponsOnNextTravel:false}; return state;};
   draw=function(){previousDraw(); try{ensureV41();}catch(e){} };
-  setTimeout(()=>{try{ensureV41(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.1: weapons travel risk, finance deposit/withdraw all, vault export and contact result banners active.');}catch(e){console.warn('V4.1 startup skipped:',e);}},720);
+  setTimeout(()=>{try{ensureV41(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.1: weapons travel risk, finance deposit/withdraw all, vault export and contact result banners active.');}catch(e){console.warn('V4.1 startup skipped:',e);}},720);
 })();
 
 /* Noir Market V4.2 feature patch: police bribe resolution. */
@@ -3967,7 +3967,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v42={}; state.stats=state.stats||{}; state.stats.bribeAttempts=0; state.stats.bribesAccepted=0; state.stats.bribesRejected=0; return state;};
   draw=function(){previousDraw(); try{ensureV42();}catch(e){} };
-  setTimeout(()=>{try{ensureV42(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.2: Police Bribe Resolution system active.');}catch(e){console.warn('V4.2 startup skipped:',e);}},840);
+  setTimeout(()=>{try{ensureV42(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.2: Police Bribe Resolution system active.');}catch(e){console.warn('V4.2 startup skipped:',e);}},840);
 })();
 
 
@@ -4029,11 +4029,11 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v43={mainParallaxBackground:true}; return state;};
   draw=function(){previousDraw(); try{ensureV43(); setupMainParallaxV43();}catch(e){} };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupMainParallaxV43,{once:true}); else setupMainParallaxV43();
-  setTimeout(()=>{try{ensureV43(); setupMainParallaxV43(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.3: Main screen parallax background active.');}catch(e){console.warn('V4.3 startup skipped:',e);}},900);
+  setTimeout(()=>{try{ensureV43(); setupMainParallaxV43(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.3: Main screen parallax background active.');}catch(e){console.warn('V4.3 startup skipped:',e);}},900);
 })();
 
 
-/* Noir Market V4.7: corrected Redhead Games opening ident over active snow splash. */
+/* Noir Market V4.8: corrected Redhead Games opening ident over active snow splash. */
 (()=>{
   const VERSION='4.6';
   const SAVE_KEY='noir_market_v4_6';
@@ -4124,15 +4124,15 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v46={instructionsAdded:true,redheadIntro:true,correctedIntro:true}; return state;};
   draw=function(){previousDraw(); try{ensureV46();}catch(e){} };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',runRedheadIntroV46,{once:true}); else runRedheadIntroV46();
-  setTimeout(()=>{try{ensureV46(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.6: menu instructions and Redhead Games intro active.');}catch(e){console.warn('V4.6 startup skipped:',e);}},1050);
+  setTimeout(()=>{try{ensureV46(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.6: menu instructions and Redhead Games intro active.');}catch(e){console.warn('V4.6 startup skipped:',e);}},1050);
 })();
 
 
-/* Noir Market V4.7: corrected main splash logo, animated tagline and splash instructions. */
+/* Noir Market V4.8: corrected main splash logo, animated tagline and splash instructions. */
 (()=>{
-  const VERSION='4.7';
-  const SAVE_KEY='noir_market_v4_7';
-  const FALLBACK_KEYS=['noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const VERSION='4.8';
+  const SAVE_KEY='noir_market_v4_8';
+  const FALLBACK_KEYS=['noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   const previousBaseState=baseState;
   const previousDraw=draw;
 
@@ -4142,6 +4142,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     if(!s)return;
     s.version=VERSION;
     s.v47=s.v47||{correctedSplashLogo:true,animatedTagline:true,splashInstructions:true};
+    s.v48=s.v48||{splashLayoutPolish:true,slowerSplashFade:true};
   }
 
   function startSplashTaglineV47(){
@@ -4169,9 +4170,101 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     if(x){s=JSON.parse(x); ensureV47(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
     newGame(false); ensureV47(); save(); return true;
   };
-  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v47={correctedSplashLogo:true,animatedTagline:true,splashInstructions:true}; return state;};
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v47={correctedSplashLogo:true,animatedTagline:true,splashInstructions:true}; state.v48={splashLayoutPolish:true,slowerSplashFade:true}; return state;};
   draw=function(){previousDraw(); try{ensureV47();}catch(e){} };
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startSplashTaglineV47,{once:true}); else startSplashTaglineV47();
-  setTimeout(()=>{try{ensureV47(); startSplashTaglineV47(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.7: corrected main splash logo, animated tagline and splash instructions active.');}catch(e){console.warn('V4.7 startup skipped:',e);}},1280);
+  setTimeout(()=>{try{ensureV47(); startSplashTaglineV47(); document.title='Noir Market V4.8'; save(); console.log('NOIR MARKET V4.8: splash logo layout polish, slower main splash fade and bottom instructions active.');}catch(e){console.warn('V4.7 startup skipped:',e);}},1280);
+})();
+
+
+/* Noir Market V4.9: staged splash fade and HOW TO PLAY instructions button. */
+(()=>{
+  const VERSION='4.9';
+  const SAVE_KEY='noir_market_v4_9';
+  const FALLBACK_KEYS=['noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+
+  function escapeV49(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+  function ensureV49(){
+    if(typeof ensureV47==='function')ensureV47();
+    else if(typeof ensureV46==='function')ensureV46();
+    if(typeof ensureStats==='function')ensureStats();
+    if(!s)return;
+    s.version=VERSION;
+    s.v49=s.v49||{stagedSplashReveal:true,howToPlayInstructionsButton:true};
+  }
+
+  function revealMainSplashAfterSnowV49(){
+    const reveal=()=>{
+      if(!document.body.classList.contains('preintro-running')){
+        setTimeout(()=>document.body.classList.add('splash-ui-revealed'),420);
+        return true;
+      }
+      return false;
+    };
+    if(reveal())return;
+    const started=Date.now();
+    const timer=setInterval(()=>{
+      if(reveal()||Date.now()-started>5200){clearInterval(timer); if(!document.body.classList.contains('splash-ui-revealed'))document.body.classList.add('splash-ui-revealed');}
+    },80);
+  }
+
+  const instructionsHtmlV49=()=>`<div class="instructions-copy">
+    <p class="instructions-intro">Noir Market is a dark street-level trading game where every city has a price. Buy stock when prices are low, move between cities, sell when the market rises, and avoid getting caught with too much heat on you.</p>
+    <p class="instructions-intro">The aim is simple: build cash, grow reputation, move smart, and survive long enough to climb the ranks.</p>
+    <h4>Market</h4><p>Buy and sell stock in your current city. Prices change daily based on supply, demand, rumours, news and your own actions.</p>
+    <h4>Storage / Vault</h4><p>Store stock safely in each city. Vaults are city-specific, so anything stored in London stays in London until you return or ship it.</p>
+    <h4>Travel</h4><p>Move between cities to find better prices. Travelling can trigger police stops, seizures, fines, arrests or random events, especially if you are carrying risky stock or weapons.</p>
+    <h4>Shipping / Export</h4><p>Send stock between cities instead of carrying it yourself. You can export from carried stock or from your current city vault, but shipments carry cost and risk.</p>
+    <h4>Finances</h4><p>View your cash and bank balance. Deposit money to protect it, or withdraw funds when you need buying power.</p>
+    <h4>Black Market</h4><p>Buy weapons and other high-risk items. Weapons may help in certain situations, but carrying them while travelling increases police risk.</p>
+    <h4>Hustle</h4><p>Use side opportunities and informants to make extra money or gain market tips. Some tips are useful, some are wrong, and some people will take your money and run.</p>
+    <h4>Contacts</h4><p>Use contacts to attempt deals and opportunities. Results can succeed or fail depending on risk, reputation and chance.</p>
+    <h4>Loans</h4><p>Borrow money when you need fast cash. Loans come with interest, deadlines and penalties if you miss repayment.</p>
+    <h4>News / Rumours</h4><p>Watch the ticker and daily rumours. They can hint at price movement, shortages, police activity or city events, but not everything you hear is true.</p>
+    <h4>Reputation / Rank</h4><p>Your reputation affects how people deal with you. Your rank grows as your net worth increases, but it can drop if your money falls or your decisions catch up with you.</p>
+    <h4>Heat</h4><p>Heat shows how much attention you are attracting. Higher heat increases the risk of police stops, failed travel, raids and arrest.</p>
+    <div class="instructions-tip"><h4>Tip</h4><p>Do not carry everything at once. Use vaults, watch the market, keep cash safe, and move before the heat finds you.</p></div>
+  </div>`;
+
+  window.showInstructionsV49=function(fromWelcome=false){
+    modal('Instructions',`${instructionsHtmlV49()}<div class="back-menu-spacer"></div><button type="button" id="backFromInstructionsV49">${fromWelcome?'Back to How to Play':'Back to Menu'}</button>`);
+    setTimeout(()=>{const b=$('backFromInstructionsV49'); if(b)b.onclick=fromWelcome?showWelcome:showMenu;},0);
+  };
+
+  showWelcome=function(){
+    modal('How to Play',`<div class="howto"><p>You start with £1,000, no debt and questionable judgement.</p><p>Buy low, sell high, travel between cities and try not to get robbed, arrested, battered or completely rinsed by the market.</p><p>Rumours may help. They may also be nonsense. That is business.</p><p class="disclaimer">This game is for entertainment purposes only.</p><div class="howto-actions"><button type="button" id="welcomeInstructionsBtn" class="play-wide">INSTRUCTIONS</button><button type="button" id="playWelcomeBtn" class="buy play-wide">PLAY</button></div></div>`);
+    setTimeout(()=>{const i=$('welcomeInstructionsBtn'), p=$('playWelcomeBtn'); if(i)i.onclick=()=>showInstructionsV49(true); if(p)p.onclick=showShadyChoice;},0);
+  };
+
+  const previousShowMenu=showMenu;
+  showMenu=function(){
+    ensureV49();
+    const nameVal=escapeV49(s.playerName||'').slice(0,24);
+    modal('Menu',`<div class="menu-player"><label for="playerNameInput">Player name</label><input id="playerNameInput" maxlength="24" placeholder="Add your name" value="${nameVal}"><button type="button" id="savePlayerNameBtn">SAVE NAME</button></div><div class="menu-settings"><button type="button" id="soundToggleBtn">SOUNDS: ${soundEnabled?'ON':'OFF'}</button><button type="button" id="musicToggleBtn">MUSIC: ${musicEnabled?'ON':'OFF'}</button></div><div class="menu-list"><button type="button" id="instructionsBtn">Instructions</button><button type="button" id="statsBtn">Stats</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>`);
+    setTimeout(()=>{
+      const instructions=$('instructionsBtn'), stats=$('statsBtn'), snd=$('soundToggleBtn'), mus=$('musicToggleBtn'), saveName=$('savePlayerNameBtn'), newGameBtn=$('menuNewGameBtn');
+      if(instructions)instructions.onclick=()=>showInstructionsV49(false);
+      if(saveName)saveName.onclick=(typeof setPlayerNameV18==='function')?setPlayerNameV18:function(){s.playerName=String(($('playerNameInput')&&$('playerNameInput').value)||'').trim().slice(0,24);save();draw();showMenu();};
+      if(stats)stats.onclick=showStats;
+      if(snd)snd.onclick=()=>{soundEnabled=!soundEnabled; localStorage.setItem('noir_market_sound',soundEnabled?'on':'off'); if(soundEnabled&&typeof sound==='function')sound('positive'); save(); showMenu();};
+      if(mus)mus.onclick=()=>{musicEnabled=!musicEnabled; localStorage.setItem('noir_market_music',musicEnabled?'on':'off'); if(musicEnabled&&typeof startBackgroundMusic==='function')startBackgroundMusic(); else if(typeof stopBackgroundMusic==='function')stopBackgroundMusic(); save(); showMenu();};
+      if(newGameBtn)newGameBtn.onclick=confirmNewGame;
+    },0);
+  };
+
+  save=function(){ensureV49(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV49(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV49(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v49={stagedSplashReveal:true,howToPlayInstructionsButton:true}; return state;};
+  draw=function(){previousDraw(); try{ensureV49();}catch(e){} };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',revealMainSplashAfterSnowV49,{once:true}); else revealMainSplashAfterSnowV49();
+  setTimeout(()=>{try{ensureV49(); document.title='Noir Market V4.9'; save(); console.log('NOIR MARKET V4.9: staged snow-first splash reveal and HOW TO PLAY instructions button active.');}catch(e){console.warn('V4.9 startup skipped:',e);}},1500);
 })();

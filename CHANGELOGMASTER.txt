@@ -895,3 +895,20 @@ Changes made:
 - Kept Redhead Games opening ident, snow effect and loading bar behaviour intact.
 - Updated app version, manifest and service worker cache to V4.7.
 - Preserved save migration from V4.6 and older builds.
+
+
+## V4.8
+- Moved the Redhead Games opening logo slightly upward for better visual centring.
+- Slowed the main Noir Market splash fade-in by 50%.
+- Moved the LOADING / ENTER button down slightly.
+- Pinned the splash INSTRUCTIONS text to the bottom of the screen.
+- Updated app version, manifest and service worker cache to V4.8.
+
+
+## V4.9
+- Changed splash sequence so snow appears first, then Noir Market logo, tagline, loading control and instruction text fade in smoothly.
+- Prevented the main splash UI from appearing fully during the Redhead Games opening ident.
+- Added an INSTRUCTIONS button to the HOW TO PLAY screen shown on game load.
+- HOW TO PLAY Instructions button opens the full in-game instructions and can return back to HOW TO PLAY.
+- Updated app version, manifest and service worker cache to V4.9.
+- Preserved save migration from V4.8 and older builds.

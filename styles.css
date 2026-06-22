@@ -892,3 +892,119 @@ body.preintro-running .preintro{
   .splash-tagline{font-size:11px!important;letter-spacing:3px!important;margin-bottom:16px!important;}
   .splash-instructions{width:min(86vw,320px)!important;}
 }
+
+
+/* Noir Market V4.8: splash layout polish */
+.preintro-logo{
+  width:min(78vw,430px)!important;
+  max-width:430px!important;
+  animation:redheadIntroLogoFadeV48 2.35s ease forwards!important;
+}
+@keyframes redheadIntroLogoFadeV48{
+  0%{opacity:0;transform:translateY(-3.5vh) scale(.94)}
+  20%{opacity:1;transform:translateY(-3.5vh) scale(1)}
+  70%{opacity:1;transform:translateY(-3.5vh) scale(1)}
+  100%{opacity:0;transform:translateY(-3.5vh) scale(.985)}
+}
+body.preintro-running .splash-logo,
+body.preintro-running .splash-tagline,
+body.preintro-running .splash-loader,
+body.preintro-running .splash-instructions{
+  opacity:0;
+  animation:noirMainSplashFadeInV48 3.975s ease .35s forwards;
+}
+@keyframes noirMainSplashFadeInV48{
+  0%{opacity:0;transform:translateY(8px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.splash{
+  position:fixed!important;
+  padding:calc(30px + env(safe-area-inset-top)) 18px calc(94px + env(safe-area-inset-bottom))!important;
+  justify-content:center!important;
+}
+.splash-loader{
+  margin-top:18px!important;
+  margin-bottom:0!important;
+  transform:translateY(12px);
+}
+.splash-instructions{
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  bottom:calc(26px + env(safe-area-inset-bottom))!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+}
+@media(max-width:560px){
+  .preintro-logo{width:min(82vw,390px)!important;}
+  .splash{padding-top:calc(22px + env(safe-area-inset-top))!important;padding-bottom:calc(106px + env(safe-area-inset-bottom))!important;}
+  .splash-loader{margin-top:16px!important;transform:translateY(14px);}
+  .splash-instructions{bottom:calc(24px + env(safe-area-inset-bottom))!important;width:min(88vw,340px)!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  .preintro-logo{animation:redheadIntroLogoFadeV48 1.2s ease forwards!important;}
+  body.preintro-running .splash-logo,
+  body.preintro-running .splash-tagline,
+  body.preintro-running .splash-loader,
+  body.preintro-running .splash-instructions{animation:noirMainSplashFadeInV48 1.8s ease .15s forwards!important;}
+}
+
+
+/* Noir Market V4.9: staged splash reveal and HOW TO PLAY instructions access */
+body.preintro-running .splash-logo,
+body.preintro-running .splash-tagline,
+body.preintro-running .splash-loader,
+body.preintro-running .splash-instructions{
+  opacity:0!important;
+  animation:none!important;
+  transform:translateY(10px)!important;
+}
+body:not(.preintro-running):not(.splash-ui-revealed) .splash-logo,
+body:not(.preintro-running):not(.splash-ui-revealed) .splash-tagline,
+body:not(.preintro-running):not(.splash-ui-revealed) .splash-loader,
+body:not(.preintro-running):not(.splash-ui-revealed) .splash-instructions{
+  opacity:0!important;
+  animation:none!important;
+  transform:translateY(10px)!important;
+}
+body.splash-ui-revealed .splash-logo,
+body.splash-ui-revealed .splash-tagline,
+body.splash-ui-revealed .splash-loader,
+body.splash-ui-revealed .splash-instructions{
+  opacity:0;
+  animation:noirMainSplashFadeInV49 3.1s cubic-bezier(.2,.76,.22,1) forwards!important;
+}
+body.splash-ui-revealed .splash-loader{
+  animation:noirMainSplashLoaderFadeInV49 3.1s cubic-bezier(.2,.76,.22,1) forwards!important;
+}
+body.splash-ui-revealed .splash-instructions{
+  animation:noirMainSplashInstructionsFadeInV49 3.1s cubic-bezier(.2,.76,.22,1) forwards!important;
+}
+@keyframes noirMainSplashFadeInV49{
+  0%{opacity:0;transform:translateY(14px) scale(.985)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes noirMainSplashLoaderFadeInV49{
+  0%{opacity:0;transform:translateY(26px)}
+  100%{opacity:1;transform:translateY(12px)}
+}
+@keyframes noirMainSplashInstructionsFadeInV49{
+  0%{opacity:0;transform:translateX(-50%) translateY(10px)}
+  100%{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+.howto .play-wide + .play-wide,
+.howto-actions .play-wide{margin-top:10px;}
+.howto-actions{display:grid;gap:10px;margin-top:14px;}
+@media(max-width:560px){
+  body.splash-ui-revealed .splash-loader{animation:noirMainSplashLoaderFadeInMobileV49 3.1s cubic-bezier(.2,.76,.22,1) forwards!important;}
+  @keyframes noirMainSplashLoaderFadeInMobileV49{
+    0%{opacity:0;transform:translateY(28px)}
+    100%{opacity:1;transform:translateY(14px)}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.splash-ui-revealed .splash-logo,
+  body.splash-ui-revealed .splash-tagline,
+  body.splash-ui-revealed .splash-loader,
+  body.splash-ui-revealed .splash-instructions{animation:none!important;opacity:1!important;}
+}
