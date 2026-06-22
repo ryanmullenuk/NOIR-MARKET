@@ -1994,7 +1994,7 @@ function hustle() {
     ensureStats();
     var informants = [
         { id: 'simon', name: 'Simon the Snitch', cost: 100, trust: 0.35, bio: 'Cheap, twitchy and usually hiding behind the bins. Knows a bit, guesses a lot.' },
-        { id: 'lisa', name: 'Loose Lisa', cost: 250, trust: 0.60, bio: 'Talks too much, hears too much and occasionally remembers which bit was true.' },
+        { id: 'lisa', name: 'Lucy Loose Lips', cost: 250, trust: 0.60, bio: 'Talks too much, hears too much and occasionally remembers which bit was true.' },
         { id: 'pete', name: 'Pistol Pete', cost: 10000, trust: 0.90, bio: 'Expensive, paranoid and oddly well informed. The closest thing to reliable in this business.' }
     ];
     modal('Hustle', "<h4>Informants</h4><p class=\"subtle\">Informants vary in price and reliability. Cheap tips are risky. Expensive tips are usually better, but nobody is clean in this game.</p><div class=\"hustle-grid\">".concat(informants.map(function (i) { return "<div class=\"hustle-card\"><h4>".concat(i.name, " \u00B7 ").concat(money(i.cost), "</h4><p>").concat(i.bio, "</p><button type=\"button\" class=\"buy\" data-informant=\"").concat(i.id, "\">Pay ").concat(i.name, "</button></div>"); }).join(''), "</div><h4>Businesses</h4><div class=\"coming-soon\"><strong>COMING SOON</strong><p class=\"subtle\">Front companies, dirty laundrettes and other bad decisions will arrive in a later release.</p></div>"));
@@ -4640,13 +4640,13 @@ catch (e) { } }, 980);
     function realTip() {
         var tips = [
             { name: 'Simon the Snitch', text: 'London’s dry on coke. Prices are about to climb. Don’t ask how I know, I owe people.', city: 'London', product: 'Cocaine', pct: 28, duration: 2 },
-            { name: 'Loose Lisa', text: 'Bristol’s flooded with pills. Everyone bought too much before the rain. Prices are soft.', city: 'Bristol', product: 'Ecstasy', pct: -24, duration: 2 },
+            { name: 'Lucy Loose Lips', text: 'Bristol’s flooded with pills. Everyone bought too much before the rain. Prices are soft.', city: 'Bristol', product: 'Ecstasy', pct: -24, duration: 2 },
             { name: 'Pistol Pete', text: 'Glasgow’s getting hot. Police are circling ket suppliers. Move carefully.', city: 'Glasgow', product: 'Ketamine', pct: 22, duration: 2, heat: 10 },
             { name: 'Simon the Snitch', text: 'Mushrooms in Cardiff are short. Something about damp storage and a very relaxed rat.', city: 'Cardiff', product: 'Mushrooms', pct: 28, duration: 2 },
-            { name: 'Loose Lisa', text: 'Weed in Leeds is cheap today. Too many lads, not enough buyers.', city: 'Leeds', product: 'Weed', pct: -22, duration: 1 },
+            { name: 'Lucy Loose Lips', text: 'Weed in Leeds is cheap today. Too many lads, not enough buyers.', city: 'Leeds', product: 'Weed', pct: -22, duration: 1 },
             { name: 'Pistol Pete', text: 'Liverpool docks just got fresh stock in. Coke price will dip before it snaps back.', city: 'Liverpool', product: 'Cocaine', pct: -25, duration: 1 },
             { name: 'Simon the Snitch', text: 'Manchester’s clubs are being watched. Pills are risky but prices will jump.', city: 'Manchester', product: 'Ecstasy', pct: 24, duration: 2, heat: 6 },
-            { name: 'Loose Lisa', text: 'Birmingham’s full of cheap weed after a grow house panic sale.', city: 'Birmingham', product: 'Weed', pct: -26, duration: 2 }
+            { name: 'Lucy Loose Lips', text: 'Birmingham’s full of cheap weed after a grow house panic sale.', city: 'Birmingham', product: 'Weed', pct: -26, duration: 2 }
         ];
         var tip = pick(tips);
         applyPriceModifier(tip.city, tip.product, tip.pct, tip.duration, 'Informant Tip', tip.text);
@@ -4656,22 +4656,22 @@ catch (e) { } }, 980);
     }
     var falseTips = [
         'Simon insists coke is about to crash in London. He looks confident, which is usually a bad sign.',
-        'Loose Lisa swears pills are drying up in Bristol. She also swore she once dated Stormzy.',
+        'Lucy Loose Lips swears pills are drying up in Bristol. She also swore she once dated Stormzy.',
         'Pete says Glasgow is safe tonight. The police helicopter overhead suggests otherwise.',
         'Simon claims weed prices are rising in Leeds. He may have confused Leeds with a dream he had.',
-        'Loose Lisa says Cardiff is flooded with mushrooms. Nobody else has heard this, including Cardiff.',
+        'Lucy Loose Lips says Cardiff is flooded with mushrooms. Nobody else has heard this, including Cardiff.',
         'Pete says Liverpool docks are locked down. Ten minutes later, everyone seems fully stocked.'
     ];
     var scamTexts = [
         'Simon takes the £100, says “back in two minutes”, and is last seen sprinting through a car park.',
-        'Loose Lisa pockets the £250, winks, and gets into a taxi she clearly cannot afford.',
+        'Lucy Loose Lips pockets the cash, winks, and gets into a taxi she clearly cannot afford.',
         'Pistol Pete takes the £10,000, stares at you for three seconds, then says: “Bad investment.” He leaves.',
         'The informant takes the cash and gives you a tip about horse racing. It is not even today’s race.',
         'They vanish with your money. You have learned an important lesson about trusting people in alleyways.'
     ];
     var vagueTexts = [
         'Simon says: “Something’s happening somewhere soon.” You are now poorer and none the wiser.',
-        'Loose Lisa says: “I’m hearing movement.” She refuses to explain whether she means stock, police, or her stomach.',
+        'Lucy Loose Lips says: “I’m hearing movement.” She refuses to explain whether she means stock, police, or her stomach.',
         'Pete says: “Keep your eyes open.” For £10,000, this feels legally close to robbery.',
         'The informant tells you to “watch the market”. Useful, if you had never considered looking at the market.',
         'They say the streets are changing. The streets appear to still be streets.'
@@ -4685,7 +4685,7 @@ catch (e) { } }, 980);
     ];
     var timedInformants = [
         { name: 'Simon the Snitch', cost: 100, tone: 'Cheap, nervous and twitchy.' },
-        { name: 'Loose Lisa', cost: 250, tone: 'Gossipy, confident and chaotic.' },
+        { name: 'Lucy Loose Lips', cost: 250, tone: 'Gossipy, confident and chaotic.' },
         { name: 'Pistol Pete', cost: 10000, tone: 'Serious, threatening and expensive.' }
     ];
     function canShowInformantPopup() {
@@ -4736,7 +4736,7 @@ catch (e) { } }, 980);
                     }
                     else if (r < .90) {
                         outcome = pick(scamTexts);
-                        if (info.name === 'Loose Lisa')
+                        if (info.name === 'Lucy Loose Lips')
                             rep(-1);
                         if (info.name === 'Pistol Pete')
                             rep(-2);
@@ -4755,7 +4755,7 @@ catch (e) { } }, 980);
                 };
             if (slapBtn)
                 slapBtn.onclick = function () {
-                    if (info.name === 'Loose Lisa')
+                    if (info.name === 'Lucy Loose Lips')
                         rep(-1);
                     if (info.name === 'Pistol Pete')
                         rep(-3);
@@ -6015,7 +6015,7 @@ catch (e) { } }, 980);
         ensureV39();
         var informants = [
             { id: 'simon', name: 'Simon the Snitch', cost: 100, trust: 0.35, bio: 'Cheap, twitchy and usually hiding behind the bins. Knows a bit, guesses a lot.' },
-            { id: 'lisa', name: 'Loose Lisa', cost: 250, trust: 0.60, bio: 'Gossipy, confident and chaotic. Talks too much, hears too much and occasionally remembers which bit was true.' },
+            { id: 'lisa', name: 'Lucy Loose Lips', cost: 250, trust: 0.60, bio: 'Gossipy, confident and chaotic. Talks too much, hears too much and occasionally remembers which bit was true.' },
             { id: 'pete', name: 'Pistol Pete', cost: 10000, trust: 0.90, bio: 'Expensive, paranoid and oddly well informed. The closest thing to reliable in this business.' }
         ];
         var coming = "<h4>Businesses</h4><div class=\"coming-soon\"><strong>COMING SOON</strong><div class=\"hustle-grid\"><div class=\"hustle-card\"><h4>Deliverude</h4><p>A totally unofficial courier outfit for moving bags across town when you\u2019re too busy, too wanted, or too lazy to do it yourself.</p><p class=\"subtle\">Fast delivery, zero paperwork, and a complaints department that is just a woman called Sharon ignoring your calls.</p></div><div class=\"hustle-card\"><h4>Uber Yeats</h4><p>Nobody is bringing noodles and the driver definitely took the long way because he \u201Csaw a car that looked at him funny\u201D.</p><p class=\"subtle\">Cheap, chaotic, and occasionally arrives with fewer items than it left with.</p></div><div class=\"hustle-card\"><h4>Karen &amp; Sharon Broker Bitches</h4><p>Karen and Sharon are identical twins, business partners, and the only loan providers in the city who can make a payment reminder feel like a hostage note.</p><p class=\"subtle\">They dress like they\u2019re off to complain to a manager, but operate like they buried the last one.</p><p class=\"subtle\">Their lending model is simple: fast cash, aggressive interest, and weekly check-ins that start polite and end with Sharon describing exactly where your kneecaps are.</p><p class=\"subtle\">Karen handles the paperwork, Sharon handles customer retention, and neither of them has smiled since 1998.</p></div></div></div>";
@@ -6067,7 +6067,7 @@ catch (e) { } }, 980);
         ensureV39();
         document.title = 'Noir Market V4.8';
         save();
-        console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');
+        console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Lucy Loose Lips, full ticker coverage and hidden informant odds verified.');
     }
     catch (e) { } }, 620);
 })();
@@ -7473,12 +7473,12 @@ catch (e) { } }, 980);
 })();
 
 
-/* Noir Market V6.5: consolidated stable starting city selector. */
+/* Noir Market V6.6: dynamic informants, new-game flow and Redhead Games intro hardening. */
 (function () {
-    var VERSION = '6.5';
-    var SAVE_KEY = 'noir_market_v6_5';
+    var VERSION = '6.6';
+    var SAVE_KEY = 'noir_market_v6_6';
     var FALLBACK_KEYS = [
-        'noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0',
+        'noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0',
         'noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0',
         'noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0',
         'noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0',
@@ -7518,22 +7518,24 @@ catch (e) { } }, 980);
         }
         return null;
     }
-    function ensureV65() {
+    function ensureV66() {
         if (!s || typeof s !== 'object') return;
         s.version = VERSION;
         s.v65 = { stableSelector: true, consolidated: true };
+        s.v66 = { dynamicInformants: true, newGameHowTo: true, introHardened: true };
     }
 
     baseState = function () {
         var state = previousBaseState();
         state.version = VERSION;
         state.v65 = { stableSelector: true, consolidated: true };
+        state.v66 = { dynamicInformants: true, newGameHowTo: true, introHardened: true };
         return state;
     };
 
     save = function () {
         try {
-            ensureV65();
+            ensureV66();
             localStorage.setItem(SAVE_KEY, JSON.stringify(s));
         } catch (e) {
             try { previousSave(); } catch (_) {}
@@ -7550,7 +7552,7 @@ catch (e) { } }, 980);
         }
         if (parsed) {
             s = parsed;
-            ensureV65();
+            ensureV66();
             try { if (typeof setActiveCityMarket === 'function') setActiveCityMarket(); } catch (e) {}
             try { if (typeof updateRankProgress === 'function') updateRankProgress(); } catch (e) {}
             try { save(); } catch (e) {}
@@ -7559,7 +7561,7 @@ catch (e) { } }, 980);
         }
         var started = false;
         try { started = previousLoad ? previousLoad() : false; } catch (e) { started = false; }
-        ensureV65();
+        ensureV66();
         try { save(); } catch (e) {}
         return started;
     };
@@ -7676,16 +7678,179 @@ catch (e) { } }, 980);
             var inst = document.getElementById('welcomeInstructionsBtn');
             var play = document.getElementById('playWelcomeBtn');
             if (inst) inst.onclick = function () { return showInstructionsV49(true); };
-            if (play) play.onclick = function () { if (!applyStartingCity()) return false; return showShadyChoice(); };
+            if (play) play.onclick = function () { if (!applyStartingCity()) return false; var dlg = document.getElementById('modal'); if (dlg && dlg.open) dlg.close(); return false; };
             bindSelector();
         }, 0);
     };
 
-    function initV65() {
-        document.title = 'Noir Market V6.5';
-        ensureV65();
-        try { save(); } catch (e) {}
-        console.log('NOIR MARKET V6.5: consolidated stable build active.');
+
+
+    function clampV66(value, min, max) { return Math.max(min, Math.min(max, value)); }
+    function randomIntV66(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function moneyV66(value) { try { return money(value); } catch (e) { return '£' + String(Math.round(value || 0)); } }
+    function pickV66(list) { return list[Math.floor(Math.random() * list.length)] || list[0]; }
+
+    function buildInformantV66(id) {
+        var desperate = Math.random() < (id === 'pete' ? 0 : 0.24);
+        var trust = 0.55;
+        var cost = 100;
+        var name = 'Simon the Snitch';
+        var bio = 'Cheap, nervous and twitchy. Sometimes useful, sometimes just nearby.';
+        if (id === 'simon') {
+            trust = randomIntV66(42, 82) / 100;
+            cost = desperate ? randomIntV66(25, 75) : randomIntV66(80, 180);
+            if (trust > 0.80) cost = randomIntV66(260, 520);
+        } else if (id === 'lucy') {
+            name = 'Lucy Loose Lips';
+            bio = 'Gossipy, confident and chaotic. Talks too much, hears too much, sometimes gets it right.';
+            trust = randomIntV66(58, 86) / 100;
+            cost = desperate ? randomIntV66(60, 140) : randomIntV66(180, 360);
+            if (trust > 0.80) cost = randomIntV66(475, 900);
+        } else {
+            name = 'Pistol Pete';
+            bio = 'Serious, expensive and usually plugged into something worth knowing.';
+            trust = randomIntV66(89, 97) / 100;
+            cost = randomIntV66(1000, 2500);
+        }
+        return { id: id, name: name, cost: cost, trust: trust, desperate: desperate, bio: bio };
     }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV65, { once: true }); else initV65();
+
+    function tipPoolV66(info) {
+        var all = [
+            { owner: 'simon', name: 'Simon the Snitch', text: 'London is drying up on coke. Prices are starting to climb, and Simon looks scared enough to be telling the truth.', city: 'London', product: 'Cocaine', pct: 28, duration: 2 },
+            { owner: 'simon', name: 'Simon the Snitch', text: 'Mushrooms in Cardiff are short after a damp lock-up turned into soup.', city: 'Cardiff', product: 'Mushrooms', pct: 26, duration: 2 },
+            { owner: 'simon', name: 'Simon the Snitch', text: 'Manchester clubs are being watched. Pills are risky, but the price is moving.', city: 'Manchester', product: 'Ecstasy', pct: 22, duration: 2, heat: 5 },
+            { owner: 'lucy', name: 'Lucy Loose Lips', text: 'Bristol is flooded with pills. Too much stock, not enough sensible people.', city: 'Bristol', product: 'Ecstasy', pct: -24, duration: 2 },
+            { owner: 'lucy', name: 'Lucy Loose Lips', text: 'Leeds has cheap weed today. Everyone bought heavy and nobody wants to admit it.', city: 'Leeds', product: 'Weed', pct: -22, duration: 1 },
+            { owner: 'lucy', name: 'Lucy Loose Lips', text: 'Birmingham has weed moving cheap after a grow house panic sale.', city: 'Birmingham', product: 'Weed', pct: -26, duration: 2 },
+            { owner: 'pete', name: 'Pistol Pete', text: 'Liverpool docks just got fresh stock in. Coke price will dip before it snaps back.', city: 'Liverpool', product: 'Cocaine', pct: -30, duration: 1 },
+            { owner: 'pete', name: 'Pistol Pete', text: 'Glasgow is getting hot. Ket suppliers are being watched, but scarcity is pushing prices up.', city: 'Glasgow', product: 'Ketamine', pct: 30, duration: 2, heat: 8 },
+            { owner: 'pete', name: 'Pistol Pete', text: 'Dublin has a tight window on ecstasy. Demand is moving hard before supply catches up.', city: 'Dublin', product: 'Ecstasy', pct: 32, duration: 2 }
+        ];
+        var filtered = all.filter(function (tip) { return tip.owner === info.id; });
+        return filtered.length ? filtered : all;
+    }
+
+    function applyInformantTipV66(info) {
+        var tip = pickV66(tipPoolV66(info));
+        try { applyPriceModifier(tip.city, tip.product, tip.pct, tip.duration, 'Informant Tip', tip.text); } catch (e) {}
+        if (tip.heat && places && places[s.city] && tip.city === places[s.city][0]) s.heat = Math.min(100, (s.heat || 0) + tip.heat);
+        return tip.name + ' says: “' + tip.text + '”';
+    }
+
+    function falseTipV66(info) {
+        var lines = {
+            simon: [
+                'Simon insists coke is about to crash in London. He is whispering into a dead phone.',
+                'Simon says weed is booming in Leeds. He may have confused Leeds with a dream he had.'
+            ],
+            lucy: [
+                'Lucy Loose Lips swears pills are drying up in Bristol. She also swears she once dated Stormzy.',
+                'Lucy Loose Lips says Cardiff is flooded with mushrooms. Cardiff appears unaware of this.'
+            ],
+            pete: [
+                'Pistol Pete says Glasgow is safe tonight. The police helicopter overhead makes this feel bold.',
+                'Pistol Pete says Liverpool docks are locked down. Ten minutes later, everyone seems fully stocked.'
+            ]
+        };
+        return pickV66(lines[info.id] || lines.simon);
+    }
+
+    function scamTextV66(info) {
+        if (info.id === 'lucy') return 'Lucy Loose Lips pockets the cash, winks, and gets into a taxi she clearly cannot afford.';
+        if (info.id === 'pete') return 'Pistol Pete takes the money, stares at you for three seconds, then says: “Bad investment.” He leaves.';
+        return 'Simon takes the cash, says “back in two minutes”, and is last seen sprinting through a car park.';
+    }
+
+    function vagueTextV66(info) {
+        if (info.id === 'lucy') return 'Lucy Loose Lips says: “I’m hearing movement.” She refuses to explain whether she means stock, police, or her stomach.';
+        if (info.id === 'pete') return 'Pistol Pete says: “Keep your eyes open.” For that money, this feels legally close to robbery.';
+        return 'Simon says: “Something’s happening somewhere soon.” You are now poorer and none the wiser.';
+    }
+
+    hustle = function () {
+        ensureStats();
+        var informants = [buildInformantV66('simon'), buildInformantV66('lucy'), buildInformantV66('pete')];
+        var coming = '<div class="hustle-card"><h4>Businesses</h4><p>COMING SOON.</p></div>';
+        modal('Hustle', '<h4>Informants</h4><p class="subtle">Pay for market information. Prices now move with desperation, confidence and how useful the tip might be.</p><div class="hustle-grid">' + informants.map(function (i) {
+            var mood = i.desperate ? 'Desperate price today.' : (i.trust > 0.80 ? 'Pushing their luck today.' : 'Standard street price.');
+            return '<div class="hustle-card"><h4>' + escapeHtml(i.name) + ' · ' + moneyV66(i.cost) + '</h4><p>' + escapeHtml(i.bio) + '</p><p class="subtle">' + escapeHtml(mood) + '</p><button type="button" class="buy" data-informant-v66="' + escapeHtml(i.id) + '">Pay ' + escapeHtml(i.name) + '</button></div>';
+        }).join('') + '</div>' + coming);
+        setTimeout(function () {
+            var buttons = document.querySelectorAll('[data-informant-v66]');
+            for (var b = 0; b < buttons.length; b++) {
+                buttons[b].onclick = function () {
+                    var id = this.getAttribute('data-informant-v66');
+                    var info = null;
+                    for (var i = 0; i < informants.length; i++) if (informants[i].id === id) info = informants[i];
+                    if (!info) return;
+                    if ((s.cash || 0) < info.cost) { errorMsg('INSUFFICIENT FUNDS'); return; }
+                    s.cash -= info.cost;
+                    ensureStats();
+                    s.stats.informants = (s.stats.informants || 0) + 1;
+                    var scamChance = info.id === 'pete' ? 0.02 : 0.10;
+                    var r = Math.random();
+                    var outcome = '';
+                    if (r < scamChance) {
+                        outcome = scamTextV66(info);
+                        if (info.id === 'lucy') rep(-1);
+                        if (info.id === 'pete') rep(-2);
+                        errorMsg('SCAMMED');
+                    } else if (Math.random() < info.trust) {
+                        outcome = applyInformantTipV66(info);
+                        success('TIP PAID');
+                    } else if (Math.random() < 0.55) {
+                        outcome = falseTipV66(info);
+                    } else {
+                        outcome = vagueTextV66(info);
+                    }
+                    s.notice = outcome;
+                    save();
+                    draw();
+                    modal('Informant Result', '<p>' + escapeHtml(outcome) + '</p><button type="button" id="closeInformantV66">Close</button>');
+                    setTimeout(function () { var close = document.getElementById('closeInformantV66'); if (close) close.onclick = function () { var dlg = document.getElementById('modal'); if (dlg && dlg.open) dlg.close(); }; }, 0);
+                };
+            }
+        }, 0);
+    };
+
+    var previousNewGameV66 = newGame;
+    newGame = function (showHowTo) {
+        previousNewGameV66(false);
+        if (showHowTo) {
+            selectedStartingCityIndex = null;
+            setTimeout(function () { try { showWelcome(); } catch (e) {} }, 0);
+        }
+    };
+
+    function hardenRedheadIntroV66() {
+        var body = document.body;
+        var preintro = document.getElementById('preintro');
+        var logo = preintro ? preintro.querySelector('img') : null;
+        if (!body || !preintro || !logo) return;
+        preintro.style.zIndex = '2147483000';
+        preintro.style.opacity = '1';
+        preintro.style.visibility = 'visible';
+        preintro.style.pointerEvents = 'none';
+        logo.style.opacity = '1';
+        logo.style.visibility = 'visible';
+        logo.decoding = 'sync';
+        try {
+            if (!window.__NOIR_REDHEAD_PRELOADED_V66) {
+                window.__NOIR_REDHEAD_PRELOADED_V66 = true;
+                var img = new Image();
+                img.decoding = 'sync';
+                img.src = 'assets/redhead-games-logo.png';
+            }
+        } catch (e) {}
+    }
+
+    function initV66() {
+        document.title = 'Noir Market V6.6';
+        hardenRedheadIntroV66();
+        ensureV66();
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V6.6: dynamic informants, new-game HOW TO PLAY flow and intro hardening active.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV66, { once: true }); else initV66();
 })();

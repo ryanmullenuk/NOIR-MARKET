@@ -1,4 +1,13 @@
 
+## V6.6
+- Hardened the Redhead Games opening logo so it renders immediately above splash and snow layers while the splash screen prepares.
+- Updated Hustle informants with dynamic tip pricing based on desperation and likely tip quality.
+- Renamed Loose Lisa to Lucy Loose Lips in the active Hustle informant flow.
+- Adjusted Pistol Pete to offer high-value tips between £1,000 and £2,500 with very high reliability.
+- Fixed confirmed New Game routing so it returns to the HOW TO PLAY starting-city flow instead of Shady Loans.
+- Updated app title, manifest version, service worker cache name, save key and save migration to V6.6.
+- Removed the MP3 from service worker install-time caching so music remains user-interaction loaded.
+
 ## V6.5
 - Consolidation and stability release based on V6.4.
 - Removed superseded V5.9, V6.0 and V6.1 starting city selector logic from the live script.

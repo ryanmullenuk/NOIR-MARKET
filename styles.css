@@ -1217,3 +1217,57 @@ body.splash-ui-revealed .splash-instructions{
 @media(max-width:700px){.start-city-grid-v65{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:auto!important;gap:6px!important}.start-city-option-v65{min-height:36px!important;font-size:10px!important;letter-spacing:.32px!important}.start-city-selector-v65{gap:7px!important}.howto-start-select{max-width:100%!important;}}
 @media(min-width:701px){.start-city-grid-v65{grid-template-columns:repeat(7,minmax(78px,1fr))!important;}}
 @media(max-height:700px){.start-city-selector-v65{gap:5px!important;margin-top:5px!important}.start-city-option-v65{min-height:34px!important;font-size:9px!important}.random-city-btn-v65{min-height:38px!important}.howto-start-select p{font-size:12px!important;margin:3px 0!important}.howto-start-select p:nth-of-type(2){display:none!important}}
+
+
+/* Noir Market V6.6: instant Redhead Games intro reliability and non-blocking splash layers. */
+.preintro,
+body.preintro-running .preintro{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483000!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#000!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+  animation:redheadIntroOverlayFadeV66 2.65s ease forwards!important;
+  will-change:opacity!important;
+}
+.preintro-logo,
+body.preintro-running .preintro-logo{
+  width:min(78vw,430px)!important;
+  max-width:430px!important;
+  height:auto!important;
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translateY(-3.5vh) scale(1)!important;
+  animation:redheadIntroLogoFadeV66 2.35s ease forwards!important;
+  position:relative!important;
+  z-index:2147483001!important;
+  pointer-events:none!important;
+  image-rendering:auto!important;
+  will-change:opacity,transform!important;
+}
+body.preintro-running #splash,
+body.preintro-running #splashSnowCanvas,
+body.preintro-running .dust-bg,
+body.preintro-running .splash-vignette{
+  pointer-events:none!important;
+}
+@keyframes redheadIntroOverlayFadeV66{
+  0%{opacity:1;visibility:visible}
+  82%{opacity:1;visibility:visible}
+  100%{opacity:0;visibility:hidden}
+}
+@keyframes redheadIntroLogoFadeV66{
+  0%{opacity:1;transform:translateY(-3.5vh) scale(1)}
+  82%{opacity:1;transform:translateY(-3.5vh) scale(1)}
+  100%{opacity:0;transform:translateY(-3.5vh) scale(.985)}
+}
+@media(prefers-reduced-motion:reduce){
+  .preintro,body.preintro-running .preintro{animation:redheadIntroOverlayFadeV66 1.35s ease forwards!important;}
+  .preintro-logo,body.preintro-running .preintro-logo{animation:redheadIntroLogoFadeV66 1.2s ease forwards!important;}
+}
