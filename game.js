@@ -8004,3 +8004,201 @@ catch (e) { } }, 980);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV61, { once: true }); else initV61();
 })();
+
+
+/* Noir Market V6.3: compact button-only starting city selector with random city option. */
+(function () {
+    var VERSION = '6.3';
+    var SAVE_KEY = 'noir_market_v6_3';
+    var FALLBACK_KEYS = ['noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4'];
+    var previousBaseState = baseState;
+    var previousSave = save;
+    var previousLoad = load;
+    var selectedStartingCityIndexV62 = null;
+    var lastStartSelectorActionV62 = 0;
+    var CITY_ORDER_V62 = ['London','Manchester','Birmingham','Liverpool','Bristol','Glasgow','Cardiff','Leeds','Newcastle','Edinburgh','Aberdeen','Belfast','Dublin','Cork'];
+    function escapeV62(value) {
+        return String(value == null ? '' : value).replace(/[&<>'"]/g, function (ch) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch] || ch;
+        });
+    }
+    function placeNameV62(idx) {
+        return (places && places[idx] && places[idx][0]) || 'London';
+    }
+    function indexForCityV62(city) {
+        for (var i = 0; i < places.length; i++) {
+            if (places[i] && places[i][0] === city) return i;
+        }
+        return 0;
+    }
+    function safeReadSaveV62(key) {
+        var raw = null;
+        try { raw = localStorage.getItem(key); } catch (e) { return null; }
+        if (!raw || raw === 'undefined' || raw === 'null' || raw === '[object Object]') return null;
+        try {
+            var parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object' && parsed.inv && parsed.prices) return parsed;
+        } catch (e) {}
+        return null;
+    }
+    function ensureV62() {
+        if (!s || typeof s !== 'object') return;
+        s.version = VERSION;
+        s.v62 = s.v62 || { buttonStartingCitySelector: true, randomCityButton: true };
+    }
+    save = function () {
+        try {
+            ensureV62();
+            localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+        } catch (e) {
+            try { previousSave(); } catch (_) {}
+        }
+    };
+    load = function () {
+        var parsed = safeReadSaveV62(SAVE_KEY);
+        if (!parsed) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                parsed = safeReadSaveV62(FALLBACK_KEYS[i]);
+                if (parsed) break;
+            }
+        }
+        if (parsed) {
+            s = parsed;
+            ensureV62();
+            try { if (typeof setActiveCityMarket === 'function') setActiveCityMarket(); } catch (e) {}
+            try { if (typeof updateRankProgress === 'function') updateRankProgress(); } catch (e) {}
+            try { save(); } catch (e) {}
+            try { draw(); } catch (e) {}
+            return false;
+        }
+        var started = false;
+        try { started = previousLoad ? previousLoad() : false; } catch (e) { try { newGame(false); started = true; } catch (_) {} }
+        ensureV62();
+        try { save(); } catch (e) {}
+        return started;
+    };
+    baseState = function () {
+        var state = previousBaseState();
+        state.version = VERSION;
+        state.v62 = { buttonStartingCitySelector: true, randomCityButton: true }; state.v63 = { horizontalCityButtons: true };
+        return state;
+    };
+    function selectorHtmlV62() {
+        var buttons = CITY_ORDER_V62.map(function (city) {
+            var safeCity = escapeV62(city);
+            return '<button type="button" class="start-city-option-v62" data-city="' + safeCity + '" aria-pressed="false">' + safeCity + '</button>';
+        }).join('');
+        return '<div class="start-city-selector start-city-selector-v62">' +
+            '<div class="start-city-label">Choose starting city</div>' +
+            '<div id="startCityButtonsV62" class="start-city-grid-v62" aria-label="Starting city list">' + buttons + '</div>' +
+            '<button type="button" id="randomStartingCityV62" class="random-city-btn-v62">RANDOM CITY</button>' +
+            '<div id="selectedStartingCityV62" class="selected-start-city start-city-prompt-v62"><span class="pending">Select a starting city</span></div>' +
+            '</div>';
+    }
+    function refreshSelectedCityV62() {
+        var hasSelection = selectedStartingCityIndexV62 !== null && selectedStartingCityIndexV62 !== undefined;
+        var name = hasSelection ? placeNameV62(selectedStartingCityIndexV62) : '';
+        var label = document.getElementById('selectedStartingCityV62');
+        if (label) label.innerHTML = hasSelection ? ('Starting City: ' + escapeV62(name)) : '<span class="pending">Select a starting city</span>';
+        var buttons = document.querySelectorAll('#startCityButtonsV62 [data-city]');
+        for (var i = 0; i < buttons.length; i++) {
+            var isSelected = hasSelection && buttons[i].getAttribute('data-city') === name;
+            if (isSelected) buttons[i].classList.add('selected'); else buttons[i].classList.remove('selected');
+            buttons[i].setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        }
+        var play = document.getElementById('playWelcomeBtn');
+        if (play) {
+            play.disabled = !hasSelection;
+            if (hasSelection) play.classList.remove('disabled'); else play.classList.add('disabled');
+        }
+    }
+    window.selectStartingCityV62 = function (city, ev) {
+        if (ev) {
+            if (ev.preventDefault) ev.preventDefault();
+            if (ev.stopPropagation) ev.stopPropagation();
+        }
+        selectedStartingCityIndexV62 = indexForCityV62(city);
+        refreshSelectedCityV62();
+        try { sound('positive'); } catch (e) {}
+        try { haptic(); } catch (e) {}
+        return false;
+    };
+    function pickRandomStartingCityV62(ev) {
+        if (ev) {
+            if (ev.preventDefault) ev.preventDefault();
+            if (ev.stopPropagation) ev.stopPropagation();
+        }
+        var now = Date.now ? Date.now() : new Date().getTime();
+        if (now - lastStartSelectorActionV62 < 280) return false;
+        lastStartSelectorActionV62 = now;
+        var city = CITY_ORDER_V62[Math.floor(Math.random() * CITY_ORDER_V62.length)] || 'London';
+        return window.selectStartingCityV62(city, ev);
+    }
+    function bindStartingCityButtonsV62() {
+        var wrap = document.getElementById('startCityButtonsV62');
+        function handle(ev) {
+            ev = ev || window.event;
+            var target = ev.target || ev.srcElement;
+            while (target && target !== wrap && !(target.getAttribute && target.getAttribute('data-city'))) target = target.parentNode;
+            if (target && target !== wrap && target.getAttribute && target.getAttribute('data-city')) {
+                return window.selectStartingCityV62(target.getAttribute('data-city'), ev);
+            }
+        }
+        if (wrap) {
+            if (wrap.addEventListener) {
+                wrap.addEventListener('click', handle, false);
+                wrap.addEventListener('touchend', handle, false);
+                wrap.addEventListener('pointerup', handle, false);
+            } else {
+                wrap.onclick = handle;
+            }
+        }
+        var random = document.getElementById('randomStartingCityV62');
+        if (random) {
+            if (random.addEventListener) {
+                random.addEventListener('click', pickRandomStartingCityV62, false);
+                random.addEventListener('touchend', pickRandomStartingCityV62, false);
+                random.addEventListener('pointerup', pickRandomStartingCityV62, false);
+            } else {
+                random.onclick = pickRandomStartingCityV62;
+            }
+        }
+        refreshSelectedCityV62();
+    }
+    function applyStartingCityV62() {
+        if (selectedStartingCityIndexV62 === null || selectedStartingCityIndexV62 === undefined) {
+            try { toast('SELECT A STARTING CITY', 'bad'); } catch (e) {}
+            return false;
+        }
+        var city = placeNameV62(selectedStartingCityIndexV62);
+        if (!s || typeof s !== 'object') s = baseState();
+        s.city = selectedStartingCityIndexV62;
+        s.notice = 'You start in ' + city + ' with £1,000 cash, £0 in the bank and a clean slate.';
+        s.news = (city + ': MARKETS ARE QUIET TODAY.').toUpperCase();
+        if (s.economy && s.economy.news) s.economy.news.text = s.news;
+        try { if (typeof ensureVaults === 'function') ensureVaults(); } catch (e) {}
+        try { if (typeof ensureEconomy === 'function') ensureEconomy(); } catch (e) {}
+        try { if (typeof setActiveCityMarket === 'function') setActiveCityMarket(); } catch (e) {}
+        try { save(); } catch (e) {}
+        try { draw(); } catch (e) {}
+        return true;
+    }
+    showWelcome = function () {
+        selectedStartingCityIndexV62 = null;
+        modal('How to Play', '<div class="howto howto-start-select"><p>You start with £1,000, no debt and questionable judgement.</p><p>Buy low, sell high, travel between cities and try not to get robbed, arrested, battered or completely rinsed by the market.</p><p>Rumours may help. They may also be nonsense. That is business.</p><p class="disclaimer">This game is for entertainment purposes only.</p><div class="howto-actions"><button type="button" id="welcomeInstructionsBtn" class="play-wide">INSTRUCTIONS</button></div>' + selectorHtmlV62() + '<button type="button" id="playWelcomeBtn" class="buy play-wide start-play-btn disabled" disabled>PLAY</button></div>');
+        setTimeout(function () {
+            var i = document.getElementById('welcomeInstructionsBtn');
+            var p = document.getElementById('playWelcomeBtn');
+            if (i) i.onclick = function () { return showInstructionsV49(true); };
+            if (p) p.onclick = function () { if (!applyStartingCityV62()) return false; return showShadyChoice(); };
+            bindStartingCityButtonsV62();
+        }, 0);
+    };
+    function initV62() {
+        document.title = 'Noir Market V6.3';
+        ensureV62();
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V6.2: button grid starting city selector active.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV62, { once: true }); else initV62();
+})();

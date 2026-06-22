@@ -1,4 +1,4 @@
-const CACHE_NAME='noir-market-v6.1';
+const CACHE_NAME='noir-market-v6.3';
 const CORE_ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./assets/logo-splash.png','./assets/logo.png','./assets/redhead-games-logo.png','./assets/uk-start-map.png'];
 const OPTIONAL_ASSETS=['./assets/music/noir_market_music.mp3','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./apple-touch-icon-dark.png','./apple-touch-icon-light.png','./icon-192-light.png','./icon-512-light.png'];
 self.addEventListener('install',function(event){

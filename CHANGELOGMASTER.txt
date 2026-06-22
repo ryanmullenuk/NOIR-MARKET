@@ -990,3 +990,20 @@ V6.1
 - PLAY remains green and starts the mission from the selected city.
 - No gameplay systems changed.
 - Updated cache and manifest to V6.1.
+
+
+V6.2
+- Replaced the starting city selector with a compact button-only layout.
+- Added all 14 city buttons in two rows of seven.
+- Added a full-width RANDOM CITY button that selects and highlights a city at random.
+- Selected city buttons now turn amber.
+- PLAY remains full width and green, and stays disabled until a city is selected.
+- Removed map-dot and clickable city-location interaction logic from the live HOW TO PLAY selector.
+- No gameplay systems changed.
+- Updated cache and manifest to V6.2.
+
+
+## V6.3
+- Fixed starting city button formatting so city names display horizontally within each button.
+- Preserved 2-row city selector layout using horizontally scrollable mobile-safe button grid.
+- No gameplay features changed.
