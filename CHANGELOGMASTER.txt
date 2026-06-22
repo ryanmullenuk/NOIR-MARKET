@@ -1,26 +1,5 @@
 NOIR MARKET CHANGELOGMASTER
-Current release: V4.4
-
-CHANGELOG_v4.4.txt
-====================
-NOIR MARKET V4.4 CHANGELOG
-
-Splash screen update:
-- Replaced the previous splash presentation with a full-screen black splash screen.
-- Added the new Noir Market logo asset with transparent background.
-- Added subtle canvas snow behind the splash UI, inspired by particles.js snow styling.
-- Added animated tagline sequence: TRADE. / RISK. / SURVIVE.
-- Retained the existing loading bar behaviour, including white fill to 100% and ENTER state.
-- Added instructions below the loading bar: INSTRUCTIONS / For a better gaming experience, click share and add to homescreen.
-- Tuned snow particle count for mobile and desktop performance.
-- Preserved splash isolation so no game content is visible behind it.
-
-Versioning:
-- Updated game version to V4.4.
-- Updated manifest version to 4.4.
-- Updated service worker cache to noir-market-v4.4.
-- Added save migration from V4.3 and older versions.
-
+Current release: V4.3
 Baseline: Noir Market V4.0
 
 
@@ -884,3 +863,35 @@ Checks completed:
 - sw.js syntax check passed.
 - manifest.json validation passed.
 
+V4.4
+- Added Redhead Games opening ident before the Noir Market splash screen.
+- Added menu Instructions button with full section-by-section gameplay guidance.
+- Added Redhead Games logo asset to service worker cache.
+- Updated version labels, save key and manifest to V4.4.
+- Preserved migration from V4.3 and earlier saves.
+
+
+========================================================================
+CHANGELOG_v4.6.txt
+========================================================================
+NOIR MARKET V4.6 CHANGELOG
+
+Changes made:
+- Rebuilt from the latest supplied V4.4 build containing the new Noir Market logo and snow splash screen.
+- Corrected Redhead Games opening ident so it appears on initial load.
+- Redhead Games logo now fades in, holds, and fades out over an already-active Noir Market snow splash.
+- Removed the behaviour that hid the Noir Market splash while the Redhead Games ident was running.
+- Snow effect now continues smoothly behind the transition into the Noir Market splash screen.
+- Retained the menu Instructions section added in V4.4.
+- Updated release version to V4.6.
+- Updated manifest version and service worker cache to V4.6.
+- Preserved migration from V4.5, V4.4 and earlier save keys.
+
+
+## V4.7
+- Corrected main Noir Market splash logo to use the supplied full transparent logo artwork.
+- Added animated splash tagline cycling one item at a time: TRADE. / RISK. / SURVIVE.
+- Added splash instruction text below the loading bar: INSTRUCTIONS / For a better gaming experience, click share and add to homescreen.
+- Kept Redhead Games opening ident, snow effect and loading bar behaviour intact.
+- Updated app version, manifest and service worker cache to V4.7.
+- Preserved save migration from V4.6 and older builds.

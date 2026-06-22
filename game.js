@@ -2880,7 +2880,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{try{setupSplashLoaderV27();}catch(e){console.error('V3.3 setup failed:',e);}}, {once:true});
   else setTimeout(()=>{try{setupSplashLoaderV27(); if(s&&s.version!==VERSION){s.version=VERSION; save();}}catch(e){console.error('V3.3 setup failed:',e);}},0);
-  setTimeout(()=>{try{document.title='Noir Market V3.3'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V4.7'; console.log('NOIR MARKET V3.3: instant top snow, city news, price events and timed informants active.');}catch(e){}},320);
 })();
 
 /* Noir Market V3.7: debt clearing, rumour travel result, cash prompt and travel button polish. */
@@ -3028,7 +3028,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     dlg.addEventListener('close',()=>{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');});
     dlg.addEventListener('cancel',(e)=>{e.preventDefault();closeModalFastV34();});
   }
-  setTimeout(()=>{try{document.title='Noir Market V3.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.7: debt clearing, rumour travel result, cash prompt and travel button polish active.');}catch(e){}},320);
+  setTimeout(()=>{try{document.title='Noir Market V4.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} console.log('NOIR MARKET V3.7: debt clearing, rumour travel result, cash prompt and travel button polish active.');}catch(e){}},320);
 })();
 
 /* Noir Market V3.7 penalty wording correction retained. */
@@ -3274,7 +3274,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
     newGame(false); ensureV37(); save(); return true;
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v37={cashPromptIgnoreUntil:0,cashPromptLastDay:0}; return state;};
-  setTimeout(()=>{try{document.title='Noir Market V3.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
+  setTimeout(()=>{try{document.title='Noir Market V4.7'; if(s&&s.version!==VERSION){s.version=VERSION; save();} const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; console.log('NOIR MARKET V3.7 feature patch active.');}catch(e){}},360);
 })();
 
 
@@ -3491,7 +3491,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v38={burnerPhones:0,contactCallCooldownUntil:0,nextContactCallAt:0,callActive:false}; return state;};
   draw=function(){previousDraw(); ensureV38(); bindActionButtonsV38(); scheduleContactCallCheckV38();};
-  setTimeout(()=>{try{ensureV38(); document.title='Noir Market V3.8'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
+  setTimeout(()=>{try{ensureV38(); document.title='Noir Market V4.7'; const travelBtn=$('travelBtn'); if(travelBtn)travelBtn.textContent='Travel & Shipping'; bindActionButtonsV38(); save(); console.log('NOIR MARKET V3.8: Burner Phones, Contacts and brokered contact deals active.');}catch(e){}},520);
 })();
 
 
@@ -3601,7 +3601,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v40={stabilised:true}; return state;};
   draw=function(){previousDraw(); ensureV39();};
-  setTimeout(()=>{try{ensureV39(); document.title='Noir Market V4.0'; save(); console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');}catch(e){}},620);
+  setTimeout(()=>{try{ensureV39(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.0: Stabilised base build active. Sell screen, Loose Lisa, full ticker coverage and hidden informant odds verified.');}catch(e){}},620);
 })();
 
 
@@ -3827,7 +3827,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v41={carryWeaponsOnNextTravel:false}; return state;};
   draw=function(){previousDraw(); try{ensureV41();}catch(e){} };
-  setTimeout(()=>{try{ensureV41(); document.title='Noir Market V4.1'; save(); console.log('NOIR MARKET V4.1: weapons travel risk, finance deposit/withdraw all, vault export and contact result banners active.');}catch(e){console.warn('V4.1 startup skipped:',e);}},720);
+  setTimeout(()=>{try{ensureV41(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.1: weapons travel risk, finance deposit/withdraw all, vault export and contact result banners active.');}catch(e){console.warn('V4.1 startup skipped:',e);}},720);
 })();
 
 /* Noir Market V4.2 feature patch: police bribe resolution. */
@@ -3967,7 +3967,7 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   };
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v42={}; state.stats=state.stats||{}; state.stats.bribeAttempts=0; state.stats.bribesAccepted=0; state.stats.bribesRejected=0; return state;};
   draw=function(){previousDraw(); try{ensureV42();}catch(e){} };
-  setTimeout(()=>{try{ensureV42(); document.title='Noir Market V4.2'; save(); console.log('NOIR MARKET V4.2: Police Bribe Resolution system active.');}catch(e){console.warn('V4.2 startup skipped:',e);}},840);
+  setTimeout(()=>{try{ensureV42(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.2: Police Bribe Resolution system active.');}catch(e){console.warn('V4.2 startup skipped:',e);}},840);
 })();
 
 
@@ -4029,105 +4029,129 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
   baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v43={mainParallaxBackground:true}; return state;};
   draw=function(){previousDraw(); try{ensureV43(); setupMainParallaxV43();}catch(e){} };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupMainParallaxV43,{once:true}); else setupMainParallaxV43();
-  setTimeout(()=>{try{ensureV43(); setupMainParallaxV43(); document.title='Noir Market V4.3'; save(); console.log('NOIR MARKET V4.3: Main screen parallax background active.');}catch(e){console.warn('V4.3 startup skipped:',e);}},900);
+  setTimeout(()=>{try{ensureV43(); setupMainParallaxV43(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.3: Main screen parallax background active.');}catch(e){console.warn('V4.3 startup skipped:',e);}},900);
 })();
 
 
-/* Noir Market V4.4: new black snow splash, logo, animated tagline and instructions */
+/* Noir Market V4.7: corrected Redhead Games opening ident over active snow splash. */
 (()=>{
-  const VERSION='4.4';
-  const SAVE_KEY='noir_market_v4_4';
-  const FALLBACK_KEYS=['noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const VERSION='4.6';
+  const SAVE_KEY='noir_market_v4_6';
+  const FALLBACK_KEYS=['noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  const previousBaseState=baseState;
+  const previousDraw=draw;
+  const previousShowMenu=showMenu;
+
+  function escapeV46(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+  function ensureV46(){
+    if(typeof ensureV43==='function')ensureV43();
+    if(typeof ensureStats==='function')ensureStats();
+    if(!s)return;
+    s.version=VERSION;
+    s.v46=s.v46||{instructionsAdded:true,redheadIntro:true,correctedIntro:true};
+  }
+
+  function runRedheadIntroV46(){
+    const pre=document.getElementById('preintro');
+    const splash=document.getElementById('splash');
+    if(splash){
+      splash.style.visibility='visible';
+      splash.style.opacity='1';
+    }
+    try{ if(typeof setupSplashLoaderV27==='function')setupSplashLoaderV27(); }catch(e){}
+    const finish=()=>{
+      document.body.classList.remove('preintro-running');
+      if(splash){
+        splash.style.visibility='';
+        splash.style.opacity='';
+      }
+      if(pre){
+        pre.classList.add('preintro-hide');
+        setTimeout(()=>{try{pre.remove();}catch(e){}},700);
+      }
+    };
+    if(!pre){document.body.classList.remove('preintro-running');return;}
+    document.body.classList.add('preintro-running');
+    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(finish,reduced?1450:2700);
+  }
+
+  window.showInstructionsV46=function(){
+    modal('Instructions',`<div class="instructions-copy">
+      <p class="instructions-intro">Noir Market is a dark street-level trading game where every city has a price. Buy stock when prices are low, move between cities, sell when the market rises, and avoid getting caught with too much heat on you.</p>
+      <p class="instructions-intro">The aim is simple: build cash, grow reputation, move smart, and survive long enough to climb the ranks.</p>
+
+      <h4>Market</h4><p>Buy and sell stock in your current city. Prices change daily based on supply, demand, rumours, news and your own actions.</p>
+      <h4>Storage / Vault</h4><p>Store stock safely in each city. Vaults are city-specific, so anything stored in London stays in London until you return or ship it.</p>
+      <h4>Travel</h4><p>Move between cities to find better prices. Travelling can trigger police stops, seizures, fines, arrests or random events, especially if you are carrying risky stock or weapons.</p>
+      <h4>Shipping / Export</h4><p>Send stock between cities instead of carrying it yourself. You can export from carried stock or from your current city vault, but shipments carry cost and risk.</p>
+      <h4>Finances</h4><p>View your cash and bank balance. Deposit money to protect it, or withdraw funds when you need buying power.</p>
+      <h4>Black Market</h4><p>Buy weapons and other high-risk items. Weapons may help in certain situations, but carrying them while travelling increases police risk.</p>
+      <h4>Hustle</h4><p>Use side opportunities and informants to make extra money or gain market tips. Some tips are useful, some are wrong, and some people will take your money and run.</p>
+      <h4>Contacts</h4><p>Use contacts to attempt deals and opportunities. Results can succeed or fail depending on risk, reputation and chance.</p>
+      <h4>Loans</h4><p>Borrow money when you need fast cash. Loans come with interest, deadlines and penalties if you miss repayment.</p>
+      <h4>News / Rumours</h4><p>Watch the ticker and daily rumours. They can hint at price movement, shortages, police activity or city events, but not everything you hear is true.</p>
+      <h4>Reputation / Rank</h4><p>Your reputation affects how people deal with you. Your rank grows as your net worth increases, but it can drop if your money falls or your decisions catch up with you.</p>
+      <h4>Heat</h4><p>Heat shows how much attention you are attracting. Higher heat increases the risk of police stops, failed travel, raids and arrest.</p>
+      <div class="instructions-tip"><h4>Tip</h4><p>Do not carry everything at once. Use vaults, watch the market, keep cash safe, and move before the heat finds you.</p></div>
+      <div class="back-menu-spacer"></div><button type="button" id="backMenuFromInstructionsBtn">Back to Menu</button>
+    </div>`);
+    setTimeout(()=>{const b=$('backMenuFromInstructionsBtn'); if(b)b.onclick=showMenu;},0);
+  };
+
+  showMenu=function(){
+    ensureV46();
+    const nameVal=escapeV46(s.playerName||'').slice(0,24);
+    modal('Menu',`<div class="menu-player"><label for="playerNameInput">Player name</label><input id="playerNameInput" maxlength="24" placeholder="Add your name" value="${nameVal}"><button type="button" id="savePlayerNameBtn">SAVE NAME</button></div><div class="menu-settings"><button type="button" id="soundToggleBtn">SOUNDS: ${soundEnabled?'ON':'OFF'}</button><button type="button" id="musicToggleBtn">MUSIC: ${musicEnabled?'ON':'OFF'}</button></div><div class="menu-list"><button type="button" id="instructionsBtn">Instructions</button><button type="button" id="statsBtn">Stats</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>`);
+    setTimeout(()=>{
+      const instructions=$('instructionsBtn'), stats=$('statsBtn'), snd=$('soundToggleBtn'), mus=$('musicToggleBtn'), saveName=$('savePlayerNameBtn'), newGameBtn=$('menuNewGameBtn');
+      if(instructions)instructions.onclick=showInstructionsV46;
+      if(saveName)saveName.onclick=(typeof setPlayerNameV18==='function')?setPlayerNameV18:function(){s.playerName=String(($('playerNameInput')&&$('playerNameInput').value)||'').trim().slice(0,24);save();draw();showMenu();};
+      if(stats)stats.onclick=showStats;
+      if(snd)snd.onclick=()=>{soundEnabled=!soundEnabled; localStorage.setItem('noir_market_sound',soundEnabled?'on':'off'); if(soundEnabled&&typeof sound==='function')sound('positive'); save(); showMenu();};
+      if(mus)mus.onclick=()=>{musicEnabled=!musicEnabled; localStorage.setItem('noir_market_music',musicEnabled?'on':'off'); if(musicEnabled&&typeof startBackgroundMusic==='function')startBackgroundMusic(); else if(typeof stopBackgroundMusic==='function')stopBackgroundMusic(); save(); showMenu();};
+      if(newGameBtn)newGameBtn.onclick=confirmNewGame;
+    },0);
+  };
+
+  save=function(){ensureV46(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  load=function(){
+    let x=localStorage.getItem(SAVE_KEY);
+    if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
+    if(x){s=JSON.parse(x); ensureV46(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV46(); save(); return true;
+  };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v46={instructionsAdded:true,redheadIntro:true,correctedIntro:true}; return state;};
+  draw=function(){previousDraw(); try{ensureV46();}catch(e){} };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',runRedheadIntroV46,{once:true}); else runRedheadIntroV46();
+  setTimeout(()=>{try{ensureV46(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.6: menu instructions and Redhead Games intro active.');}catch(e){console.warn('V4.6 startup skipped:',e);}},1050);
+})();
+
+
+/* Noir Market V4.7: corrected main splash logo, animated tagline and splash instructions. */
+(()=>{
+  const VERSION='4.7';
+  const SAVE_KEY='noir_market_v4_7';
+  const FALLBACK_KEYS=['noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   const previousBaseState=baseState;
   const previousDraw=draw;
 
-  function ensureV44(){
+  function ensureV47(){
+    if(typeof ensureV46==='function')ensureV46();
+    if(typeof ensureStats==='function')ensureStats();
     if(!s)return;
     s.version=VERSION;
-    s.v44=s.v44||{newSplash:true};
+    s.v47=s.v47||{correctedSplashLogo:true,animatedTagline:true,splashInstructions:true};
   }
 
-  function stopSplashSnowV44(){
-    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
-    if(window.__NOIR_V44_STOP_SNOW){try{window.__NOIR_V44_STOP_SNOW();}catch(e){}}
-  }
-
-  function startSplashSnowV44(){
-    const canvas=$('splashSnowCanvas'), splash=$('splash');
-    if(!canvas||!splash)return;
-    if(window.__NOIR_V44_SNOW_RUNNING)return;
-    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
-    window.__NOIR_V44_SNOW_RUNNING=true;
-    const ctx=canvas.getContext('2d'); if(!ctx)return;
-    let raf=0, running=true, pointer=0;
-    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const count=reduced?0:((window.matchMedia&&window.matchMedia('(max-width:560px)').matches)?90:150);
-    const flakes=[];
-    function resize(){
-      const ratio=Math.min(window.devicePixelRatio||1,2);
-      const w=window.innerWidth, h=window.innerHeight;
-      canvas.width=Math.ceil(w*ratio); canvas.height=Math.ceil(h*ratio);
-      canvas.style.width=w+'px'; canvas.style.height=h+'px';
-      ctx.setTransform(ratio,0,0,ratio,0,0);
-    }
-    function reset(f,initial){
-      const w=window.innerWidth, h=window.innerHeight;
-      f.x=8+Math.random()*Math.max(8,w-16);
-      f.y=initial?Math.random()*h:-10-Math.random()*80;
-      const z=Math.random();
-      f.r=.55+Math.pow(z,2)*2.1;
-      f.v=.65+z*2.2;
-      f.a=.18+z*.48;
-      f.s=.18+Math.random()*.95;
-      f.t=Math.random()*Math.PI*2;
-    }
-    function init(){flakes.length=0; for(let i=0;i<count;i++){const f={}; reset(f,true); flakes.push(f);}}
-    function step(){
-      if(!running)return;
-      const w=window.innerWidth,h=window.innerHeight;
-      ctx.clearRect(0,0,w,h);
-      ctx.save();
-      ctx.beginPath(); ctx.rect(0,0,w,h); ctx.clip();
-      for(const f of flakes){
-        f.t+=.012; f.y+=f.v; f.x+=Math.sin(f.t)*f.s+(pointer*.26);
-        if(f.y>h+10)reset(f,false);
-        if(f.x>w-6)f.x=6; if(f.x<6)f.x=w-6;
-        ctx.beginPath();
-        ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
-        ctx.shadowBlur=f.r>1.8?3:0;
-        ctx.shadowColor='rgba(255,255,255,.22)';
-        ctx.fillStyle='rgba(255,255,255,'+f.a+')';
-        ctx.fill();
-      }
-      ctx.restore();
-      raf=requestAnimationFrame(step);
-    }
-    function onPointer(e){pointer=((e.clientX||window.innerWidth/2)/window.innerWidth)-.5;}
-    function onResize(){resize(); init();}
-    function stop(){
-      running=false;
-      if(raf)cancelAnimationFrame(raf);
-      ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
-      window.removeEventListener('pointermove',onPointer);
-      window.removeEventListener('resize',onResize);
-      window.__NOIR_V44_SNOW_RUNNING=false;
-      window.__NOIR_V44_STOP_SNOW=null;
-    }
-    resize(); init(); canvas.classList.add('visible');
-    window.addEventListener('pointermove',onPointer,{passive:true});
-    window.addEventListener('resize',onResize,{passive:true});
-    window.__NOIR_V44_STOP_SNOW=stop;
-    raf=requestAnimationFrame(step);
-  }
-
-  function startTaglineV44(){
-    const el=$('splashTagline');
-    if(!el||el.dataset.v44==='1')return;
-    el.dataset.v44='1';
+  function startSplashTaglineV47(){
+    const el=document.getElementById('splashTagline');
+    if(!el||el.dataset.active==='1')return;
+    el.dataset.active='1';
     const words=['TRADE.','RISK.','SURVIVE.'];
     let i=0;
-    el.textContent=words[i];
-    function cycle(){
+    el.textContent=words[0];
+    setInterval(()=>{
       if(!document.body.contains(el))return;
       el.classList.add('fade-out');
       setTimeout(()=>{
@@ -4135,52 +4159,19 @@ setTimeout(()=>{try{console.log('NOIR MARKET V2.7 splash patch: particles='+docu
         el.textContent=words[i];
         el.classList.remove('fade-out');
       },300);
-    }
-    const id=setInterval(cycle,1650);
-    window.__NOIR_V44_STOP_TAGLINE=()=>clearInterval(id);
+    },1350);
   }
 
-  createSplashDust=function(){startSplashSnowV44();};
-
-  setupSplashLoaderV27=function(){
-    const splash=$('splash'), enter=$('splashEnter'), fill=$('splashLoaderFill'), text=$('splashLoaderText'), prompt=$('splashPrompt');
-    if(!splash||!enter||!fill||!text)return;
-    if(splash.dataset.loaderVersion==='4.4')return;
-    splash.dataset.loaderVersion='4.4';
-    let ready=false, entered=false;
-    const markReady=()=>{if(ready)return; ready=true; fill.style.width='100%'; enter.disabled=false; enter.classList.add('ready'); text.textContent='ENTER'; enter.setAttribute('aria-label','Enter Noir Market'); if(prompt)prompt.textContent='';};
-    const enterGame=()=>{
-      if(!ready||entered)return;
-      entered=true;
-      try{unlockAudio(); if(typeof startBackgroundMusic==='function')startBackgroundMusic(); musicStarted=true;}catch(e){}
-      try{sound('positive');}catch(e){}
-      splash.classList.add('hide');
-      setTimeout(()=>{try{stopSplashSnowV44(); if(window.__NOIR_V44_STOP_TAGLINE)window.__NOIR_V44_STOP_TAGLINE();}catch(e){} showWelcome(); if(typeof scheduleInformants==='function')scheduleInformants();},420);
-    };
-    enter.disabled=true;
-    enter.classList.remove('ready');
-    enter.onclick=enterGame;
-    splash.onclick=(e)=>{if(e.target&&e.target.closest&&e.target.closest('#splashEnter'))return; enterGame();};
-    fill.style.transition='width .28s cubic-bezier(.18,.84,.25,1)';
-    fill.style.width='0%';
-    text.textContent='LOADING';
-    if(prompt)prompt.textContent='';
-    startSplashSnowV44();
-    startTaglineV44();
-    requestAnimationFrame(()=>{fill.style.width='68%'; requestAnimationFrame(()=>setTimeout(markReady,180));});
-  };
-
-  save=function(){ensureV44(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
+  save=function(){ensureV47(); localStorage.setItem(SAVE_KEY,JSON.stringify(s));};
   load=function(){
     let x=localStorage.getItem(SAVE_KEY);
     if(!x){for(const key of FALLBACK_KEYS){x=localStorage.getItem(key); if(x)break;}}
-    if(x){s=JSON.parse(x); ensureV44(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
-    newGame(false); ensureV44(); save(); return true;
+    if(x){s=JSON.parse(x); ensureV47(); if(typeof setActiveCityMarket==='function')setActiveCityMarket(); if(typeof updateRankProgress==='function')updateRankProgress(); if(typeof updateBestRankV18==='function')updateBestRankV18(); save(); draw(); return false;}
+    newGame(false); ensureV47(); save(); return true;
   };
-  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v44={newSplash:true}; return state;};
-  draw=function(){previousDraw(); try{ensureV44();}catch(e){} };
+  baseState=function(){const state=previousBaseState(); state.version=VERSION; state.v47={correctedSplashLogo:true,animatedTagline:true,splashInstructions:true}; return state;};
+  draw=function(){previousDraw(); try{ensureV47();}catch(e){} };
 
-  const init=()=>{try{setupSplashLoaderV27(); startTaglineV44(); document.title='Noir Market V4.4'; if(s){ensureV44(); save();}}catch(e){console.warn('V4.4 splash init skipped:',e);}};
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true}); else setTimeout(init,0);
-  setTimeout(()=>{try{document.title='Noir Market V4.4'; console.log('NOIR MARKET V4.4: new snow splash, animated tagline and install instructions active.');}catch(e){}},940);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startSplashTaglineV47,{once:true}); else startSplashTaglineV47();
+  setTimeout(()=>{try{ensureV47(); startSplashTaglineV47(); document.title='Noir Market V4.7'; save(); console.log('NOIR MARKET V4.7: corrected main splash logo, animated tagline and splash instructions active.');}catch(e){console.warn('V4.7 startup skipped:',e);}},1280);
 })();

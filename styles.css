@@ -751,74 +751,144 @@ body{overflow-x:hidden;background:#000!important;}
   .main-parallax-bg{transform:scale(1.04)!important;will-change:auto;}
 }
 
-/* Noir Market V4.4: black snow splash with new logo, animated tagline and install instructions */
+
+/* Noir Market V4.4: Redhead Games intro and menu instructions */
+.preintro{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .55s ease,visibility .55s ease;
+}
+body.preintro-running .preintro{opacity:1;visibility:visible;pointer-events:auto;}
+body.preintro-running #splash{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+.preintro.preintro-hide{opacity:0!important;visibility:hidden!important;}
+.preintro-logo{
+  width:min(76vw,420px);
+  height:auto;
+  display:block;
+  opacity:0;
+  transform:scale(.96);
+  animation:redheadIntroFadeV44 2.05s ease forwards;
+}
+@keyframes redheadIntroFadeV44{
+  0%{opacity:0;transform:scale(.94)}
+  22%{opacity:1;transform:scale(1)}
+  72%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(.985)}
+}
+.instructions-copy{display:grid;gap:13px;line-height:1.45;color:#e8e8e8;}
+.instructions-copy .instructions-intro{margin:0 0 3px;color:#f2f2f2;}
+.instructions-copy h4{margin:8px 0 0!important;color:#fff;text-transform:uppercase;letter-spacing:1.4px;font-size:13px;}
+.instructions-copy p{margin:0;color:#d9d9d9;}
+.instructions-copy .instructions-tip{margin-top:6px;padding:12px 13px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.045);}
+.menu-list #instructionsBtn{border-color:rgba(255,255,255,.20);}
+@media (prefers-reduced-motion:reduce){
+  .preintro-logo{animation:none;opacity:1;transform:none;}
+}
+
+
+/* Noir Market V4.6: corrected Redhead Games intro over active snow splash */
+body.preintro-running #splash{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+}
+body.preintro-running .preintro{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  background:#000!important;
+  animation:redheadIntroOverlayFadeV46 2.65s ease forwards!important;
+}
+.preintro{
+  background:#000!important;
+}
+.preintro-logo{
+  width:min(78vw,430px)!important;
+  max-width:430px!important;
+  opacity:0;
+  transform:scale(.94);
+  animation:redheadIntroLogoFadeV46 2.35s ease forwards!important;
+}
+@keyframes redheadIntroOverlayFadeV46{
+  0%{opacity:1}
+  68%{opacity:1}
+  100%{opacity:0}
+}
+@keyframes redheadIntroLogoFadeV46{
+  0%{opacity:0;transform:scale(.94)}
+  20%{opacity:1;transform:scale(1)}
+  70%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(.985)}
+}
+@media (prefers-reduced-motion:reduce){
+  body.preintro-running .preintro{animation:redheadIntroOverlayFadeV46 1.35s ease forwards!important;}
+  .preintro-logo{animation:redheadIntroLogoFadeV46 1.2s ease forwards!important;}
+}
+
+
+/* Noir Market V4.7: corrected main splash logo, animated tagline and homescreen instruction text */
 .splash{
   background:#000!important;
-  background-image:none!important;
-  justify-content:center!important;
   gap:0!important;
-  padding:calc(20px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom))!important;
 }
-.splash::before{display:none!important;content:none!important;}
-.splash::after{box-shadow:inset 0 0 0 1px #000,inset 0 0 34px 22px rgba(0,0,0,.94)!important;}
-.splash .dust-bg,.splash .live-dust{display:none!important;opacity:0!important;}
-#splashSnowCanvas{z-index:1!important;opacity:.88!important;}
-.splash-vignette{z-index:2!important;background:radial-gradient(circle at 50% 46%,rgba(0,0,0,0) 0 42%,rgba(0,0,0,.30) 74%,rgba(0,0,0,.86) 100%)!important;}
-.splash-logo-v44{
+.splash-logo{
+  width:min(84vw,520px)!important;
+  max-height:54vh!important;
+  object-fit:contain!important;
+  margin:0 auto 18px!important;
+  filter:none!important;
   position:relative!important;
   z-index:6!important;
-  width:min(82vw,520px)!important;
-  max-height:46vh!important;
-  height:auto!important;
-  object-fit:contain!important;
-  margin:0 auto 16px!important;
-  filter:none!important;
 }
+.splash h1{display:none!important;}
 .splash-tagline{
   position:relative!important;
   z-index:6!important;
-  min-height:22px!important;
+  min-height:18px!important;
   margin:0 0 18px!important;
   color:#fff!important;
-  font-size:14px!important;
-  line-height:22px!important;
-  letter-spacing:4px!important;
-  text-align:center!important;
-  text-transform:uppercase!important;
+  font-size:12px!important;
   font-weight:700!important;
+  letter-spacing:4px!important;
+  text-transform:uppercase!important;
+  text-align:center!important;
   opacity:1;
-  transform:translateY(0);
-  transition:opacity .3s ease,transform .3s ease;
+  transition:opacity .3s ease, transform .3s ease;
 }
-.splash-tagline.fade-out{opacity:0;transform:translateY(5px);}
-.splash-loader{position:relative!important;z-index:6!important;margin-top:0!important;margin-bottom:14px!important;}
+.splash-tagline.fade-out{opacity:0;transform:translateY(3px);}
+.splash-loader{margin-bottom:14px!important;}
 .splash-instructions{
   position:relative!important;
   z-index:6!important;
-  max-width:360px!important;
-  margin:0 auto!important;
+  width:min(82vw,360px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:5px!important;
   text-align:center!important;
-  color:rgba(255,255,255,.72)!important;
-  font-size:11px!important;
-  line-height:1.45!important;
-  letter-spacing:.35px!important;
+  color:#fff!important;
+  line-height:1.35!important;
 }
 .splash-instructions strong{
-  display:block!important;
-  color:#fff!important;
-  margin-bottom:5px!important;
-  font-size:11px!important;
-  line-height:1!important;
+  font-size:10px!important;
   letter-spacing:2.4px!important;
-  text-transform:uppercase!important;
   font-weight:800!important;
 }
-.splash-instructions span{display:block!important;}
-@media(max-width:560px){
-  .splash-logo-v44{width:min(88vw,390px)!important;max-height:42vh!important;margin-bottom:14px!important;}
-  .splash-tagline{font-size:12px!important;letter-spacing:3.2px!important;margin-bottom:16px!important;}
-  .splash-instructions{max-width:300px!important;font-size:10.5px!important;}
+.splash-instructions span{
+  font-size:10px!important;
+  letter-spacing:.45px!important;
+  color:rgba(255,255,255,.72)!important;
 }
-@media(prefers-reduced-motion:reduce){
-  .splash-tagline{transition:none!important;}
+@media(max-width:560px){
+  .splash-logo{width:min(88vw,390px)!important;max-height:48vh!important;margin-bottom:16px!important;}
+  .splash-tagline{font-size:11px!important;letter-spacing:3px!important;margin-bottom:16px!important;}
+  .splash-instructions{width:min(86vw,320px)!important;}
 }
