@@ -8345,3 +8345,260 @@ catch (e) { } }, 980);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV73, { once: true }); else initV73();
 })();
+
+/* Noir Market V7.5: updated iOS/PWA icon assets. */
+(function () {
+    var VERSION = '7.5';
+    var SAVE_KEY = 'noir_market_v7_5';
+    var FALLBACK_KEYS = ['noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+
+    var previousBaseStateV74 = baseState;
+    var previousNextDayV74 = typeof nextDay === 'function' ? nextDay : null;
+    var previousMaybeArrestV74 = typeof maybeArrest === 'function' ? maybeArrest : null;
+    var previousShowArrestModalV74 = typeof showArrestModal === 'function' ? showArrestModal : null;
+    var previousMaybeFightV74 = typeof maybeFight === 'function' ? maybeFight : null;
+    var previousMaybeCashMuggingV74 = typeof maybeCashMugging === 'function' ? maybeCashMugging : null;
+    var previousRandomEventV74 = typeof randomEvent === 'function' ? randomEvent : null;
+    var previousHustleV74 = typeof hustle === 'function' ? hustle : null;
+    var previousSaveV74 = typeof save === 'function' ? save : null;
+    var previousDrawV74 = typeof draw === 'function' ? draw : null;
+
+    function clampV74(n, min, max) {
+        n = Number(n);
+        if (!isFinite(n)) n = 0;
+        return Math.max(min, Math.min(max, Math.round(n)));
+    }
+    function escV74(v) {
+        return String(v !== null && v !== void 0 ? v : '').replace(/[&<>"']/g, function (m) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]);
+        });
+    }
+    function repV74() { return clampV74(s && s.reputation, 0, 100); }
+    function carriedUnitsV74() {
+        var d = 0, w = 0;
+        try { d = typeof used === 'function' ? used() : 0; } catch (e) { d = 0; }
+        try { w = (s && Array.isArray(s.weapons)) ? s.weapons.length : 0; } catch (e) { w = 0; }
+        return { drugs: Math.max(0, d), weapons: Math.max(0, w), total: Math.max(0, d) + Math.max(0, w) };
+    }
+    function markTroubleV74(reason) {
+        if (!s) return;
+        s.v74 = s.v74 || {};
+        s.v74.noTroubleDays = 0;
+        s.v74.lastTroubleDay = s.day || 1;
+        s.v74.lastTroubleReason = reason || 'trouble';
+    }
+    function ensureV74() {
+        if (!s) return;
+        if (typeof ensureStats === 'function') ensureStats();
+        s.version = VERSION;
+        s.v74 = s.v74 || {};
+        if (typeof s.v74.noTroubleDays !== 'number') s.v74.noTroubleDays = 0;
+        if (typeof s.v74.lastTroubleDay !== 'number') s.v74.lastTroubleDay = 0;
+        if (typeof s.v74.travelHeatEvents !== 'number') s.v74.travelHeatEvents = 0;
+        if (typeof s.v74.quietHeatDrops !== 'number') s.v74.quietHeatDrops = 0;
+        s.heat = clampV74(s.heat, 0, 100);
+        s.reputation = clampV74(s.reputation, 0, 100);
+    }
+    function appendSentenceV74(base, line) {
+        return String(base || '').replace(/\s+$/,'') + (line ? ' ' + line : '');
+    }
+    function travelHeatLineV74() {
+        if (Math.random() >= 0.42) return '';
+        var up = Math.random() < 0.55;
+        var amount = up ? rand(2, 7) : rand(2, 6);
+        s.heat = clampV74((s.heat || 0) + (up ? amount : -amount), 0, 100);
+        s.v74.travelHeatEvents = (s.v74.travelHeatEvents || 0) + 1;
+        if (up) {
+            return pick([
+                'You get clocked by two plain-clothes officers outside the station. Nothing happens, but the attention sticks. Heat increased ' + amount + '%.',
+                'A bored transport officer gives you the look. You are not stopped, but you are remembered. Heat increased ' + amount + '%.',
+                'You walk past a patrol car and somehow look guilty standing still. Heat increased ' + amount + '%.'
+            ]);
+        }
+        return pick([
+            'Leaving town cools things off. Local attention fades slightly. Heat decreased ' + amount + '%.',
+            'Changing cities gives the local gossip machine something else to chew on. Heat decreased ' + amount + '%.',
+            'You keep moving and the last city loses interest. Heat decreased ' + amount + '%.'
+        ]);
+    }
+    function quietHeatLineV74() {
+        if (!s || s.day <= 1) return '';
+        s.v74 = s.v74 || {};
+        if (s.v74.lastTroubleDay === s.day) return '';
+        s.v74.noTroubleDays = (s.v74.noTroubleDays || 0) + 1;
+        if (s.v74.noTroubleDays <= 3) return '';
+        if (Math.random() >= 0.45) return '';
+        if ((s.heat || 0) <= 0) return '';
+        var drop = rand(2, 6);
+        s.heat = clampV74((s.heat || 0) - drop, 0, 100);
+        s.v74.quietHeatDrops = (s.v74.quietHeatDrops || 0) + 1;
+        return 'You keep your head down for a few days. Police attention drifts elsewhere. Heat decreased ' + drop + '%.';
+    }
+    function reputationPoliceChanceV74(context) {
+        if (context === 'travel') return 0;
+        var r = repV74();
+        if (r < 35) return 0;
+        if (r < 60) return 0.015;
+        if (r < 80) return 0.035;
+        return 0.06;
+    }
+    function fightGateV74() {
+        var r = repV74();
+        if (r < 30) return 1.00;
+        if (r < 60) return 0.85;
+        if (r < 80) return 0.68;
+        return 0.52;
+    }
+    function mugGateV74() {
+        var r = repV74();
+        if (r < 30) return 1.00;
+        if (r < 60) return 0.82;
+        if (r < 80) return 0.62;
+        return 0.45;
+    }
+
+    baseState = function () {
+        var state = previousBaseStateV74();
+        state.version = VERSION;
+        state.heat = rand(0, 9);
+        state.reputation = rand(0, 9);
+        state.v74 = { noTroubleDays: 0, lastTroubleDay: 0, travelHeatEvents: 0, quietHeatDrops: 0 };
+        state.notice = 'You start with a small name, low heat and £1,000 cash. Build carefully.';
+        return state;
+    };
+
+    nextDay = function (base, showRumour) {
+        ensureV74();
+        var amended = String(base || '');
+        var quietLine = quietHeatLineV74();
+        if (quietLine) amended = appendSentenceV74(amended, quietLine);
+        if (!showRumour) {
+            var travelLine = travelHeatLineV74();
+            if (travelLine) amended = appendSentenceV74(amended, travelLine);
+        }
+        if (previousNextDayV74) return previousNextDayV74(amended, showRumour);
+    };
+
+    maybeArrest = function (context) {
+        ensureV74();
+        var arrest = previousMaybeArrestV74 ? previousMaybeArrestV74(context) : null;
+        if (!arrest && Math.random() < reputationPoliceChanceV74(context)) {
+            var carried = carriedUnitsV74();
+            if (carried.total < 1) {
+                arrest = { major: false, fine: 0, jail: 0, context: context, cleanStopV73: true, reputationStopV74: true };
+            } else {
+                arrest = { major: false, fine: rand(500, 3000), jail: rand(1, 3), context: context, reputationStopV74: true };
+            }
+        }
+        if (arrest) markTroubleV74('police');
+        return arrest;
+    };
+
+    showArrestModal = function (arrest, baseTitle, body, rumourBlock) {
+        markTroubleV74('police');
+        if (arrest && arrest.reputationStopV74 && !arrest.cleanStopV73) {
+            body = String(body || '') + '<h4>Recognised</h4><p>' + escV74(pick([
+                'Police recognise you before you recognise them. One of them asks how business is going, then lets the silence hang a bit too long.',
+                'The officer clearly knows the score. He does not say the word bribe, but he leaves a very obvious gap in the conversation.',
+                'They know your name, which is flattering until one of them starts discussing processing times and cash inconvenience.'
+            ])) + '</p>';
+        }
+        if (previousShowArrestModalV74) return previousShowArrestModalV74(arrest, baseTitle, body, rumourBlock);
+    };
+
+    maybeFight = function () {
+        if (!previousMaybeFightV74) return;
+        if (Math.random() > fightGateV74()) return;
+        var before = s && s.currentFight;
+        var result = previousMaybeFightV74();
+        if (!before && s && s.currentFight) markTroubleV74('fight');
+        return result;
+    };
+
+    if (previousMaybeCashMuggingV74) {
+        maybeCashMugging = function () {
+            if (Math.random() > mugGateV74()) return '';
+            var before = s && s.stats ? (s.stats.mugged || 0) : 0;
+            var text = previousMaybeCashMuggingV74();
+            var after = s && s.stats ? (s.stats.mugged || 0) : before;
+            if (after > before || text) markTroubleV74('mugging');
+            return text;
+        };
+    }
+
+    if (previousRandomEventV74) {
+        randomEvent = function (base) {
+            ensureV74();
+            var before = s && s.stats ? (s.stats.mugged || 0) : 0;
+            var result = previousRandomEventV74(base);
+            var after = s && s.stats ? (s.stats.mugged || 0) : before;
+            if (after > before) markTroubleV74('mugging');
+            s.heat = clampV74(s.heat, 0, 100);
+            s.reputation = clampV74(s.reputation, 0, 100);
+            return result;
+        };
+    }
+
+    hustle = function () {
+        if (previousHustleV74) previousHustleV74();
+        setTimeout(function () {
+            var body = document.querySelector('#modalBody .modal-scroll');
+            if (!body || body.getAttribute('data-v74-businesses')) return;
+            var text = body.textContent || '';
+            if (text.indexOf('Deliverude') !== -1 && text.indexOf('Uber Yeats') !== -1 && text.indexOf('Karen') !== -1 && text.indexOf('Sharon') !== -1) {
+                body.setAttribute('data-v74-businesses', 'present');
+                return;
+            }
+            var block = document.createElement('div');
+            block.className = 'coming-soon';
+            block.setAttribute('data-v74-businesses', 'added');
+            block.innerHTML = '<strong>COMING SOON</strong><div class="hustle-grid"><div class="hustle-card"><h4>Deliverude</h4><p>A totally unofficial courier outfit for moving bags across town when you\'re too busy, too wanted, or too lazy to do it yourself.</p><p class="subtle">Fast delivery, zero paperwork, and a complaints department that is just a woman called Sharon ignoring your calls.</p></div><div class="hustle-card"><h4>Uber Yeats</h4><p>Nobody is bringing noodles and the driver definitely took the long way because he saw a car that looked at him funny.</p><p class="subtle">Cheap, chaotic, and occasionally arrives with fewer items than it left with.</p></div><div class="hustle-card"><h4>Karen &amp; Sharon Broker Bitches</h4><p>Karen and Sharon are identical twins, business partners, and the only loan providers in the city who can make a payment reminder feel like a hostage note.</p><p class="subtle">They dress like they\'re off to complain to a manager, but operate like they buried the last one.</p><p class="subtle">Their lending model is simple: fast cash, aggressive interest, and weekly check-ins that start polite and end with Sharon describing exactly where your kneecaps are.</p><p class="subtle">Karen handles the paperwork, Sharon handles customer retention, and neither of them has smiled since 1998.</p></div></div>';
+            var h = document.createElement('h4');
+            h.textContent = 'Businesses';
+            body.appendChild(h);
+            body.appendChild(block);
+        }, 0);
+    };
+
+    save = function () {
+        ensureV74();
+        localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    };
+
+    load = function () {
+        var x = localStorage.getItem(SAVE_KEY);
+        if (!x) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                x = localStorage.getItem(FALLBACK_KEYS[i]);
+                if (x) break;
+            }
+        }
+        if (x) {
+            s = JSON.parse(x);
+            ensureV74();
+            if (typeof setActiveCityMarket === 'function') setActiveCityMarket();
+            if (typeof updateRankProgress === 'function') updateRankProgress();
+            if (typeof updateBestRankV18 === 'function') updateBestRankV18();
+            save();
+            draw();
+            return false;
+        }
+        newGame(false);
+        ensureV74();
+        save();
+        return true;
+    };
+
+    draw = function () {
+        if (previousDrawV74) previousDrawV74();
+        ensureV74();
+    };
+
+    function initV74() {
+        try { ensureV74(); } catch (e) {}
+        document.title = 'Noir Market V7.5';
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V7.5: updated iOS/PWA icon assets active.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV74, { once: true }); else initV74();
+})();

@@ -1,3 +1,25 @@
+## V7.5 - iOS and PWA Icon Update
+
+- Updated the iOS home screen icon to the supplied fuller NOIR powder artwork.
+- Rebuilt apple touch icons for standard, dark and light variants.
+- Rebuilt PWA 192px and 512px icon assets for consistent installed-app display.
+- Updated version references, save key and service worker cache to V7.5.
+- No gameplay, splash video, music, market, travel, shipping, heat, reputation, police, Hustle or save migration logic changed.
+
+
+## V7.4 - Dynamic Heat, Reputation Balance and Hustle Business Extras
+
+- New games now start with random Heat between 0% and 9%.
+- New games now start with random Reputation between 0% and 9%.
+- Existing saves are migrated without resetting Heat or Reputation.
+- Added occasional Heat movement during travel between cities, including suspicious attention increases and city-leaving cooldowns.
+- Added quiet-period Heat reduction after more than three days without police checks, fights, muggings or attacks.
+- Reputation now reduces fight and mugging exposure as the player becomes better known.
+- Higher Reputation can create extra police attention and recognition-based stops.
+- Added high-reputation police wording suggesting officers know the score and may be fishing for a bribe.
+- Confirmed Hustle coming-soon business cards for Deliverude, Uber Yeats, and Karen & Sharon Broker Bitches.
+- Updated version references, save key and service worker cache to V7.4.
+
 NOIR MARKET V7.2
 
 Release type:
