@@ -8346,11 +8346,11 @@ catch (e) { } }, 980);
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV73, { once: true }); else initV73();
 })();
 
-/* Noir Market V7.5: updated iOS/PWA icon assets. */
+/* Noir Market V7.6: full-bleed iOS/PWA icon assets. */
 (function () {
-    var VERSION = '7.5';
-    var SAVE_KEY = 'noir_market_v7_5';
-    var FALLBACK_KEYS = ['noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var VERSION = '7.6';
+    var SAVE_KEY = 'noir_market_v7_6';
+    var FALLBACK_KEYS = ['noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
 
     var previousBaseStateV74 = baseState;
     var previousNextDayV74 = typeof nextDay === 'function' ? nextDay : null;
@@ -8596,9 +8596,180 @@ catch (e) { } }, 980);
 
     function initV74() {
         try { ensureV74(); } catch (e) {}
-        document.title = 'Noir Market V7.5';
+        document.title = 'Noir Market V7.6';
         try { save(); } catch (e) {}
-        console.log('NOIR MARKET V7.5: updated iOS/PWA icon assets active.');
+        console.log('NOIR MARKET V7.6: full-bleed iOS/PWA icon assets active.');
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV74, { once: true }); else initV74();
+})();
+
+
+/* Noir Market V7.7: hidden developer testing support. */
+(function () {
+    var VERSION = '7.7';
+    var SAVE_KEY = 'noir_market_v7_7';
+    var FALLBACK_KEYS = ['noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var BANKROLL = 999999999999;
+    var DISPLAY_THRESHOLD = 999000000000;
+    var CAPACITY = 999999999;
+
+    var previousBaseStateV77 = typeof baseState === 'function' ? baseState : null;
+    var previousLoadV77 = typeof load === 'function' ? load : null;
+    var previousSaveV77 = typeof save === 'function' ? save : null;
+    var previousDrawV77 = typeof draw === 'function' ? draw : null;
+    var previousMoneyV77 = typeof money === 'function' ? money : function (n) { return '£' + Math.round(n || 0).toLocaleString('en-GB'); };
+    var previousTotalSpaceV77 = typeof totalSpace === 'function' ? totalSpace : function () { return 20; };
+    var previousPersonSpaceV77 = typeof personSpace === 'function' ? personSpace : function () { return previousTotalSpaceV77(); };
+    var previousVaultCapacityV77 = typeof vaultCapacity === 'function' ? vaultCapacity : null;
+    var previousModalV77 = typeof modal === 'function' ? modal : null;
+    var previousSetPlayerNameV77 = typeof setPlayerNameV18 === 'function' ? setPlayerNameV18 : null;
+
+    function isDevModeV77() {
+        return !!(s && String(s.playerName || '') === 'GODMODE');
+    }
+    function ensureV77() {
+        if (!s) return;
+        if (typeof ensureStats === 'function') ensureStats();
+        s.version = VERSION;
+        s.v77 = s.v77 || {};
+        var active = isDevModeV77();
+        if (active) {
+            if (!s.v77.devWasActive) {
+                s.v77.normalCash = (typeof s.cash === 'number' && isFinite(s.cash) && s.cash < DISPLAY_THRESHOLD) ? s.cash : 1000;
+                s.v77.normalBank = (typeof s.bank === 'number' && isFinite(s.bank) && s.bank < DISPLAY_THRESHOLD) ? s.bank : 0;
+                s.v77.normalBestNet = s.stats && typeof s.stats.bestNet === 'number' && isFinite(s.stats.bestNet) && s.stats.bestNet < DISPLAY_THRESHOLD ? s.stats.bestNet : null;
+            }
+            s.v77.devWasActive = true;
+            s.cash = BANKROLL;
+            s.bank = BANKROLL;
+        } else if (s.v77.devWasActive) {
+            s.cash = (typeof s.v77.normalCash === 'number' && isFinite(s.v77.normalCash)) ? Math.max(0, Math.round(s.v77.normalCash)) : 1000;
+            s.bank = (typeof s.v77.normalBank === 'number' && isFinite(s.v77.normalBank)) ? Math.max(0, Math.round(s.v77.normalBank)) : 0;
+            if (s.stats && typeof s.v77.normalBestNet === 'number' && isFinite(s.v77.normalBestNet)) s.stats.bestNet = s.v77.normalBestNet;
+            s.v77.devWasActive = false;
+        }
+    }
+    function applyDevDisplayV77() {
+        if (!isDevModeV77()) return;
+        try {
+            var cash = document.getElementById('cash');
+            var bank = document.getElementById('bank');
+            var debt = document.getElementById('debt');
+            var space = document.getElementById('space');
+            var spaceLabel = document.getElementById('spaceLabel');
+            if (cash) cash.textContent = '£∞';
+            if (bank) bank.textContent = '£∞';
+            if (debt && Number(s.debt || 0) <= 0) debt.textContent = '£0';
+            if (spaceLabel) spaceLabel.innerHTML = '∞/∞ <span class="storage-type">' + (typeof storageType === 'function' ? storageType() : 'Storage') + '</span>';
+            if (space) space.textContent = '∞/∞ · ' + (typeof storageType === 'function' ? storageType() : 'Storage');
+            var modalBody = document.getElementById('modalBody');
+            if (modalBody) {
+                var html = modalBody.innerHTML;
+                html = html.replace(/£999,999,999,999/g, '£∞');
+                html = html.replace(/999999999999/g, '∞');
+                html = html.replace(/([>\s])\d+\/999999999/g, '$1∞/∞');
+                html = html.replace(/Storage \d+\/∞/g, 'Storage ∞/∞');
+                html = html.replace(/Capacity \d+\/∞/g, 'Capacity ∞/∞');
+                html = html.replace(/vault space<\/span><strong>\d+<\/strong>/gi, 'vault space</span><strong>∞</strong>');
+                modalBody.innerHTML = html;
+            }
+        } catch (e) {}
+    }
+
+    money = function (n) {
+        if (isDevModeV77() && Number(n) >= DISPLAY_THRESHOLD) return '£∞';
+        return previousMoneyV77(n);
+    };
+    totalSpace = function () {
+        ensureV77();
+        return isDevModeV77() ? CAPACITY : previousTotalSpaceV77();
+    };
+    personSpace = function () {
+        ensureV77();
+        return isDevModeV77() ? CAPACITY : previousPersonSpaceV77();
+    };
+    if (previousVaultCapacityV77) {
+        vaultCapacity = function (cityName) {
+            ensureV77();
+            return isDevModeV77() ? CAPACITY : previousVaultCapacityV77(cityName);
+        };
+    }
+    if (previousModalV77) {
+        modal = function (title, body) {
+            ensureV77();
+            var result = previousModalV77(title, body);
+            setTimeout(applyDevDisplayV77, 0);
+            setTimeout(applyDevDisplayV77, 80);
+            return result;
+        };
+    }
+    if (previousSetPlayerNameV77) {
+        setPlayerNameV18 = function () {
+            var result = previousSetPlayerNameV77();
+            ensureV77();
+            save();
+            draw();
+            return result;
+        };
+    }
+
+    baseState = function () {
+        var state = previousBaseStateV77 ? previousBaseStateV77() : {};
+        state.version = VERSION;
+        state.v77 = state.v77 || { devWasActive: false };
+        return state;
+    };
+
+    save = function () {
+        ensureV77();
+        localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    };
+
+    load = function () {
+        var x = localStorage.getItem(SAVE_KEY);
+        if (!x) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                x = localStorage.getItem(FALLBACK_KEYS[i]);
+                if (x) break;
+            }
+        }
+        if (x) {
+            s = JSON.parse(x);
+            ensureV77();
+            if (typeof setActiveCityMarket === 'function') setActiveCityMarket();
+            if (typeof updateRankProgress === 'function') updateRankProgress();
+            if (typeof updateBestRankV18 === 'function') updateBestRankV18();
+            save();
+            draw();
+            return false;
+        }
+        if (previousLoadV77) return previousLoadV77();
+        if (typeof newGame === 'function') newGame(false);
+        ensureV77();
+        save();
+        draw();
+        return true;
+    };
+
+    draw = function () {
+        ensureV77();
+        var beforeCash = s && s.cash;
+        var beforeBank = s && s.bank;
+        if (previousDrawV77) previousDrawV77();
+        ensureV77();
+        if (isDevModeV77()) {
+            s.cash = BANKROLL;
+            s.bank = BANKROLL;
+        }
+        applyDevDisplayV77();
+    };
+
+    function initV77() {
+        try { ensureV77(); } catch (e) {}
+        document.title = 'Noir Market V7.7';
+        try { applyDevDisplayV77(); } catch (e) {}
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V7.7: developer testing support active.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV77, { once: true }); else initV77();
 })();

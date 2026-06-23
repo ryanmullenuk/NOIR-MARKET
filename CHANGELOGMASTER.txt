@@ -1,3 +1,17 @@
+## V7.7 - Hidden Developer Testing Support
+- Added hidden developer testing support for controlled private QA.
+- Added infinite-style cash and storage handling for the private test flow without storing JavaScript Infinity values.
+- Preserved normal gameplay behaviour when testing support is inactive.
+- Updated version references, save key and service worker cache to V7.7.
+
+## V7.6 - Full-Bleed iOS and PWA Icon Fix
+
+- Rebuilt the iOS and PWA icon assets so the NOIR powder artwork fills the full icon tile.
+- Removed the inset white-border effect by using a full-bleed black icon background.
+- Updated apple-touch-icon and 192/512 PWA icon assets.
+- Updated version references, save key and service worker cache to V7.6.
+- No gameplay systems changed.
+
 ## V7.5 - iOS and PWA Icon Update
 
 - Updated the iOS home screen icon to the supplied fuller NOIR powder artwork.
