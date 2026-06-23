@@ -1304,3 +1304,107 @@ body.preintro-running .splash-vignette{
 body.preintro-running #splashPowderVideo{opacity:0!important;}
 body:not(.preintro-running) #splashPowderVideo{opacity:.82!important;transition:opacity .45s ease!important;}
 #splash.hide #splashPowderVideo{opacity:0!important;}
+
+
+/* Noir Market V7.2: mobile full-screen splash video and safe bottom instructions. */
+#splash.splash{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  min-height:100vh!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  background:#000!important;
+  padding:calc(22px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom))!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+@supports (height:100dvh){
+  #splash.splash{height:100dvh!important;min-height:100dvh!important;}
+}
+#splashPowderVideo.splash-powder-video{
+  position:absolute!important;
+  top:50%!important;
+  left:50%!important;
+  width:100vw!important;
+  height:100vh!important;
+  min-width:100vw!important;
+  min-height:100vh!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  transform:translate3d(-50%,-50%,0)!important;
+  pointer-events:none!important;
+  z-index:1!important;
+  background:#000 url("assets/video/powder-splash-poster.jpg") center center / cover no-repeat!important;
+}
+@supports (height:100dvh){
+  #splashPowderVideo.splash-powder-video{height:100dvh!important;min-height:100dvh!important;}
+}
+#splash .splash-logo,
+#splash .splash-tagline,
+#splash #splashPrompt,
+#splash .splash-loader{
+  position:relative!important;
+  z-index:6!important;
+}
+#splash .splash-instructions{
+  position:absolute!important;
+  z-index:7!important;
+  left:50%!important;
+  right:auto!important;
+  bottom:calc(18px + env(safe-area-inset-bottom))!important;
+  transform:translateX(-50%)!important;
+  width:calc(100vw - 32px)!important;
+  max-width:360px!important;
+  margin:0!important;
+  padding:0 8px!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+  pointer-events:none!important;
+}
+#splash .splash-instructions strong{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+  letter-spacing:2.2px!important;
+}
+#splash .splash-instructions span{
+  display:block!important;
+  width:100%!important;
+  max-width:330px!important;
+  text-align:center!important;
+  font-size:10px!important;
+  line-height:1.25!important;
+  letter-spacing:.35px!important;
+}
+body.splash-ui-revealed #splash .splash-instructions,
+body.preintro-running #splash .splash-instructions,
+body:not(.preintro-running):not(.splash-ui-revealed) #splash .splash-instructions{
+  transform:translateX(-50%)!important;
+}
+@media(max-height:700px){
+  #splash.splash{padding-top:calc(14px + env(safe-area-inset-top))!important;padding-bottom:calc(92px + env(safe-area-inset-bottom))!important;}
+  #splash .splash-logo{max-height:38vh!important;margin-bottom:8px!important;}
+  #splash .splash-tagline{margin-bottom:8px!important;}
+  #splash .splash-loader{margin-top:8px!important;}
+  #splash .splash-instructions{bottom:calc(12px + env(safe-area-inset-bottom))!important;}
+  #splash .splash-instructions span{font-size:9px!important;line-height:1.18!important;}
+}
+@media(max-height:600px){
+  #splash.splash{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important;}
+  #splash .splash-logo{max-height:32vh!important;}
+  #splash .splash-instructions strong{font-size:9px!important;}
+  #splash .splash-instructions span{font-size:8.5px!important;}
+}

@@ -7996,11 +7996,11 @@ catch (e) { } }, 980);
 })();
 
 
-/* Noir Market V7.1: use supplied optimised powder explosion MP4 as splash background video. */
+/* Noir Market V7.2: mobile full-screen splash video and safe bottom instructions. */
 (function () {
-    var VERSION = '7.1';
-    var SAVE_KEY = 'noir_market_v7_1';
-    var FALLBACK_KEYS = ['noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var VERSION = '7.2';
+    var SAVE_KEY = 'noir_market_v7_2';
+    var FALLBACK_KEYS = ['noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
     var previousBaseStateV70 = baseState;
     var previousShowWelcomeV70 = showWelcome;
     var previousNewGameV70 = newGame;
@@ -8106,8 +8106,8 @@ catch (e) { } }, 980);
     setupSplashLoaderV27 = function () {
         var splash = $('splash'), enter = $('splashEnter'), fill = $('splashLoaderFill'), text = $('splashLoaderText'), prompt = $('splashPrompt');
         if (!splash || !enter || !fill || !text) return;
-        if (splash.dataset.loaderVersion === '7.1') return;
-        splash.dataset.loaderVersion = '7.1';
+        if (splash.dataset.loaderVersion === '7.2') return;
+        splash.dataset.loaderVersion = '7.2';
         var ready = false, entered = false;
         var markReady = function () {
             if (ready) return;
@@ -8151,11 +8151,11 @@ catch (e) { } }, 980);
     };
 
     function initV70() {
-        document.title = 'Noir Market V7.1';
+        document.title = 'Noir Market V7.2';
         try { startSplashVideoV70(); } catch (e) {}
         try { setupSplashLoaderV27(); } catch (e) {}
         try { save(); } catch (e) {}
-        console.log('NOIR MARKET V7.1: supplied optimised powder explosion splash video active; snow disabled on splash.');
+        console.log('NOIR MARKET V7.2: splash video full-screen mobile fit active; bottom instructions locked inside safe area.');
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV70, { once: true }); else initV70();
 })();

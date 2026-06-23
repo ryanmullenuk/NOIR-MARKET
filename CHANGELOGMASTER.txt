@@ -1,3 +1,29 @@
+NOIR MARKET V7.2
+
+Release type:
+- Splash layout stability release.
+
+Changes:
+- Locked the powder splash video to a full-screen mobile portrait layout using cover sizing and centre positioning.
+- Added dynamic viewport-height support where available for modern iPhone Safari while retaining 100vh fallback.
+- Repositioned the splash INSTRUCTIONS block to the bottom centre of the screen inside the iPhone safe area.
+- Added smaller-height fallbacks so the instruction text does not drop below the bottom edge on shorter screens.
+- Preserved the Redhead Games intro, splash video asset, HOW TO PLAY flow and all gameplay systems.
+
+Technical notes:
+- Updated active version references, service worker cache, save key and save migration for V7.2.
+- Service worker cache updated to noir-market-v7.2.
+- Save key updated to noir_market_v7_2.
+- Save migration includes noir_market_v7_1.
+- No gameplay logic changed.
+
+Checks completed:
+- ZIP integrity check passed.
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
+- Asset reference check passed.
+
 NOIR MARKET V7.1
 Release type: Splash video asset update
 
