@@ -8159,3 +8159,189 @@ catch (e) { } }, 980);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV70, { once: true }); else initV70();
 })();
+
+
+/* Noir Market V7.3: clean police stop and friend drop-by day event. */
+(function () {
+    var VERSION = '7.3';
+    var SAVE_KEY = 'noir_market_v7_3';
+    var FALLBACK_KEYS = ['noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var previousBaseStateV73 = baseState;
+    var previousRandomEventV73 = randomEvent;
+    var previousMaybeArrestV73 = typeof maybeArrest === 'function' ? maybeArrest : null;
+    var previousShowArrestModalV73 = typeof showArrestModal === 'function' ? showArrestModal : null;
+
+    function escV73(v) {
+        return String(v !== null && v !== void 0 ? v : '').replace(/[&<>"']/g, function (m) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]);
+        });
+    }
+    function carriedDrugsV73() {
+        try { return Math.max(0, used()); } catch (e) { return 0; }
+    }
+    function carriedWeaponsV73() {
+        return (s && Array.isArray(s.weapons)) ? s.weapons.length : 0;
+    }
+    function isCleanCarriedV73() {
+        return carriedDrugsV73() < 1 && carriedWeaponsV73() < 1;
+    }
+    function cityNameV73() {
+        return (places[s.city] && places[s.city][0]) || 'this city';
+    }
+    function ensureV73() {
+        if (typeof ensureStats === 'function') ensureStats();
+        if (!s) return;
+        s.version = VERSION;
+        s.v73 = s.v73 || {};
+        s.stats = s.stats || {};
+        if (typeof s.stats.friendDropBys !== 'number') s.stats.friendDropBys = 0;
+        if (typeof s.stats.cleanPoliceStops !== 'number') s.stats.cleanPoliceStops = 0;
+    }
+
+    function currentVaultSpaceV73(city) {
+        try {
+            if (typeof ensureVaults === 'function') ensureVaults();
+            var cap = (typeof vaultCapacity === 'function') ? vaultCapacity(city) : 100;
+            var usedNow = (typeof vaultUsed === 'function') ? vaultUsed(city) : 0;
+            return Math.max(0, cap - usedNow);
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    function addFriendDropByV73() {
+        if (!s || !Array.isArray(drugs) || !drugs.length) return '';
+        if (Math.random() >= 0.09) return '';
+        ensureV73();
+        var drug = pickDrug();
+        var qty = rand(1, 20);
+        var pocketSpace = 0;
+        try { pocketSpace = Math.max(0, totalSpace() - used()); } catch (e) { pocketSpace = 0; }
+        var city = cityNameV73();
+        if (typeof ensureVaults === 'function') ensureVaults();
+        var vault = (s.vaults && s.vaults[city]) ? s.vaults[city] : null;
+        if (!vault) {
+            s.vaults = s.vaults || {};
+            s.vaults[city] = (typeof blankInv === 'function') ? blankInv() : {};
+            vault = s.vaults[city];
+        }
+        var vaultSpace = currentVaultSpaceV73(city);
+        var toPocket = Math.min(qty, pocketSpace);
+        var remaining = qty - toPocket;
+        var toVault = Math.min(remaining, vaultSpace);
+        if (toPocket > 0) s.inv[drug] = (s.inv[drug] || 0) + toPocket;
+        if (toVault > 0) vault[drug] = (vault[drug] || 0) + toVault;
+        s.stats.friendDropBys = (s.stats.friendDropBys || 0) + 1;
+        var intro = pick([
+            "An old mate appears outside your flat holding a carrier bag and looking deeply confused. He says, ‘I think I owe you for something. Might’ve been petrol. Might’ve been that thing in Croydon. No idea. Anyway, take these.’",
+            "A friend turns up breathing heavily and says, ‘You helped me with that thing, didn’t you? Or I helped you? Either way, this feels fair.’",
+            "Some lad you vaguely recognise leans through the doorway and says, ‘I’ve had your name written on this bag for three days. Don’t ask why, because I don’t know.’",
+            "A mate knocks once, looks both ways, and says, ‘I’m settling a debt. Not sure whose. Probably yours. Take it before I remember.’"
+        ]);
+        var result;
+        if (toPocket === qty) {
+            result = "Your mate gives you " + qty + " " + drug + ". Added to your pockets.";
+        } else if (toPocket === 0 && toVault > 0) {
+            result = "Your mate gives you " + qty + " " + drug + ". Your pockets are full, so " + toVault + " went into your " + city + " vault.";
+        } else if (toPocket > 0 && toVault > 0) {
+            result = "Your mate gives you " + qty + " " + drug + ". " + toPocket + " went in your pockets and " + toVault + " went into your " + city + " vault.";
+        } else {
+            result = "Your mate offers you " + qty + " " + drug + ", but your pockets and " + city + " vault are full. He calls you ungrateful and leaves with it.";
+        }
+        return ' ' + intro + ' ' + result;
+    }
+
+    randomEvent = function (base) {
+        previousRandomEventV73(base);
+        try {
+            var extra = addFriendDropByV73();
+            if (extra) s.notice = String(s.notice || '') + extra;
+        } catch (e) {
+            console.warn('V7.3 friend drop-by skipped:', e);
+        }
+    };
+
+    maybeArrest = function (context) {
+        var arrest = previousMaybeArrestV73 ? previousMaybeArrestV73(context) : null;
+        if (arrest && context !== 'travel' && !arrest.airport && isCleanCarriedV73()) {
+            arrest.cleanStopV73 = true;
+            arrest.major = false;
+            arrest.fine = 0;
+            arrest.jail = 0;
+        }
+        return arrest;
+    };
+
+    showArrestModal = function (arrest, baseTitle, body, rumourBlock) {
+        if (arrest && arrest.cleanStopV73) {
+            ensureV73();
+            s.stats.cleanPoliceStops = (s.stats.cleanPoliceStops || 0) + 1;
+            s.stats.arrests = (s.stats.arrests || 0) + 1;
+            s.heat = Math.min(100, (s.heat || 0) + 10);
+            s.notice = 'No contraband found. 0 days in jail. Heat increased by 10%.';
+            if (typeof save === 'function') save();
+            if (typeof draw === 'function') draw();
+            var line = pick([
+                'Police stop you outside a chicken shop and turn your pockets inside out. They clearly think they know what you are up to, but all they find is lint, loose change and old receipts. One of them mutters something about keeping an eye on you before walking off.',
+                'Two officers search you like they are expecting a Netflix documentary to fall out of your jacket. They find nothing. One mutters, “Not today then,” and leaves you standing there looking unemployed.',
+                'Police pull you aside and ask a lot of questions with very little grammar. Your pockets are clean, which annoys them more than it should. They leave you embarrassed and somehow hotter than before.',
+                'A patrol car rolls up and the officers go through your pockets with the confidence of men who have already decided you are guilty. They find nothing but crumbs and attitude, then wander off disappointed.'
+            ]);
+            modal('Police Stop', String(body || '') + '<h4>Police Stop</h4><p>' + escV73(line) + '</p><div class="deal-result-banner failure">NO CONTRABAND FOUND</div><p>No contraband found. 0 days in jail. Heat increased by 10%.</p><button type="button" id="continueCleanStopV73">Continue</button>');
+            var c = $('continueCleanStopV73');
+            if (c) c.onclick = function () {
+                if (typeof closeModalFastV34 === 'function') closeModalFastV34(); else if ($('modal')) $('modal').close();
+                if (typeof handleDueLoans === 'function') handleDueLoans();
+            };
+            return;
+        }
+        if (previousShowArrestModalV73) return previousShowArrestModalV73(arrest, baseTitle, body, rumourBlock);
+    };
+
+    baseState = function () {
+        var state = previousBaseStateV73();
+        state.version = VERSION;
+        state.v73 = {};
+        state.stats = state.stats || {};
+        state.stats.friendDropBys = state.stats.friendDropBys || 0;
+        state.stats.cleanPoliceStops = state.stats.cleanPoliceStops || 0;
+        return state;
+    };
+
+    save = function () {
+        ensureV73();
+        localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    };
+
+    load = function () {
+        var x = localStorage.getItem(SAVE_KEY);
+        if (!x) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                x = localStorage.getItem(FALLBACK_KEYS[i]);
+                if (x) break;
+            }
+        }
+        if (x) {
+            s = JSON.parse(x);
+            ensureV73();
+            if (typeof setActiveCityMarket === 'function') setActiveCityMarket();
+            if (typeof updateRankProgress === 'function') updateRankProgress();
+            if (typeof updateBestRankV18 === 'function') updateBestRankV18();
+            save();
+            draw();
+            return false;
+        }
+        newGame(false);
+        ensureV73();
+        save();
+        return true;
+    };
+
+    function initV73() {
+        try { ensureV73(); } catch (e) {}
+        document.title = 'Noir Market V7.3';
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V7.3: clean police stops and friend drop-by day events active.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV73, { once: true }); else initV73();
+})();

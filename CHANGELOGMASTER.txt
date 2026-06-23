@@ -1117,3 +1117,12 @@ V6.2
 - Reinforced mobile city button text orientation and non-interactive background layers.
 - Updated version, manifest, cache name and save migration to V6.4.
 
+## V7.3 - Clean Police Stops and Friend Drop-By Events
+
+- Added clean-player police stop handling for non-airport police stops where the player carries no drugs and no weapons.
+- Clean stops now feel invasive and unfair, create 0 jail days, issue no contraband seizure, avoid bribe logic, and add +10% heat.
+- Added occasional day-advance friend drop-by event where a confused mate gives the player 1-20 units of a random drug.
+- Friend drop-by stock is added to carried inventory first, then split into the current city vault if pockets are full or partly full.
+- Preserved city-specific vault behaviour and normal storage capacity rules.
+- No unrelated gameplay, splash, video, music, travel, shipping, market, rank or save migration changes made.
+
