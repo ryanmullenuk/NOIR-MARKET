@@ -1,6 +1,6 @@
-const CACHE_NAME='noir-market-v6.8';
+const CACHE_NAME='noir-market-v7.1';
 const CORE_ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./assets/logo-splash.png','./assets/logo.png','./assets/redhead-games-logo.png'];
-const OPTIONAL_ASSETS=['./assets/uk-start-map.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./apple-touch-icon-dark.png','./apple-touch-icon-light.png','./icon-192-light.png','./icon-512-light.png'];
+const OPTIONAL_ASSETS=['./assets/video/powder-splash-poster.jpg','./assets/uk-start-map.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./apple-touch-icon-dark.png','./apple-touch-icon-light.png','./icon-192-light.png','./icon-512-light.png'];
 function cacheAsset(cache,asset){return cache.add(asset).catch(function(){return null;});}
 self.addEventListener('install',function(event){
   event.waitUntil(caches.open(CACHE_NAME).then(function(cache){

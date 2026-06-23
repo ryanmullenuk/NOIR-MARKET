@@ -7856,11 +7856,11 @@ catch (e) { } }, 980);
 })();
 
 
-/* Noir Market V6.8: iOS home screen icon refresh only; V6.7 gameplay retained. */
+/* Noir Market V6.9: iOS home screen icon refresh only; V6.8 gameplay retained. */
 (function () {
-    var VERSION = '6.8';
-    var SAVE_KEY = 'noir_market_v6_8';
-    var FALLBACK_KEYS = ['noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var VERSION = '6.9';
+    var SAVE_KEY = 'noir_market_v6_9';
+    var FALLBACK_KEYS = ['noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
     var previousBaseStateV67 = baseState;
     var previousLoadV67 = load;
     var previousSaveV67 = save;
@@ -7919,8 +7919,8 @@ catch (e) { } }, 980);
     setupSplashLoaderV27 = function () {
         var splash = $('splash'), enter = $('splashEnter'), fill = $('splashLoaderFill'), text = $('splashLoaderText'), prompt = $('splashPrompt');
         if (!splash || !enter || !fill || !text) return;
-        if (splash.dataset.loaderVersion === '6.8') return;
-        splash.dataset.loaderVersion = '6.8';
+        if (splash.dataset.loaderVersion === '6.9') return;
+        splash.dataset.loaderVersion = '6.9';
         var ready = false, entered = false;
         var markReady = function () {
             if (ready) return;
@@ -7987,10 +7987,175 @@ catch (e) { } }, 980);
     };
 
     function initV67() {
-        document.title = 'Noir Market V6.8';
+        document.title = 'Noir Market V6.9';
         try { save(); } catch (e) {}
         try { setupSplashLoaderV27(); } catch (e) {}
-        console.log('NOIR MARKET V6.8: iOS home screen icon refresh applied; V6.7 gameplay retained.');
+        console.log('NOIR MARKET V6.9: iOS home screen icon refresh applied; V6.8 gameplay retained.');
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV67, { once: true }); else initV67();
+})();
+
+
+/* Noir Market V7.1: use supplied optimised powder explosion MP4 as splash background video. */
+(function () {
+    var VERSION = '7.1';
+    var SAVE_KEY = 'noir_market_v7_1';
+    var FALLBACK_KEYS = ['noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var previousBaseStateV70 = baseState;
+    var previousShowWelcomeV70 = showWelcome;
+    var previousNewGameV70 = newGame;
+
+    baseState = function () {
+        var state = previousBaseStateV70();
+        state.version = VERSION;
+        return state;
+    };
+
+    save = function () {
+        ensureStats();
+        s.version = VERSION;
+        localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    };
+
+    load = function () {
+        var x = localStorage.getItem(SAVE_KEY);
+        if (!x) {
+            for (var i = 0; i < FALLBACK_KEYS.length; i++) {
+                x = localStorage.getItem(FALLBACK_KEYS[i]);
+                if (x) break;
+            }
+        }
+        if (x) {
+            s = JSON.parse(x);
+            ensureStats();
+            s.version = VERSION;
+            if (typeof setActiveCityMarket === 'function') setActiveCityMarket();
+            if (typeof updateRankProgress === 'function') updateRankProgress();
+            if (typeof updateBestRankV18 === 'function') updateBestRankV18();
+            save();
+            draw();
+            return false;
+        }
+        newGame(false);
+        return true;
+    };
+
+    function stopLegacySplashSnowV70() {
+        try { if (window.__NOIR_V33_STOP_SNOW) window.__NOIR_V33_STOP_SNOW(); } catch (e) {}
+        try { window.__NOIR_V33_SNOW_RUNNING = false; } catch (e) {}
+        var canvas = document.getElementById('splashSnowCanvas');
+        if (canvas) {
+            try {
+                var ctx = canvas.getContext('2d');
+                if (ctx) ctx.clearRect(0, 0, canvas.width || window.innerWidth, canvas.height || window.innerHeight);
+            } catch (e) {}
+            canvas.classList.remove('visible');
+            canvas.style.display = 'none';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.opacity = '0';
+        }
+    }
+
+    function startSplashVideoV70() {
+        stopLegacySplashSnowV70();
+        var video = document.getElementById('splashPowderVideo');
+        if (!video) return;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.style.pointerEvents = 'none';
+        var playAttempt = video.play();
+        if (playAttempt && typeof playAttempt.catch === 'function') {
+            playAttempt.catch(function () {
+                // Poster fallback remains visible if mobile Safari delays autoplay.
+            });
+        }
+    }
+
+    function stopSplashVideoV70() {
+        var video = document.getElementById('splashPowderVideo');
+        if (!video) return;
+        try { video.pause(); } catch (e) {}
+        try { video.removeAttribute('src'); } catch (e) {}
+        var sources = video.querySelectorAll ? video.querySelectorAll('source') : [];
+        for (var i = 0; i < sources.length; i++) {
+            try { sources[i].removeAttribute('src'); } catch (e) {}
+        }
+        try { video.load(); } catch (e) {}
+    }
+
+    function openHowToPlayBeforePaintV70() {
+        try { previousShowWelcomeV70(); }
+        catch (e) { try { showWelcome(); } catch (ignored) {} }
+    }
+
+    startInstantTopSnow = function () { stopLegacySplashSnowV70(); startSplashVideoV70(); };
+    createSplashDust = function () { startSplashVideoV70(); };
+
+    newGame = function (showHowTo) {
+        previousNewGameV70(false);
+        if (showHowTo) {
+            try { if (typeof selectedStartingCityIndex !== 'undefined') selectedStartingCityIndex = null; } catch (e) {}
+            openHowToPlayBeforePaintV70();
+        }
+    };
+
+    setupSplashLoaderV27 = function () {
+        var splash = $('splash'), enter = $('splashEnter'), fill = $('splashLoaderFill'), text = $('splashLoaderText'), prompt = $('splashPrompt');
+        if (!splash || !enter || !fill || !text) return;
+        if (splash.dataset.loaderVersion === '7.1') return;
+        splash.dataset.loaderVersion = '7.1';
+        var ready = false, entered = false;
+        var markReady = function () {
+            if (ready) return;
+            ready = true;
+            fill.style.width = '100%';
+            enter.disabled = false;
+            enter.classList.add('ready');
+            text.textContent = 'ENTER';
+            enter.setAttribute('aria-label', 'Enter Noir Market');
+            if (prompt) prompt.textContent = '';
+        };
+        var enterGame = function () {
+            if (!ready || entered) return;
+            entered = true;
+            unlockAudio();
+            try { startBackgroundMusic(); musicStarted = true; } catch (e) {}
+            sound('positive');
+            openHowToPlayBeforePaintV70();
+            requestAnimationFrame(function () {
+                splash.classList.add('hide');
+                setTimeout(function () {
+                    stopSplashVideoV70();
+                    stopLegacySplashSnowV70();
+                    try { if (typeof scheduleInformants === 'function') scheduleInformants(); } catch (e) {}
+                }, 460);
+            });
+        };
+        enter.disabled = true;
+        enter.classList.remove('ready');
+        enter.onclick = enterGame;
+        splash.onclick = function (e) {
+            if (e.target && e.target.closest && e.target.closest('#splashEnter')) return;
+            enterGame();
+        };
+        fill.style.transition = 'width .2s cubic-bezier(.18,.84,.25,1)';
+        fill.style.width = '0%';
+        text.textContent = 'LOADING';
+        if (prompt) prompt.textContent = '';
+        startSplashVideoV70();
+        requestAnimationFrame(function () { fill.style.width = '70%'; requestAnimationFrame(function () { return setTimeout(markReady, 115); }); });
+    };
+
+    function initV70() {
+        document.title = 'Noir Market V7.1';
+        try { startSplashVideoV70(); } catch (e) {}
+        try { setupSplashLoaderV27(); } catch (e) {}
+        try { save(); } catch (e) {}
+        console.log('NOIR MARKET V7.1: supplied optimised powder explosion splash video active; snow disabled on splash.');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV70, { once: true }); else initV70();
 })();

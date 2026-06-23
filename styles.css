@@ -1277,3 +1277,30 @@ body.preintro-running .splash-vignette{
 .coming-soon{margin-top:10px;border:1px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.035);border-radius:14px;padding:14px;text-align:center;}
 .coming-soon strong{display:block;letter-spacing:1.8px;color:#f4c25b;font-size:14px;margin-bottom:6px;}
 .coming-soon p{margin:0;}
+
+
+/* Noir Market V7.0: splash powder video replaces splash snow particles. */
+#splash.splash{background:#000!important;overflow:hidden!important;}
+#splashPowderVideo.splash-powder-video{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  z-index:1!important;
+  opacity:.82!important;
+  pointer-events:none!important;
+  background:#000 url("assets/video/powder-splash-poster.jpg") center center / cover no-repeat!important;
+  transform:translateZ(0)!important;
+}
+#splashSnowCanvas{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+#splash .dust-bg{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+#splash .splash-vignette{z-index:2!important;pointer-events:none!important;background:radial-gradient(circle at center,rgba(0,0,0,.02) 0 36%,rgba(0,0,0,.36) 68%,rgba(0,0,0,.86) 100%)!important;}
+#splash .splash-logo,
+#splash .splash-tagline,
+#splash #splashPrompt,
+#splash .splash-loader,
+#splash .splash-instructions{position:relative!important;z-index:6!important;}
+body.preintro-running #splashPowderVideo{opacity:0!important;}
+body:not(.preintro-running) #splashPowderVideo{opacity:.82!important;transition:opacity .45s ease!important;}
+#splash.hide #splashPowderVideo{opacity:0!important;}

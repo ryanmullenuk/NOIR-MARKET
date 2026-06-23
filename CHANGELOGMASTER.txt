@@ -1,3 +1,44 @@
+NOIR MARKET V7.1
+Release type: Splash video asset update
+
+Changes:
+- Replaced the generated placeholder splash powder video with the supplied/licensed powder explosion MP4.
+- Optimised the supplied 1080x1920 source video into a local 720x1280 H.264 MP4 splash loop.
+- Updated the splash poster fallback from the supplied video.
+- Preserved the non-blocking splash video layer with pointer-events disabled.
+- Preserved Redhead Games intro isolation and instant-load behaviour.
+- Kept splash snow disabled only on the splash screen.
+- Preserved main game particle/network background and all gameplay systems.
+- Updated active version references, service worker cache, save key and save migration for V7.1.
+
+Checks:
+- ZIP integrity check passed.
+- game.js syntax check passed.
+- sw.js syntax check passed.
+- manifest.json validation passed.
+- Asset reference check passed with no missing local files.
+- Service worker cache updated to noir-market-v7.1.
+- Save key updated to noir_market_v7_1.
+- Save migration includes noir_market_v7_0.
+- MP4 remains outside service worker install cache.
+
+
+NOIR MARKET V7.0
+- Replaced the splash snow particle effect with a non-blocking splash powder video layer.
+- Added assets/video/powder-splash.mp4 and assets/video/powder-splash-poster.jpg as splash-only decorative assets.
+- Kept the Redhead Games intro isolated and instant-loading above the splash layer.
+- Added video playback hardening for iPhone Safari using muted, playsinline, autoplay, loop and poster fallback.
+- Disabled legacy splash snow/dust rendering while preserving the main game particle/network background.
+- Stopped and unloaded the splash video after ENTER to reduce memory usage.
+- Updated version references, service worker cache name, save key and save migration.
+
+NOIR MARKET V6.9
+- Updated the iOS home screen icon artwork to the supplied lighter NOIR icon, sized correctly for Apple touch icons and PWA manifest icons.
+- Refreshed apple-touch-icon assets and matching 192px / 512px icon assets.
+- No gameplay systems changed.
+- Preserved V6.8 icon structure and all V6.7 gameplay fixes.
+- Updated app title, manifest version, service worker cache name, save key and save migration from V6.8.
+
 NOIR MARKET V6.8
 - Updated the iOS home screen icon artwork to the supplied NOIR icon.
 - Refreshed apple-touch-icon assets and matching manifest icon assets for consistent installed-app presentation.

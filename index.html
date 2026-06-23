@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Noir Market V6.8</title>
+  <title>Noir Market V7.1</title>
   <link rel="preload" as="image" href="assets/redhead-games-logo.png" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/logo-splash.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/video/powder-splash-poster.jpg" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: dark)" href="apple-touch-icon-dark.png" />
@@ -25,6 +26,9 @@
     <img class="preintro-logo" src="assets/redhead-games-logo.png" alt="Redhead Games" width="640" height="640" decoding="sync" fetchpriority="high" />
   </div>
   <div id="splash" class="splash">
+    <video id="splashPowderVideo" class="splash-powder-video" autoplay muted loop playsinline preload="metadata" poster="assets/video/powder-splash-poster.jpg" aria-hidden="true">
+      <source src="assets/video/powder-splash.mp4" type="video/mp4">
+    </video>
     <canvas id="splashSnowCanvas" aria-hidden="true"></canvas>
     <div class="dust-bg" aria-hidden="true"><div id="dust1"></div><div id="dust2"></div><div id="dust3"></div></div>
     <div class="splash-vignette" aria-hidden="true"></div>
