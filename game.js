@@ -7856,11 +7856,11 @@ catch (e) { } }, 980);
 })();
 
 
-/* Noir Market V6.7: splash-to-HOW TO PLAY transition fix and Hustle coming soon restore. */
+/* Noir Market V6.8: iOS home screen icon refresh only; V6.7 gameplay retained. */
 (function () {
-    var VERSION = '6.7';
-    var SAVE_KEY = 'noir_market_v6_7';
-    var FALLBACK_KEYS = ['noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+    var VERSION = '6.8';
+    var SAVE_KEY = 'noir_market_v6_8';
+    var FALLBACK_KEYS = ['noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
     var previousBaseStateV67 = baseState;
     var previousLoadV67 = load;
     var previousSaveV67 = save;
@@ -7919,8 +7919,8 @@ catch (e) { } }, 980);
     setupSplashLoaderV27 = function () {
         var splash = $('splash'), enter = $('splashEnter'), fill = $('splashLoaderFill'), text = $('splashLoaderText'), prompt = $('splashPrompt');
         if (!splash || !enter || !fill || !text) return;
-        if (splash.dataset.loaderVersion === '6.7') return;
-        splash.dataset.loaderVersion = '6.7';
+        if (splash.dataset.loaderVersion === '6.8') return;
+        splash.dataset.loaderVersion = '6.8';
         var ready = false, entered = false;
         var markReady = function () {
             if (ready) return;
@@ -7987,10 +7987,10 @@ catch (e) { } }, 980);
     };
 
     function initV67() {
-        document.title = 'Noir Market V6.7';
+        document.title = 'Noir Market V6.8';
         try { save(); } catch (e) {}
         try { setupSplashLoaderV27(); } catch (e) {}
-        console.log('NOIR MARKET V6.7: splash modal pre-open fix and Hustle COMING SOON section restored.');
+        console.log('NOIR MARKET V6.8: iOS home screen icon refresh applied; V6.7 gameplay retained.');
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV67, { once: true }); else initV67();
 })();

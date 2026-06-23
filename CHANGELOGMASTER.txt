@@ -1,3 +1,9 @@
+NOIR MARKET V6.8
+- Updated the iOS home screen icon artwork to the supplied NOIR icon.
+- Refreshed apple-touch-icon assets and matching manifest icon assets for consistent installed-app presentation.
+- No gameplay systems changed.
+- Preserved V6.7 splash transition, New Game HOW TO PLAY routing, Hustle informant pricing and COMING SOON restore.
+- Updated app title, manifest version, service worker cache name, save key and save migration from V6.7.
 
 NOIR MARKET V6.7
 - Fixed splash ENTER transition so HOW TO PLAY is opened before the splash layer fades out, preventing a brief flash of the main game screen.
