@@ -1,3 +1,17 @@
+## V7.9 - Consolidated Version Metadata and Stability Tidy-Up
+
+- Updated current release metadata to V7.9 across app title, manifest, service worker cache and save key.
+- Added a final stability layer to keep active saves marked as V7.9 and migrate from V7.8.
+- Prevented old live override layers from resetting the document title to older release numbers during startup.
+- Added defensive clamping for Heat, Reputation and core finance values during save/load to reduce invalid-state risk.
+- No gameplay feature changes made.
+
+## V7.8 - Hidden Developer Testing Modal Stability Fix
+- Fixed modal close handling while hidden developer testing support is active.
+- Prevented the cash deposit prompt from trapping the player during testing balances.
+- Replaced unsafe modal display rewriting with safe display updates so buttons remain tappable.
+- Updated version references, save key and service worker cache to V7.8.
+
 ## V7.7 - Hidden Developer Testing Support
 - Added hidden developer testing support for controlled private QA.
 - Added infinite-style cash and storage handling for the private test flow without storing JavaScript Infinity values.
