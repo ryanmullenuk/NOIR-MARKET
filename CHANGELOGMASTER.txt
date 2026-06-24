@@ -1,3 +1,12 @@
+## V8.2 - HOW TO PLAY Start Flow Stability Fix
+
+- Fixed a splash layering issue where the HOW TO PLAY city PLAY button could reveal the hidden splash screen underneath the modal.
+- Added a hard splash-exit state after ENTER and after selected-city PLAY so the splash cannot reappear or trap interaction.
+- Added defensive event handling for click/touch on the PLAY button without changing city selector behaviour.
+- Updated release metadata, manifest version, service worker cache and save key to V8.2.
+- Preserved save migration from V8.1 and older builds.
+- No gameplay feature changes made.
+
 ## V8.1 - Clean Build Stability Pass
 
 - Removed unused legacy assets from the packaged build where no active reference remained.

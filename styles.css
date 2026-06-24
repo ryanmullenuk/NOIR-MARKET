@@ -1260,7 +1260,7 @@ body.preintro-running .splash-vignette{
 
 
 
-/* Noir Market V8.1: static powder splash with lightweight dust overlay, video removed. */
+/* Noir Market V8.2: static powder splash with lightweight dust overlay, video removed. */
 #splash.splash{
   position:fixed!important;
   inset:0!important;
@@ -1349,3 +1349,8 @@ body:not(.preintro-running) #splash.splash{opacity:1!important;visibility:visibl
   #splash .splash-instructions span{font-size:8px!important;}
 }
 @media(prefers-reduced-motion:reduce){#splashDustCanvas.splash-dust-canvas{display:none!important;}}
+
+
+/* Noir Market V8.2: hard hide splash after ENTER so HOW TO PLAY PLAY cannot reveal it again. */
+.splash.hide,#splash.hide{opacity:0!important;visibility:hidden!important;display:none!important;pointer-events:none!important;}
+#splash[aria-hidden="true"]{opacity:0!important;visibility:hidden!important;display:none!important;pointer-events:none!important;}
