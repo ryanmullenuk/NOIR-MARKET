@@ -7358,7 +7358,7 @@ catch (e) { } }, 980);
         try {
             if (typeof Audio !== 'undefined') {
                 if (!bgMusicV54) {
-                    bgMusicV54 = new Audio('assets/music/noir_market_music.mp3');
+                    bgMusicV54 = new Audio('');
                     bgMusicV54.preload = 'none';
                     bgMusicV54.loop = true;
                     bgMusicV54.volume = 0;
@@ -9928,4 +9928,100 @@ catch (e) { } }, 980);
   function init(){applyMetadata();bindStartHandler();try{if(typeof s!=='undefined'&&s){s=ensureV85(s);save();}}catch(e){}console.log('NOIR MARKET V8.5: HOW TO PLAY PLAY handoff fix active.');}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();},false);
+})();
+
+
+/* Noir Market V8.6: performance cleanup, no splash animation effect and no music.
+   Keeps the static Redhead logo and static Noir splash image quality unchanged. */
+(function(){
+  var VERSION='8.6';
+  var SAVE_KEY='noir_market_v8_6';
+  var FALLBACK_KEYS=['noir_market_v8_5','noir_market_v8_4','noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  var previousBaseState=typeof baseState==='function'?baseState:null;
+  var previousDraw=typeof draw==='function'?draw:null;
+  var previousLoad=typeof load==='function'?load:null;
+  function $(id){return document.getElementById(id);} 
+  function clampNumber(value,min,max,fallback){value=Number(value);if(!isFinite(value))value=fallback;return Math.max(min,Math.min(max,value));}
+  function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function applyMetadata(){try{document.title='Noir Market V8.6';}catch(e){}try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}}
+  function ensureV86(state){
+    if(!state||typeof state!=='object')return state;
+    state.version=VERSION;
+    state.heat=clampNumber(state.heat,0,100,0);
+    state.reputation=clampNumber(state.reputation,0,100,0);
+    state.cash=clampNumber(state.cash,0,999999999,0);
+    state.bank=clampNumber(state.bank,0,999999999,0);
+    state.debt=clampNumber(state.debt,0,999999999,0);
+    if(!state.settings)state.settings={};
+    state.settings.music='off';
+    if(!state.meta)state.meta={};
+    state.meta.currentRelease=VERSION;
+    state.meta.musicRemoved=true;
+    state.meta.splashEffectRemoved=true;
+    return state;
+  }
+  function stopAndRemoveSplashEffects(){
+    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
+    try{window.__NOIR_V33_SNOW_RUNNING=false;}catch(e){}
+    try{var ids=['splashDustCanvas','splashSnowCanvas'];for(var i=0;i<ids.length;i++){var el=$(ids[i]);if(el){el.style.display='none';el.style.opacity='0';el.style.pointerEvents='none';try{el.remove();}catch(_e){}}}}catch(e){}
+    try{var nodes=document.querySelectorAll('.live-dust,.game-dust,#particle-canvas');for(var j=0;j<nodes.length;j++){nodes[j].style.display='none';nodes[j].style.opacity='0';nodes[j].style.pointerEvents='none';try{nodes[j].remove();}catch(_e){}}}catch(e){}
+  }
+  function disableEffectFactories(){
+    var noop=function(){stopAndRemoveSplashEffects();return null;};
+    try{startInstantTopSnow=noop;}catch(e){}
+    try{createSplashDust=noop;}catch(e){}
+    try{createGameDust=noop;}catch(e){}
+    try{startSplashSnowEffect=noop;}catch(e){}
+    try{recreateDustSlowerSmaller=noop;}catch(e){}
+    try{ensureGameDustV21=noop;}catch(e){}
+    try{window.startInstantTopSnow=noop;window.createSplashDust=noop;window.createGameDust=noop;window.startSplashSnowEffect=noop;}catch(e){}
+  }
+  function stopMusicCompletely(){
+    try{musicEnabled=false;}catch(e){}
+    try{musicStarted=false;}catch(e){}
+    try{synthMusicOn=false;}catch(e){}
+    try{if(synthMusicTimer){clearInterval(synthMusicTimer);synthMusicTimer=null;}}catch(e){}
+    try{if(bgMusic){bgMusic.pause();bgMusic.removeAttribute&&bgMusic.removeAttribute('src');bgMusic.src='';bgMusic.load&&bgMusic.load();bgMusic=null;}}catch(e){}
+    try{if(bgMusicV54){bgMusicV54.pause();bgMusicV54.removeAttribute&&bgMusicV54.removeAttribute('src');bgMusicV54.src='';bgMusicV54.load&&bgMusicV54.load();bgMusicV54=null;}}catch(e){}
+    try{MUSIC_PATH='';}catch(e){}
+    try{localStorage.setItem('noir_market_music','off');}catch(e){}
+  }
+  stopBackgroundMusic=function(){stopMusicCompletely();};
+  startBackgroundMusic=function(){stopMusicCompletely();return false;};
+  try{stopSynthMusic=function(){try{if(synthMusicTimer){clearInterval(synthMusicTimer);synthMusicTimer=null;}}catch(e){}try{synthMusicOn=false;}catch(e){}};}catch(e){}
+  if(previousBaseState){baseState=function(){return ensureV86(previousBaseState());};}
+  save=function(){try{s=ensureV86(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){}};
+  load=function(){
+    var raw=null;
+    try{raw=localStorage.getItem(SAVE_KEY);}catch(e){raw=null;}
+    if(!raw){for(var i=0;i<FALLBACK_KEYS.length;i++){try{raw=localStorage.getItem(FALLBACK_KEYS[i]);}catch(e){raw=null;}if(raw)break;}}
+    if(raw){
+      try{s=JSON.parse(raw);}catch(e){s=null;}
+      s=ensureV86(s||(previousBaseState?previousBaseState():{}));
+      try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
+      try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
+      try{if(typeof updateBestRankV18==='function')updateBestRankV18();}catch(e){}
+      stopMusicCompletely();stopAndRemoveSplashEffects();save();try{draw();}catch(e){}return false;
+    }
+    if(previousLoad){try{previousLoad();}catch(e){try{if(typeof newGame==='function')newGame(false);}catch(_e){}}}else{try{if(typeof newGame==='function')newGame(false);else if(previousBaseState)s=previousBaseState();}catch(e){}}
+    s=ensureV86(s);stopMusicCompletely();stopAndRemoveSplashEffects();save();try{draw();}catch(e){}return true;
+  };
+  if(previousDraw){draw=function(){s=ensureV86(s);stopMusicCompletely();stopAndRemoveSplashEffects();var r=previousDraw.apply(this,arguments);s=ensureV86(s);applyMetadata();return r;};}
+  function showMenuV86(){
+    s=ensureV86(s);
+    var nameVal=escapeHtml((s&&s.playerName)||'').slice(0,24);
+    modal('Menu','<div class="menu-player"><label for="playerNameInput">Player name</label><input id="playerNameInput" maxlength="24" placeholder="Add your name" value="'+nameVal+'"><button type="button" id="savePlayerNameBtn">SAVE NAME</button></div><div class="menu-settings"><button type="button" id="soundToggleBtn">SOUNDS: '+(soundEnabled?'ON':'OFF')+'</button></div><div class="menu-list"><button type="button" id="instructionsBtn">Instructions</button><button type="button" id="statsBtn">Stats</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>');
+    setTimeout(function(){
+      var instructions=$('instructionsBtn'),stats=$('statsBtn'),snd=$('soundToggleBtn'),saveName=$('savePlayerNameBtn'),newGameBtn=$('menuNewGameBtn');
+      if(instructions)instructions.onclick=function(){if(typeof showInstructionsV49==='function')return showInstructionsV49(false);if(typeof showInstructions==='function')return showInstructions();};
+      if(saveName)saveName.onclick=(typeof setPlayerNameV18==='function')?setPlayerNameV18:function(){s.playerName=String(($('playerNameInput')&&$('playerNameInput').value)||'').trim().slice(0,24);save();draw();showMenuV86();};
+      if(stats&&typeof showStats==='function')stats.onclick=showStats;
+      if(snd)snd.onclick=function(){soundEnabled=!soundEnabled;localStorage.setItem('noir_market_sound',soundEnabled?'on':'off');if(soundEnabled&&typeof sound==='function')sound('positive');save();showMenuV86();};
+      if(newGameBtn&&typeof confirmNewGame==='function')newGameBtn.onclick=confirmNewGame;
+    },0);
+  }
+  showMenu=showMenuV86;
+  function init(){applyMetadata();disableEffectFactories();stopMusicCompletely();stopAndRemoveSplashEffects();try{if(typeof s!=='undefined'&&s){s=ensureV86(s);save();}}catch(e){}console.log('NOIR MARKET V8.6: music and splash effect removed; static splash retained.');}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('pageshow',function(){applyMetadata();disableEffectFactories();stopMusicCompletely();stopAndRemoveSplashEffects();},false);
 })();
