@@ -1240,3 +1240,14 @@ V6.2
 - Removed the splash dust animation effect and retained the static splash artwork at full quality.
 - Added final safeguards so old dust/snow factories and music start functions cannot restart during gameplay.
 - Updated version metadata, service worker cache, save key and save migration to V8.6.
+
+
+V8.7 - Fight and Police Bribe Logic Fix
+- Removed active fight modal escape route so fight encounters require RUN or FIGHT.
+- Restricted police bribe options to police encounters that explicitly create a bribe opportunity.
+- Clean police stops no longer offer bribes.
+- Successful bribes deduct the bribe amount and preserve carried drugs/weapons.
+- Failed bribes now apply the original jail sentence instead of a generic one-day sentence.
+- Failed bribes remove carried pocket drugs and weapons only, leaving vault and city storage untouched.
+- Reputation now has a clearer effect on bribe success while never making bribes guaranteed.
+- Updated release metadata, service worker cache and save migration to V8.7.

@@ -10025,3 +10025,200 @@ catch (e) { } }, 980);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();disableEffectFactories();stopMusicCompletely();stopAndRemoveSplashEffects();},false);
 })();
+
+/* Noir Market V8.7: forced fight decisions and corrected police bribe logic. */
+(function(){
+  var VERSION='8.7';
+  var SAVE_KEY='noir_market_v8_7';
+  var FALLBACK_KEYS=['noir_market_v8_6','noir_market_v8_5','noir_market_v8_4','noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  var previousBaseState=typeof baseState==='function'?baseState:null;
+  var previousDraw=typeof draw==='function'?draw:null;
+  var previousSave=typeof save==='function'?save:null;
+  var previousLoad=typeof load==='function'?load:null;
+  var previousApplyArrestPenalty=typeof applyArrestPenalty==='function'?applyArrestPenalty:null;
+  var previousModal=typeof modal==='function'?modal:null;
+  var originalShowFightChoice=typeof showFightChoice==='function'?showFightChoice:null;
+  function $(id){return document.getElementById(id);}
+  function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function clamp(n,min,max){n=Number(n);if(!isFinite(n))n=0;return Math.max(min,Math.min(max,n));}
+  function repValue(){return clamp(s&&s.reputation,0,100);}
+  function isGodMode(){return !!(s&&String(s.playerName||'')==='GODMODE');}
+  function carriedDrugUnitsSafe(){try{return Math.max(0,typeof used==='function'?used():0);}catch(e){return 0;}}
+  function carriedWeaponUnitsSafe(){try{return Math.max(0,(s&&Array.isArray(s.weapons))?s.weapons.length:0);}catch(e){return 0;}}
+  function hasContraband(){return carriedDrugUnitsSafe()+carriedWeaponUnitsSafe()>0;}
+  function applyMetadata(){try{document.title='Noir Market V8.7';}catch(e){}try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}}
+  function ensureV87(state){
+    if(!state||typeof state!=='object')return state;
+    state.version=VERSION;
+    state.heat=clamp(state.heat,0,100);
+    state.reputation=clamp(state.reputation,0,100);
+    if(!state.stats)state.stats={};
+    if(!state.meta)state.meta={};
+    state.meta.currentRelease=VERSION;
+    state.meta.bribeLogicV87=true;
+    return state;
+  }
+  function closeModalForPolice(){
+    var dlg=$('modal');
+    try{if(dlg&&dlg.open)dlg.close();}catch(e){try{if(dlg)dlg.removeAttribute('open');}catch(_e){}}
+    try{document.body.classList.remove('modal-open');document.documentElement.classList.remove('modal-open');}catch(e){}
+  }
+  function continueAfterPolice(){closeModalForPolice();try{if(typeof handleDueLoans==='function')handleDueLoans();}catch(e){}}
+  function showPoliceResult(title,label,ok,html){
+    if(typeof modal!=='function')return;
+    modal(title,'<div class="deal-result-banner '+(ok?'success':'failure')+'">'+esc(label)+'</div>'+html+'<button type="button" id="continuePoliceV87">Continue</button>');
+    var btn=$('continuePoliceV87');
+    if(btn)btn.onclick=continueAfterPolice;
+  }
+  function removeCarriedContraband(){
+    var drugs=carriedDrugUnitsSafe();
+    var weapons=carriedWeaponUnitsSafe();
+    try{Object.keys(s.inv||{}).forEach(function(k){s.inv[k]=0;});}catch(e){}
+    try{s.weapons=[];}catch(e){}
+    return {drugs:drugs,weapons:weapons};
+  }
+  function bribeAmount(arrest){
+    var base=900;
+    if(arrest&&arrest.major)base+=Number(arrest.jail||1)*1250;
+    if(arrest&&arrest.airport)base+=3500;
+    base+=carriedDrugUnitsSafe()*45;
+    base+=carriedWeaponUnitsSafe()*700;
+    base+=Math.round((s&&s.heat||0)*35);
+    return Math.max(500,Math.min(50000,Math.round(base)));
+  }
+  function bribeChance(arrest){
+    var r=repValue();
+    var chance=r<20?0.18:(r<50?0.34:(r<80?0.58:0.74));
+    chance-=clamp((s&&s.heat||0)/1000,0,0.12);
+    if(arrest&&arrest.major)chance-=0.08;
+    if(arrest&&arrest.airport)chance-=0.12;
+    if(carriedWeaponUnitsSafe()>0)chance-=0.05;
+    return clamp(chance,0.08,0.88);
+  }
+  function bribeShouldBeOffered(arrest){
+    if(!arrest||arrest.cleanStopV73)return false;
+    if(!hasContraband())return false;
+    if(arrest.bribeOfferedV87===true)return true;
+    if(arrest.bribeOfferedV87===false)return false;
+    var r=repValue();
+    var chance=0.28+(r/300);
+    if(arrest.reputationStopV74)chance+=0.18;
+    if(arrest.airport)chance-=0.12;
+    if(arrest.major)chance+=0.06;
+    if((s&&s.heat||0)>75)chance+=0.06;
+    arrest.bribeOfferedV87=Math.random()<clamp(chance,0.18,0.72);
+    arrest.originalJailV87=Math.max(0,Math.round(Number(arrest.jail||0)));
+    arrest.originalFineV87=Math.max(0,Math.round(Number(arrest.fine||0)));
+    return arrest.bribeOfferedV87;
+  }
+  function bribeSuccess(arrest,cost){
+    ensureV87(s);
+    if(!isGodMode())s.cash=Math.max(0,Math.round((s.cash||0)-cost));
+    s.stats.bribeAttempts=(s.stats.bribeAttempts||0)+1;
+    s.stats.bribes=(s.stats.bribes||0)+1;
+    s.stats.bribesAccepted=(s.stats.bribesAccepted||0)+1;
+    s.heat=clamp((s.heat||0)-3,0,100);
+    if(typeof rep==='function')rep(1);else s.reputation=clamp((s.reputation||0)+1,0,100);
+    s.notice='Bribe paid. The offence disappears and your pockets stay yours.';
+    try{save();draw();}catch(e){}
+    showPoliceResult('Police Bribe','SUCCESS',true,'<p>The officer pockets the cash without looking at you. The problem disappears.</p><p>You keep your stock and weapons.</p>');
+  }
+  function bribeFail(arrest){
+    ensureV87(s);
+    s.stats.bribeAttempts=(s.stats.bribeAttempts||0)+1;
+    s.stats.bribesRejected=(s.stats.bribesRejected||0)+1;
+    var originalJail=Math.max(0,Math.round(Number(arrest&&arrest.originalJailV87!=null?arrest.originalJailV87:(arrest&&arrest.jail)||0)));
+    var originalFine=Math.max(0,Math.round(Number(arrest&&arrest.originalFineV87!=null?arrest.originalFineV87:(arrest&&arrest.fine)||0)));
+    var seized=removeCarriedContraband();
+    if(originalJail>0){
+      s.day+=originalJail;
+      s.stats.jailDays=(s.stats.jailDays||0)+originalJail;
+    }else if(originalFine>0){
+      var fine=isGodMode()?0:Math.min(s.cash||0,originalFine);
+      s.cash=Math.max(0,(s.cash||0)-fine);
+    }
+    s.heat=clamp((s.heat||0)+10,0,100);
+    if(typeof rep==='function')rep(-3);else s.reputation=clamp((s.reputation||0)-3,0,100);
+    var sentence=originalJail>0?('Jail: '+originalJail+' day'+(originalJail===1?'':'s')+'.'):('Fine: '+(typeof money==='function'?money(originalFine):('£'+originalFine))+'.');
+    s.notice='Bribe failed. Your carried drugs and weapons are seized. '+sentence;
+    try{save();draw();}catch(e){}
+    var lowRep=repValue()<20;
+    showPoliceResult('Police Bribe','FAILURE',false,'<p>'+(lowRep?'The officer looks you up and down and laughs like you have misunderstood your place in the food chain.':'The officer looks at the money, laughs, and calls it attempted bribery.')+'</p><p>Your pockets are emptied and the original sentence stands.</p><p>Seized: '+seized.drugs+' drug unit'+(seized.drugs===1?'':'s')+' and '+seized.weapons+' weapon'+(seized.weapons===1?'':'s')+'. '+esc(sentence)+'</p>');
+  }
+  function takeCharge(arrest){
+    if(previousApplyArrestPenalty)previousApplyArrestPenalty(arrest,false);
+  }
+
+  showArrestModal=function(arrest,baseTitle,body,rumourBlock){
+    ensureV87(s);
+    if(!arrest)return;
+    s.stats.arrests=(s.stats.arrests||0)+1;
+    arrest.originalJailV87=Math.max(0,Math.round(Number(arrest.jail||0)));
+    arrest.originalFineV87=Math.max(0,Math.round(Number(arrest.fine||0)));
+    var bribeOffered=bribeShouldBeOffered(arrest);
+    var severity=arrest.major?'Major offence. You are facing '+arrest.originalJailV87+' day'+(arrest.originalJailV87===1?'':'s')+' in jail.':'Minor offence. Fine expected: '+(typeof money==='function'?money(arrest.originalFineV87):('£'+arrest.originalFineV87))+'.';
+    var contextLine=arrest.airport?'Airport stop':(carriedWeaponUnitsSafe()>0?'Weapon stop':'Police stop');
+    if(!bribeOffered){
+      modal(baseTitle||'Police Stop',String(body||'')+'<h4>'+esc(contextLine)+'</h4><p>'+esc(severity)+'</p><p class="subtle">The officer is not interested in talking. This is not one of those conversations.</p><div class="loan-choice"><button type="button" class="sell" id="takeChargeV87">Take Penalty</button></div>'+(rumourBlock||''));
+      var takeOnly=$('takeChargeV87');
+      if(takeOnly)takeOnly.onclick=function(){takeCharge(arrest);};
+      return;
+    }
+    var cost=bribeAmount(arrest);
+    var canPay=isGodMode()||((s.cash||0)>=cost);
+    var chancePct=Math.round(bribeChance(arrest)*100);
+    modal('THE OFFICER LEAVES A GAP IN THE CONVERSATION',String(body||'')+'<h4>'+esc(contextLine)+'</h4><p>'+esc(severity)+'</p><p>The officer pauses, glances at your cash, and leaves just enough silence for you to understand what he is asking.</p><div class="modal-money"><span>Bribe required</span><strong>'+(typeof money==='function'?money(cost):('£'+cost))+'</strong><em>'+chancePct+'% chance based on reputation, heat and offence</em></div><div class="loan-choice"><button type="button" class="buy" id="payBribeV87" '+(canPay?'':'disabled')+'>PAY BRIBE</button><button type="button" class="sell" id="takeChargeV87">TAKE THE CHARGE</button></div>'+(canPay?'':'<p class="subtle">You do not have enough cash for this conversation.</p>')+(rumourBlock||''));
+    var pay=$('payBribeV87'),take=$('takeChargeV87');
+    if(pay)pay.onclick=function(){if(!canPay){try{errorMsg('INSUFFICIENT CASH');}catch(e){}return;}if(Math.random()<bribeChance(arrest))bribeSuccess(arrest,cost);else bribeFail(arrest);};
+    if(take)take.onclick=function(){takeCharge(arrest);};
+  };
+
+  applyArrestPenalty=function(arrest,failedBribe){
+    if(failedBribe){return bribeFail(arrest||{});} 
+    if(previousApplyArrestPenalty)return previousApplyArrestPenalty(arrest,failedBribe);
+  };
+
+  showFightChoice=function(intro){
+    ensureV87(s);
+    var f=s&&s.currentFight;
+    if(!f){if(originalShowFightChoice)return originalShowFightChoice(intro);return;}
+    var weapon=null;
+    try{weapon=typeof bestWeapon==='function'?bestWeapon():null;}catch(e){weapon=null;}
+    modal('Trouble','<div class="forced-fight-modal">'+(typeof healthBlock==='function'?healthBlock():'')+'<p>'+String(intro||'You are in trouble.')+'</p><p>Threat round '+esc(f.round||1)+' of up to '+esc(f.maxRounds||1)+'. Choose carefully.</p><div class="choice-row"><button type="button" id="runBtnV87">RUN</button><button type="button" class="sell" id="fightBtnV87">FIGHT'+(weapon?'<br><span>'+esc(weapon.name)+'</span>':'')+'</button></div></div>');
+    var dlg=$('modal');
+    if(dlg){try{dlg.setAttribute('data-forced-choice','fight');}catch(e){}}
+    var x=$('modalCloseBtn');
+    if(x){x.style.display='none';x.setAttribute('aria-hidden','true');}
+    var run=$('runBtnV87'),fight=$('fightBtnV87');
+    if(run)run.onclick=function(){var d=$('modal');if(d)try{d.removeAttribute('data-forced-choice');}catch(e){};return resolveFight('run');};
+    if(fight)fight.onclick=function(){var d=$('modal');if(d)try{d.removeAttribute('data-forced-choice');}catch(e){};return resolveFight('fight',weapon&&weapon.name?weapon.name:'');};
+  };
+
+  function forcedChoiceGuard(ev){
+    var dlg=$('modal');
+    if(!dlg||dlg.getAttribute('data-forced-choice')!=='fight')return;
+    var target=ev&&ev.target;
+    if(ev&&ev.type==='cancel'){ev.preventDefault();return false;}
+    if(target&&(target.id==='modalCloseBtn'||(target.classList&&target.classList.contains('modal-x')))){
+      ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();return false;
+    }
+  }
+  try{var dlg=$('modal');if(dlg)dlg.addEventListener('cancel',forcedChoiceGuard,true);}catch(e){}
+  try{document.addEventListener('click',forcedChoiceGuard,true);}catch(e){}
+  try{document.addEventListener('touchend',forcedChoiceGuard,true);}catch(e){}
+
+  if(previousBaseState){baseState=function(){return ensureV87(previousBaseState());};}
+  save=function(){try{s=ensureV87(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){if(previousSave)try{previousSave();}catch(_e){}}};
+  load=function(){
+    var raw=null;
+    try{raw=localStorage.getItem(SAVE_KEY);}catch(e){raw=null;}
+    if(!raw){for(var i=0;i<FALLBACK_KEYS.length;i++){try{raw=localStorage.getItem(FALLBACK_KEYS[i]);}catch(e){raw=null;}if(raw)break;}}
+    if(raw){try{s=JSON.parse(raw);}catch(e){s=null;}s=ensureV87(s||(previousBaseState?previousBaseState():{}));try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}try{if(typeof updateBestRankV18==='function')updateBestRankV18();}catch(e){}save();try{draw();}catch(e){}return false;}
+    if(previousLoad){try{previousLoad();}catch(e){try{if(typeof newGame==='function')newGame(false);}catch(_e){}}}else{try{if(typeof newGame==='function')newGame(false);else if(previousBaseState)s=previousBaseState();}catch(e){}}
+    s=ensureV87(s);save();try{draw();}catch(e){}return true;
+  };
+  if(previousDraw){draw=function(){s=ensureV87(s);var r=previousDraw.apply(this,arguments);s=ensureV87(s);applyMetadata();return r;};}
+  function init(){applyMetadata();try{if(s){s=ensureV87(s);save();}}catch(e){}console.log('NOIR MARKET V8.7: fight and bribe logic corrections active.');}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('pageshow',applyMetadata,false);
+})();

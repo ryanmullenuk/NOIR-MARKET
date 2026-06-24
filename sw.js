@@ -1,4 +1,4 @@
-const CACHE_NAME='noir-market-v8.6';
+const CACHE_NAME='noir-market-v8.7';
 const CORE_ASSETS=['./','./index.html','./styles.css','./game.js','./manifest.json','./assets/redhead-games-logo.png'];
 const OPTIONAL_ASSETS=['./assets/splash-static.jpg','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./apple-touch-icon-dark.png','./apple-touch-icon-light.png','./icon-192-light.png','./icon-512-light.png'];
 function cacheAsset(cache,asset){return cache.add(asset).catch(function(){return null;});}
