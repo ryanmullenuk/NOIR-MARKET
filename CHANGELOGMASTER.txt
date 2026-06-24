@@ -1204,3 +1204,13 @@ V6.2
 - Preserved city-specific vault behaviour and normal storage capacity rules.
 - No unrelated gameplay, splash, video, music, travel, shipping, market, rank or save migration changes made.
 
+
+
+## V8.3 - Splash ENTER Stability Fix
+
+- Fixed ENTER on the splash screen freezing the game after V8.2.
+- Replaced the hard splash hide with a staged fade that opens HOW TO PLAY first, then safely hides the splash layer.
+- Preserved the static powder splash, dust overlay, loading bar and instruction text.
+- Confirmed video files remain removed from the package.
+- Updated version, manifest, service worker cache and save migration to V8.3.
+- No gameplay feature changes made.

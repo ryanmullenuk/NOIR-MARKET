@@ -1354,3 +1354,19 @@ body:not(.preintro-running) #splash.splash{opacity:1!important;visibility:visibl
 /* Noir Market V8.2: hard hide splash after ENTER so HOW TO PLAY PLAY cannot reveal it again. */
 .splash.hide,#splash.hide{opacity:0!important;visibility:hidden!important;display:none!important;pointer-events:none!important;}
 #splash[aria-hidden="true"]{opacity:0!important;visibility:hidden!important;display:none!important;pointer-events:none!important;}
+
+
+/* Noir Market V8.3: staged splash exit fix. Avoid the V8.2 hard-hide freeze on ENTER. */
+#splash.splash.v83-exiting{
+  opacity:0!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+  display:flex!important;
+  transition:opacity .55s ease!important;
+}
+#splash.splash.v83-hidden{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  display:none!important;
+}
