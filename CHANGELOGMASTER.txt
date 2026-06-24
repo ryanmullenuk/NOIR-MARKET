@@ -1214,3 +1214,14 @@ V6.2
 - Confirmed video files remain removed from the package.
 - Updated version, manifest, service worker cache and save migration to V8.3.
 - No gameplay feature changes made.
+
+
+## V8.4 - Splash ENTER Recovery
+
+- Rebuilt the splash ENTER handoff as a clean final recovery layer rather than relying on older layered splash handlers.
+- ENTER now opens HOW TO PLAY, fades/removes the splash layer, and restores main app interactivity through a single controlled path.
+- Added defensive fallback to reopen HOW TO PLAY if an older handler interrupts the first attempt.
+- Kept the static powder splash image, dust overlay, loading bar and instruction text.
+- Confirmed video files remain removed from the package.
+- Updated version, manifest, service worker cache and save migration to V8.4.
+- No gameplay feature changes made.

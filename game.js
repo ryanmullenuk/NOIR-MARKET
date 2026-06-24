@@ -9636,3 +9636,156 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',function(){applyMetadata();},false);
   document.addEventListener('visibilitychange',applyMetadata,false);
 })();
+
+
+/* Noir Market V8.4: clean splash ENTER recovery. This bypasses older layered splash click paths. */
+(function(){
+  var VERSION='8.4';
+  var SAVE_KEY='noir_market_v8_4';
+  var FALLBACK_KEYS=['noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  var previousBaseState=typeof baseState==='function'?baseState:null;
+  var previousDraw=typeof draw==='function'?draw:null;
+  function $(id){return document.getElementById(id);} 
+  function clampNumber(value,min,max,fallback){value=Number(value);if(!isFinite(value))value=fallback;return Math.max(min,Math.min(max,value));}
+  function ensureV84(state){
+    if(!state||typeof state!=='object')return state;
+    state.version=VERSION;
+    state.heat=clampNumber(state.heat,0,100,0);
+    state.reputation=clampNumber(state.reputation,0,100,0);
+    state.cash=clampNumber(state.cash,0,999999999,0);
+    state.bank=clampNumber(state.bank,0,999999999,0);
+    state.debt=clampNumber(state.debt,0,999999999,0);
+    if(!state.meta)state.meta={};
+    state.meta.currentRelease=VERSION;
+    state.meta.splashEnterStable=true;
+    state.meta.splashEnterRecovered=true;
+    return state;
+  }
+  function applyMetadata(){
+    try{document.title='Noir Market V8.4';}catch(e){}
+    try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
+    try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
+  }
+  function stopVisualEffects(){
+    try{if(window.__NOIR_V33_STOP_SNOW)window.__NOIR_V33_STOP_SNOW();}catch(e){}
+    try{window.__NOIR_V33_SNOW_RUNNING=false;}catch(e){}
+    try{var snow=$('splashSnowCanvas'); if(snow){snow.style.display='none';snow.style.opacity='0';snow.style.pointerEvents='none';}}catch(e){}
+    try{var dust=$('splashDustCanvas'); if(dust){dust.style.display='none';dust.style.opacity='0';dust.style.pointerEvents='none';}}catch(e){}
+  }
+  function safeClosePreintro(){
+    try{document.body.classList.remove('preintro-running');}catch(e){}
+    try{var pre=$('preintro'); if(pre){pre.classList.add('preintro-hide'); setTimeout(function(){try{pre.remove();}catch(_e){}},260);}}catch(e){}
+  }
+  function hideSplashFinal(){
+    var splash=$('splash');
+    if(!splash)return;
+    try{splash.classList.remove('hide');}catch(e){}
+    try{splash.classList.remove('v83-exiting');}catch(e){}
+    try{splash.classList.remove('v83-hidden');}catch(e){}
+    try{splash.classList.add('v84-gone');}catch(e){}
+    try{splash.style.display='none';}catch(e){}
+    try{splash.style.opacity='0';}catch(e){}
+    try{splash.style.visibility='hidden';}catch(e){}
+    try{splash.style.pointerEvents='none';}catch(e){}
+    try{splash.setAttribute('aria-hidden','true');}catch(e){}
+    stopVisualEffects();
+  }
+  function makeAppInteractive(){
+    try{document.body.classList.add('v84-game-entered');}catch(e){}
+    try{document.body.classList.remove('splash-ui-revealed');}catch(e){}
+    try{document.body.classList.remove('preintro-running');}catch(e){}
+    try{var app=document.querySelector('.app'); if(app){app.style.visibility='visible';app.style.opacity='1';app.style.pointerEvents='auto';}}catch(e){}
+  }
+  function ensureHowToPlayOpen(){
+    var dlg=$('modal');
+    var title=$('modalTitle');
+    try{if(typeof showWelcome==='function')showWelcome();}catch(e){try{console.error('V8.4 showWelcome failed',e);}catch(_e){}}
+    setTimeout(function(){
+      try{
+        dlg=$('modal'); title=$('modalTitle');
+        var titleText=title?String(title.textContent||''):'';
+        if(!dlg || !dlg.open || titleText.toLowerCase().indexOf('how to play')===-1){
+          if(typeof modal==='function'){
+            if(typeof showWelcome==='function')showWelcome();
+            dlg=$('modal'); title=$('modalTitle'); titleText=title?String(title.textContent||''):'';
+          }
+        }
+      }catch(e){}
+    },40);
+  }
+  function enterFromSplash(ev){
+    if(ev){try{ev.preventDefault();}catch(e){} try{ev.stopPropagation();}catch(e){} try{ev.stopImmediatePropagation();}catch(e){}}
+    var splash=$('splash');
+    var enter=$('splashEnter');
+    if(enter && enter.disabled) return false;
+    if(splash && splash.dataset && splash.dataset.v84Entered==='1') return false;
+    if(splash && splash.dataset) splash.dataset.v84Entered='1';
+    safeClosePreintro();
+    try{unlockAudio();}catch(e){}
+    try{startBackgroundMusic(); musicStarted=true;}catch(e){}
+    try{sound('positive');}catch(e){}
+    makeAppInteractive();
+    ensureHowToPlayOpen();
+    if(splash){
+      try{splash.classList.add('v84-exiting');}catch(e){}
+      try{splash.style.opacity='0';}catch(e){}
+      try{splash.style.pointerEvents='none';}catch(e){}
+    }
+    setTimeout(function(){hideSplashFinal(); makeAppInteractive();},180);
+    setTimeout(function(){
+      try{
+        var dlg=$('modal'); var title=$('modalTitle'); var titleText=title?String(title.textContent||''):'';
+        if(!dlg || !dlg.open || titleText.toLowerCase().indexOf('how to play')===-1){ensureHowToPlayOpen();}
+      }catch(e){}
+    },260);
+    return false;
+  }
+  function prepareSplashButton(){
+    var splash=$('splash'),enter=$('splashEnter'),fill=$('splashLoaderFill'),text=$('splashLoaderText');
+    if(!splash||!enter)return;
+    try{splash.dataset.v84Ready='1';}catch(e){}
+    try{splash.onclick=null;}catch(e){}
+    try{splash.addEventListener('click',function(ev){
+      var target=ev&&ev.target;
+      if(target&&target.closest&&target.closest('#splashEnter')) return;
+      if(ev){try{ev.preventDefault();}catch(e){} try{ev.stopPropagation();}catch(e){} }
+    },true);}catch(e){}
+    try{enter.disabled=false;}catch(e){}
+    try{enter.classList.add('ready');}catch(e){}
+    try{if(fill)fill.style.width='100%';}catch(e){}
+    try{if(text)text.textContent='ENTER';}catch(e){}
+    try{enter.setAttribute('aria-label','Enter Noir Market');}catch(e){}
+    try{enter.onclick=null;}catch(e){}
+    try{enter.addEventListener('click',enterFromSplash,true);}catch(e){}
+    try{enter.addEventListener('touchend',enterFromSplash,true);}catch(e){}
+  }
+  if(previousBaseState){baseState=function(){return ensureV84(previousBaseState());};}
+  save=function(){try{s=ensureV84(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){}}
+  load=function(){
+    var raw=null;
+    try{raw=localStorage.getItem(SAVE_KEY);}catch(e){raw=null;}
+    if(!raw){for(var i=0;i<FALLBACK_KEYS.length;i++){try{raw=localStorage.getItem(FALLBACK_KEYS[i]);}catch(e){raw=null;} if(raw)break;}}
+    if(raw){
+      try{s=JSON.parse(raw);}catch(e){s=null;}
+      s=ensureV84(s||(previousBaseState?previousBaseState():{}));
+      try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
+      try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
+      try{if(typeof updateBestRankV18==='function')updateBestRankV18();}catch(e){}
+      save(); try{draw();}catch(e){} return false;
+    }
+    try{if(typeof newGame==='function')newGame(false);else if(previousBaseState)s=previousBaseState();}catch(e){if(previousBaseState)s=previousBaseState();}
+    s=ensureV84(s); save(); try{draw();}catch(e){} return true;
+  };
+  if(previousDraw){draw=function(){s=ensureV84(s);var r=previousDraw.apply(this,arguments);s=ensureV84(s);applyMetadata();return r;};}
+  function init(){
+    applyMetadata();
+    try{if(typeof s!=='undefined'&&s){s=ensureV84(s);save();}}catch(e){}
+    prepareSplashButton();
+    setTimeout(prepareSplashButton,250);
+    setTimeout(prepareSplashButton,900);
+    console.log('NOIR MARKET V8.4: clean splash ENTER recovery active.');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('pageshow',function(){applyMetadata();setTimeout(prepareSplashButton,120);},false);
+  document.addEventListener('visibilitychange',applyMetadata,false);
+})();

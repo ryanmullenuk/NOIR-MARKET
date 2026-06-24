@@ -1370,3 +1370,12 @@ body:not(.preintro-running) #splash.splash{opacity:1!important;visibility:visibl
   pointer-events:none!important;
   display:none!important;
 }
+
+
+/* Noir Market V8.4: safe splash exit override. Keep splash non-blocking during transition; only v84-gone removes it. */
+#splash.splash.hide:not(.v84-gone){display:flex!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+#splash.splash.v83-exiting:not(.v84-gone){display:flex!important;opacity:0!important;visibility:visible!important;pointer-events:none!important;}
+#splash.splash.v84-exiting{display:flex!important;opacity:0!important;visibility:visible!important;pointer-events:none!important;transition:opacity .35s ease!important;}
+#splash.splash.v84-gone{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+body.v84-game-entered #splash{pointer-events:none!important;}
+body.v84-game-entered .app{visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
