@@ -1,3 +1,10 @@
+## V8.5 - HOW TO PLAY PLAY Handoff Fix
+
+- Fixed the issue where selecting a city and pressing PLAY could leave the game trapped after the HOW TO PLAY screen.
+- Added a final controlled PLAY handoff that sets the selected starting city, closes the modal, clears modal-open state and permanently removes the splash layer from interaction.
+- Preserved city selector behaviour, splash entry, save migration and all gameplay systems.
+- Updated release metadata, manifest version, service worker cache and save key to V8.5.
+
 ## V8.2 - HOW TO PLAY Start Flow Stability Fix
 
 - Fixed a splash layering issue where the HOW TO PLAY city PLAY button could reveal the hidden splash screen underneath the modal.

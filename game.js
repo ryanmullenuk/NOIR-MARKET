@@ -9789,3 +9789,143 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',function(){applyMetadata();setTimeout(prepareSplashButton,120);},false);
   document.addEventListener('visibilitychange',applyMetadata,false);
 })();
+
+
+/* Noir Market V8.5: reliable HOW TO PLAY city PLAY handoff.
+   This intentionally intercepts the PLAY button before older layered handlers so
+   city selection starts the game once, closes the modal, clears modal-open state
+   and prevents the old splash layer from reappearing or trapping interaction. */
+(function(){
+  var VERSION='8.5';
+  var SAVE_KEY='noir_market_v8_5';
+  var FALLBACK_KEYS=['noir_market_v8_4','noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  var previousBaseState=typeof baseState==='function'?baseState:null;
+  var previousDraw=typeof draw==='function'?draw:null;
+  function $(id){return document.getElementById(id);} 
+  function clampNumber(value,min,max,fallback){value=Number(value);if(!isFinite(value))value=fallback;return Math.max(min,Math.min(max,value));}
+  function ensureV85(state){
+    if(!state||typeof state!=='object')return state;
+    state.version=VERSION;
+    state.heat=clampNumber(state.heat,0,100,0);
+    state.reputation=clampNumber(state.reputation,0,100,0);
+    state.cash=clampNumber(state.cash,0,999999999,0);
+    state.bank=clampNumber(state.bank,0,999999999,0);
+    state.debt=clampNumber(state.debt,0,999999999,0);
+    if(!state.meta)state.meta={};
+    state.meta.currentRelease=VERSION;
+    state.meta.howToPlayStartFixed=true;
+    return state;
+  }
+  function applyMetadata(){
+    try{document.title='Noir Market V8.5';}catch(e){}
+    try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
+    try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
+  }
+  function cityIndexByName(name){
+    name=String(name||'').toLowerCase();
+    try{
+      for(var i=0;i<places.length;i++){
+        if(String(places[i][0]||'').toLowerCase()===name)return i;
+      }
+    }catch(e){}
+    return -1;
+  }
+  function selectedCityName(){
+    var btn=document.querySelector('#startCityButtonsV65 .start-city-option-v65.selected');
+    if(btn){return btn.getAttribute('data-city')||String(btn.textContent||'').trim();}
+    var label=$('selectedStartingCityV65');
+    if(label){
+      var txt=String(label.textContent||'').replace(/Starting City:/i,'').trim();
+      if(txt && txt.toLowerCase().indexOf('select a starting city')===-1)return txt;
+    }
+    return '';
+  }
+  function safeHideSplash(){
+    var splash=$('splash');
+    try{document.body.classList.add('v85-game-entered');}catch(e){}
+    try{document.body.classList.remove('preintro-running');}catch(e){}
+    try{document.body.classList.remove('splash-ui-revealed');}catch(e){}
+    if(splash){
+      try{splash.classList.add('v84-gone');}catch(e){}
+      try{splash.classList.add('v85-gone');}catch(e){}
+      try{splash.setAttribute('aria-hidden','true');}catch(e){}
+      try{splash.style.display='none';}catch(e){}
+      try{splash.style.visibility='hidden';}catch(e){}
+      try{splash.style.opacity='0';}catch(e){}
+      try{splash.style.pointerEvents='none';}catch(e){}
+    }
+    try{var dust=$('splashDustCanvas');if(dust){dust.style.display='none';dust.style.opacity='0';dust.style.pointerEvents='none';}}catch(e){}
+    try{var snow=$('splashSnowCanvas');if(snow){snow.style.display='none';snow.style.opacity='0';snow.style.pointerEvents='none';}}catch(e){}
+    try{var app=document.querySelector('.app'); if(app){app.style.visibility='visible';app.style.opacity='1';app.style.pointerEvents='auto';}}catch(e){}
+  }
+  function closeModalHard(){
+    var dlg=$('modal');
+    try{if(dlg&&dlg.open)dlg.close();}catch(e){}
+    try{if(dlg)dlg.removeAttribute('open');}catch(e){}
+    try{document.body.classList.remove('modal-open');}catch(e){}
+    try{document.documentElement.classList.remove('modal-open');}catch(e){}
+    try{document.body.style.position='';document.body.style.width='';document.body.style.inset='';document.body.style.touchAction='';}catch(e){}
+  }
+  function startFromHowToPlay(ev){
+    var target=ev&&ev.target;
+    while(target&&target!==document&&target.id!=='playWelcomeBtn')target=target.parentNode;
+    if(!target||target===document||target.id!=='playWelcomeBtn')return;
+    var title=$('modalTitle');
+    var titleText=title?String(title.textContent||'').toLowerCase():'';
+    if(titleText.indexOf('how to play')===-1)return;
+    if(ev){try{ev.preventDefault();}catch(e){} try{ev.stopPropagation();}catch(e){} try{ev.stopImmediatePropagation();}catch(e){}}
+    if(target.disabled||String(target.className||'').indexOf('disabled')!==-1){
+      try{if(typeof toast==='function')toast('SELECT A STARTING CITY','bad');}catch(e){}
+      return false;
+    }
+    var city=selectedCityName();
+    var index=cityIndexByName(city);
+    if(index<0){
+      try{if(typeof toast==='function')toast('SELECT A STARTING CITY','bad');}catch(e){}
+      return false;
+    }
+    try{if(!s||typeof s!=='object')s=previousBaseState?previousBaseState():baseState();}catch(e){}
+    try{s=ensureV85(s);}catch(e){}
+    s.city=index;
+    try{s.notice='You start in '+places[index][0]+' with £1,000 cash, £0 in the bank and a clean slate.';}catch(e){}
+    try{s.news=(places[index][0]+': MARKETS ARE QUIET TODAY.').toUpperCase();}catch(e){}
+    try{if(s.economy&&s.economy.news)s.economy.news.text=s.news;}catch(e){}
+    try{if(typeof ensureVaults==='function')ensureVaults();}catch(e){}
+    try{if(typeof ensureEconomy==='function')ensureEconomy();}catch(e){}
+    try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
+    try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
+    try{save();}catch(e){}
+    closeModalHard();
+    safeHideSplash();
+    try{draw();}catch(e){}
+    setTimeout(function(){closeModalHard();safeHideSplash();try{draw();}catch(e){}},0);
+    setTimeout(function(){closeModalHard();safeHideSplash();},120);
+    return false;
+  }
+  function bindStartHandler(){
+    try{document.addEventListener('click',startFromHowToPlay,true);}catch(e){}
+    try{document.addEventListener('touchend',startFromHowToPlay,true);}catch(e){}
+    try{document.addEventListener('pointerup',startFromHowToPlay,true);}catch(e){}
+  }
+  if(previousBaseState){baseState=function(){return ensureV85(previousBaseState());};}
+  save=function(){try{s=ensureV85(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){}}
+  load=function(){
+    var raw=null;
+    try{raw=localStorage.getItem(SAVE_KEY);}catch(e){raw=null;}
+    if(!raw){for(var i=0;i<FALLBACK_KEYS.length;i++){try{raw=localStorage.getItem(FALLBACK_KEYS[i]);}catch(e){raw=null;} if(raw)break;}}
+    if(raw){
+      try{s=JSON.parse(raw);}catch(e){s=null;}
+      s=ensureV85(s||(previousBaseState?previousBaseState():{}));
+      try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
+      try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
+      try{if(typeof updateBestRankV18==='function')updateBestRankV18();}catch(e){}
+      save();try{draw();}catch(e){}return false;
+    }
+    try{if(typeof newGame==='function')newGame(false);else if(previousBaseState)s=previousBaseState();}catch(e){if(previousBaseState)s=previousBaseState();}
+    s=ensureV85(s);save();try{draw();}catch(e){}return true;
+  };
+  if(previousDraw){draw=function(){s=ensureV85(s);var r=previousDraw.apply(this,arguments);s=ensureV85(s);applyMetadata();return r;};}
+  function init(){applyMetadata();bindStartHandler();try{if(typeof s!=='undefined'&&s){s=ensureV85(s);save();}}catch(e){}console.log('NOIR MARKET V8.5: HOW TO PLAY PLAY handoff fix active.');}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('pageshow',function(){applyMetadata();},false);
+})();

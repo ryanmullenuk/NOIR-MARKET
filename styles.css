@@ -1379,3 +1379,10 @@ body:not(.preintro-running) #splash.splash{opacity:1!important;visibility:visibl
 #splash.splash.v84-gone{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 body.v84-game-entered #splash{pointer-events:none!important;}
 body.v84-game-entered .app{visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
+
+
+/* Noir Market V8.5: final non-blocking game state after HOW TO PLAY PLAY. */
+body.v85-game-entered #splash{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+#splash.v85-gone{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+body.v85-game-entered .app{visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
+body.v85-game-entered:not(.modal-open) .app{pointer-events:auto!important;}
