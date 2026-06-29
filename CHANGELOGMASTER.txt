@@ -1,3 +1,9 @@
+V8.8 - Splash Artwork Update
+- Replaced the static splash screen artwork with the supplied NOIR MARKET collage image.
+- Retained the no-video and no-music clean build approach from V8.6/V8.7.
+- Updated release metadata, service worker cache and save migration to V8.8.
+- No gameplay systems changed.
+
 ## V8.5 - HOW TO PLAY PLAY Handoff Fix
 
 - Fixed the issue where selecting a city and pressing PLAY could leave the game trapped after the HOW TO PLAY screen.

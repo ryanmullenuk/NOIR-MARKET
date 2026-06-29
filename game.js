@@ -10026,11 +10026,11 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',function(){applyMetadata();disableEffectFactories();stopMusicCompletely();stopAndRemoveSplashEffects();},false);
 })();
 
-/* Noir Market V8.7: forced fight decisions and corrected police bribe logic. */
+/* Noir Market V8.8: forced fight decisions and corrected police bribe logic. */
 (function(){
-  var VERSION='8.7';
-  var SAVE_KEY='noir_market_v8_7';
-  var FALLBACK_KEYS=['noir_market_v8_6','noir_market_v8_5','noir_market_v8_4','noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
+  var VERSION='8.8';
+  var SAVE_KEY='noir_market_v8_8';
+  var FALLBACK_KEYS=['noir_market_v8_7','noir_market_v8_6','noir_market_v8_5','noir_market_v8_4','noir_market_v8_3','noir_market_v8_2','noir_market_v8_1','noir_market_v8_0','noir_market_v7_9','noir_market_v7_8','noir_market_v7_7','noir_market_v7_6','noir_market_v7_5','noir_market_v7_4','noir_market_v7_3','noir_market_v7_2','noir_market_v7_1','noir_market_v7_0','noir_market_v6_9','noir_market_v6_8','noir_market_v6_7','noir_market_v6_6','noir_market_v6_5','noir_market_v6_4','noir_market_v6_3','noir_market_v6_2','noir_market_v6_1','noir_market_v6_0','noir_market_v5_9','noir_market_v5_8','noir_market_v5_7','noir_market_v5_6','noir_market_v5_5','noir_market_v5_4','noir_market_v5_3','noir_market_v5_2','noir_market_v5_1','noir_market_v5_0','noir_market_v4_9','noir_market_v4_8','noir_market_v4_7','noir_market_v4_6','noir_market_v4_5','noir_market_v4_4','noir_market_v4_3','noir_market_v4_2','noir_market_v4_1','noir_market_v4_0','noir_market_v3_9','noir_market_v3_8','noir_market_v3_7','noir_market_v3_6','noir_market_v3_5','noir_market_v3_4','noir_market_v3_3','noir_market_v3_2','noir_market_v3_1','noir_market_v3_0','noir_market_v2_9','noir_market_v2_8','noir_market_v2_7','noir_market_v2_6','noir_market_v2_5','noir_market_v2_4','noir_market_v2_3','noir_market_v2_2','noir_market_v2_1','noir_market_v2_0','noir_market_v1_9','noir_market_v1_8','noir_market_v1_7','noir_market_v1_6','noir_market_v1_5','noir_market_v1_4','noir_market_v1_3','noir_market_v1_2','noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4'];
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousSave=typeof save==='function'?save:null;
@@ -10046,7 +10046,7 @@ catch (e) { } }, 980);
   function carriedDrugUnitsSafe(){try{return Math.max(0,typeof used==='function'?used():0);}catch(e){return 0;}}
   function carriedWeaponUnitsSafe(){try{return Math.max(0,(s&&Array.isArray(s.weapons))?s.weapons.length:0);}catch(e){return 0;}}
   function hasContraband(){return carriedDrugUnitsSafe()+carriedWeaponUnitsSafe()>0;}
-  function applyMetadata(){try{document.title='Noir Market V8.7';}catch(e){}try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}}
+  function applyMetadata(){try{document.title='Noir Market V8.8';}catch(e){}try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}}
   function ensureV87(state){
     if(!state||typeof state!=='object')return state;
     state.version=VERSION;
@@ -10056,6 +10056,7 @@ catch (e) { } }, 980);
     if(!state.meta)state.meta={};
     state.meta.currentRelease=VERSION;
     state.meta.bribeLogicV87=true;
+    state.meta.splashArtworkV88=true;
     return state;
   }
   function closeModalForPolice(){
@@ -10218,7 +10219,7 @@ catch (e) { } }, 980);
     s=ensureV87(s);save();try{draw();}catch(e){}return true;
   };
   if(previousDraw){draw=function(){s=ensureV87(s);var r=previousDraw.apply(this,arguments);s=ensureV87(s);applyMetadata();return r;};}
-  function init(){applyMetadata();try{if(s){s=ensureV87(s);save();}}catch(e){}console.log('NOIR MARKET V8.7: fight and bribe logic corrections active.');}
+  function init(){applyMetadata();try{if(s){s=ensureV87(s);save();}}catch(e){}console.log('NOIR MARKET V8.8: updated splash artwork active.');}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',applyMetadata,false);
 })();
