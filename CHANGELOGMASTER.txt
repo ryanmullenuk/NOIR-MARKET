@@ -1,3 +1,11 @@
+V8.9 - Music Restoration
+- Restored the supplied MP3 as the in-game background music.
+- Music is created and loaded only after user interaction, then starts from the splash ENTER action.
+- Added a gradual fade-in to 50% volume and restored the in-game music toggle.
+- Kept the MP3 out of the service worker install cache and runtime cache.
+- Preserved the static splash artwork and all V8.8 gameplay.
+- Updated release metadata, service worker cache and save migration to V8.9.
+
 V8.8 - Splash Artwork Update
 - Replaced the static splash screen artwork with the supplied NOIR MARKET collage image.
 - Retained the no-video and no-music clean build approach from V8.6/V8.7.
