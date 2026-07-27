@@ -1,3 +1,12 @@
+V9.0 - Correct Title Sequence Music
+- Replaced the V8.9 music asset with the supplied correct MP3.
+- Music now loads with the title sequence and attempts to start immediately.
+- Added an iPhone Safari fallback so the first title-screen touch starts the music when autoplay is blocked.
+- Music remains at full volume through the title and HOW TO PLAY sequence, then reduces smoothly to 50% when the main game begins.
+- Kept the MP3 out of the service worker install cache and runtime cache.
+- Preserved the static splash artwork and all V8.8/V8.9 gameplay.
+- Updated release metadata, service worker cache and save migration to V9.0.
+
 V8.9 - Music Restoration
 - Restored the supplied MP3 as the in-game background music.
 - Music is created and loaded only after user interaction, then starts from the splash ENTER action.
