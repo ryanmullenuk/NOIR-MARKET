@@ -9895,7 +9895,7 @@ catch (e) { } }, 980);
     try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
     try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
     try{save();}catch(e){}
-    try{if(typeof window.__NOIR_V90_MAIN_GAME==='function')window.__NOIR_V90_MAIN_GAME();}catch(e){}
+    try{if(typeof window.__NOIR_V91_MAIN_GAME==='function')window.__NOIR_V91_MAIN_GAME();}catch(e){}
     closeModalHard();
     safeHideSplash();
     try{draw();}catch(e){}
@@ -10223,18 +10223,18 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',applyMetadata,false);
 })();
 
-/* Noir Market V9.0: correct MP3 title-sequence music.
+/* Noir Market V9.1: selected powder splash and N icon release.
    The browser loads the supplied MP3 with the title, attempts immediate playback,
    falls back to the first title-screen gesture on iPhone Safari, then reduces to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.0';
-  var SAVE_KEY='noir_market_v9_0';
+  var VERSION='9.1';
+  var SAVE_KEY='noir_market_v9_1';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_0_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v8_9_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_1_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_0_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -10248,7 +10248,7 @@ catch (e) { } }, 980);
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{document.title='Noir Market V9.0';}catch(e){}
+    try{document.title='Noir Market V9.1';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -10269,7 +10269,7 @@ catch (e) { } }, 980);
     try{musicEnabled=readMusicPreference();}catch(e){musicEnabled=true;}
     try{if(localStorage.getItem(MUSIC_PREFERENCE_KEY)===null)writeMusicPreference(musicEnabled);}catch(e){}
   }
-  function ensureV90(state){
+  function ensureV91(state){
     if(!state||typeof state!=='object')return state;
     state.version=VERSION;
     if(!state.settings)state.settings={};
@@ -10278,6 +10278,7 @@ catch (e) { } }, 980);
     state.meta.currentRelease=VERSION;
     state.meta.musicRemoved=false;
     state.meta.correctTitleMusicV90=true;
+    state.meta.powderArtworkV91=true;
     return state;
   }
   function clearFade(){
@@ -10295,10 +10296,10 @@ catch (e) { } }, 980);
   function prepareMusic(){
     if(musicElement)return musicElement;
     try{
-      musicElement=$('backgroundMusicV90');
+      musicElement=$('backgroundMusicV91');
       if(!musicElement){
         musicElement=new Audio();
-        musicElement.id='backgroundMusicV90';
+        musicElement.id='backgroundMusicV91';
         musicElement.hidden=true;
         musicElement.setAttribute('aria-hidden','true');
         musicElement.src=MUSIC_PATH;
@@ -10384,7 +10385,7 @@ catch (e) { } }, 980);
       }
     },80);
   }
-  window.__NOIR_V90_MAIN_GAME=fadeToMainVolume;
+  window.__NOIR_V91_MAIN_GAME=fadeToMainVolume;
   startBackgroundMusic=function(){
     interactionUnlocked=true;
     try{unlockAudio();}catch(e){}
@@ -10401,14 +10402,14 @@ catch (e) { } }, 980);
     playAtCurrentPhase();
   }
   function bindTitleFallback(){
-    if(document.documentElement.getAttribute('data-v90-music-fallback'))return;
-    document.documentElement.setAttribute('data-v90-music-fallback','1');
+    if(document.documentElement.getAttribute('data-v91-music-fallback'))return;
+    document.documentElement.setAttribute('data-v91-music-fallback','1');
     try{document.addEventListener('touchstart',titleGesture,true);}catch(e){}
     try{document.addEventListener('mousedown',titleGesture,true);}catch(e){}
     try{document.addEventListener('click',titleGesture,true);}catch(e){}
   }
-  function showMenuV90(){
-    ensureV90(s);
+  function showMenuV91(){
+    ensureV91(s);
     var nameVal=escapeHtml((s&&s.playerName)||'').slice(0,24);
     modal('Menu','<div class="menu-player"><label for="playerNameInput">Player name</label><input id="playerNameInput" maxlength="24" placeholder="Add your name" value="'+nameVal+'"><button type="button" id="savePlayerNameBtn">SAVE NAME</button></div><div class="menu-settings"><button type="button" id="soundToggleBtn">SOUNDS: '+(soundEnabled?'ON':'OFF')+'</button><button type="button" id="musicToggleBtn">MUSIC: '+(musicEnabled?'ON':'OFF')+'</button></div><div class="menu-list"><button type="button" id="instructionsBtn">Instructions</button><button type="button" id="statsBtn">Stats</button><button type="button" class="sell" id="menuNewGameBtn">New Game</button></div>');
     setTimeout(function(){
@@ -10419,9 +10420,9 @@ catch (e) { } }, 980);
       var saveName=$('savePlayerNameBtn');
       var newGameButton=$('menuNewGameBtn');
       if(instructions)instructions.onclick=function(){if(typeof showInstructionsV49==='function')return showInstructionsV49(false);if(typeof showInstructions==='function')return showInstructions();};
-      if(saveName)saveName.onclick=(typeof setPlayerNameV18==='function')?setPlayerNameV18:function(){s.playerName=String(($('playerNameInput')&&$('playerNameInput').value)||'').trim().slice(0,24);save();draw();showMenuV90();};
+      if(saveName)saveName.onclick=(typeof setPlayerNameV18==='function')?setPlayerNameV18:function(){s.playerName=String(($('playerNameInput')&&$('playerNameInput').value)||'').trim().slice(0,24);save();draw();showMenuV91();};
       if(stats&&typeof showStats==='function')stats.onclick=showStats;
-      if(soundButton)soundButton.onclick=function(){soundEnabled=!soundEnabled;try{localStorage.setItem('noir_market_sound',soundEnabled?'on':'off');}catch(e){}if(soundEnabled&&typeof sound==='function')sound('positive');save();showMenuV90();};
+      if(soundButton)soundButton.onclick=function(){soundEnabled=!soundEnabled;try{localStorage.setItem('noir_market_sound',soundEnabled?'on':'off');}catch(e){}if(soundEnabled&&typeof sound==='function')sound('positive');save();showMenuV91();};
       if(musicButton)musicButton.onclick=function(){
         interactionUnlocked=true;
         try{unlockAudio();}catch(e){}
@@ -10429,24 +10430,24 @@ catch (e) { } }, 980);
         writeMusicPreference(musicEnabled);
         if(musicEnabled)playAtCurrentPhase();else stopBackgroundMusic();
         save();
-        showMenuV90();
+        showMenuV91();
       };
       if(newGameButton&&typeof confirmNewGame==='function')newGameButton.onclick=confirmNewGame;
     },0);
   }
 
   restoreMusicPreference();
-  if(previousBaseState){baseState=function(){return ensureV90(previousBaseState());};}
+  if(previousBaseState){baseState=function(){return ensureV91(previousBaseState());};}
   save=function(){
-    try{s=ensureV90(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}
+    try{s=ensureV91(s);localStorage.setItem(SAVE_KEY,JSON.stringify(s));}
     catch(e){}
   };
   load=function(){
     var raw=null;
-    try{raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem('noir_market_v8_9');}catch(e){raw=null;}
+    try{raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem('noir_market_v9_0');}catch(e){raw=null;}
     if(raw){
       try{s=JSON.parse(raw);}catch(e){s=null;}
-      s=ensureV90(s||(previousBaseState?previousBaseState():{}));
+      s=ensureV91(s||(previousBaseState?previousBaseState():{}));
       try{if(typeof setActiveCityMarket==='function')setActiveCityMarket();}catch(e){}
       try{if(typeof updateRankProgress==='function')updateRankProgress();}catch(e){}
       try{if(typeof updateBestRankV18==='function')updateBestRankV18();}catch(e){}
@@ -10457,21 +10458,21 @@ catch (e) { } }, 980);
     var result=true;
     if(previousLoad){try{result=previousLoad();}catch(e){result=true;}}
     else{try{if(typeof newGame==='function')newGame(false);else if(previousBaseState)s=previousBaseState();}catch(e){}}
-    s=ensureV90(s||(previousBaseState?previousBaseState():{}));
+    s=ensureV91(s||(previousBaseState?previousBaseState():{}));
     save();
     try{draw();}catch(e){}
     return result;
   };
   if(previousDraw){
     draw=function(){
-      s=ensureV90(s);
+      s=ensureV91(s);
       var result=previousDraw.apply(this,arguments);
-      s=ensureV90(s);
+      s=ensureV91(s);
       applyMetadata();
       return result;
     };
   }
-  showMenu=showMenuV90;
+  showMenu=showMenuV91;
   document.addEventListener('visibilitychange',function(){
     if(document.hidden){
       resumeAfterVisibility=!!(musicElement&&!musicElement.paused&&musicEnabled);
@@ -10486,8 +10487,8 @@ catch (e) { } }, 980);
     bindTitleFallback();
     prepareMusic();
     playAtCurrentPhase();
-    try{if(typeof s!=='undefined'&&s){s=ensureV90(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.0: correct title-sequence MP3 active.');
+    try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
+    console.log('NOIR MARKET V9.1: powder splash and N icon release active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();prepareMusic();if(musicEnabled&&!mainGameStarted)playAtCurrentPhase();},false);

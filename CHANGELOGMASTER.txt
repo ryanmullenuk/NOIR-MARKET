@@ -1,3 +1,10 @@
+V9.1 - Powder Splash and N Icon Update
+- Replaced the splash artwork with the selected portrait NOIR MARKET powder design.
+- Rebuilt the Apple touch and PWA icon set from the selected black N and white powder artwork.
+- Kept all icon canvases full bleed with no added border, inset frame or baked-in rounded corners.
+- Preserved V9.0 title-sequence music, main-game volume reduction and all gameplay systems.
+- Updated release metadata, service worker cache and save migration to V9.1.
+
 V9.0 - Correct Title Sequence Music
 - Replaced the V8.9 music asset with the supplied correct MP3.
 - Music now loads with the title sequence and attempts to start immediately.
