@@ -1390,3 +1390,78 @@ body.v85-game-entered:not(.modal-open) .app{pointer-events:auto!important;}
 /* Noir Market V8.6: no splash effect animation, static splash only. */
 #splashDustCanvas,#splashSnowCanvas,.live-dust,.game-dust,#particle-canvas{display:none!important;opacity:0!important;pointer-events:none!important;}
 .splash-static-image{image-rendering:auto!important;}
+
+/* Noir Market V9.2: fixed mobile game canvas, isolated screens and static rendering. */
+html{
+  width:100%;
+  min-height:100%;
+  background:#000;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  touch-action:manipulation;
+}
+body{
+  width:100%;
+  min-height:100vh;
+  min-height:100svh;
+  margin:0;
+  overflow-x:hidden;
+  overscroll-behavior-x:none;
+  background:#000!important;
+  touch-action:manipulation;
+}
+button,a,[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+input,select,textarea{font-size:16px!important;}
+.app{
+  width:100%!important;
+  max-width:480px!important;
+  min-height:100vh!important;
+  min-height:100svh!important;
+  margin:0 auto!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+}
+#mainParallaxBg,.main-parallax-bg,.main-particle-bg{
+  animation:none!important;
+  transform:none!important;
+  background:#050505!important;
+}
+#mainParallaxBg::before,#mainParallaxBg::after,
+.main-parallax-bg::before,.main-parallax-bg::after,
+.main-particle-bg::before,.main-particle-bg::after,
+#mainParticleCanvas,#particle-canvas,.live-dust,.game-dust,
+#splashDustCanvas,#splashSnowCanvas{display:none!important;animation:none!important;}
+#splash.splash{
+  width:100vw!important;
+  height:100vh!important;
+  min-height:100vh!important;
+  overflow:hidden!important;
+  background:#000!important;
+}
+@supports(height:100svh){#splash.splash{height:100svh!important;min-height:100svh!important;}}
+#splashStaticImage.splash-static-image{
+  width:100%!important;
+  height:100%!important;
+  min-width:100%!important;
+  min-height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  transform:none!important;
+}
+#modal[open],#modal .modal-card,#modal #modalBody,#modal .modal-scroll{
+  background:#050505!important;
+  opacity:1!important;
+}
+#modal::backdrop{background:#050505!important;opacity:1!important;}
+body.modal-open .app,
+body.modal-open #mainParallaxBg{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+#modal[open]{visibility:visible!important;opacity:1!important;}
+#modal[open] .modal-card{visibility:visible!important;opacity:1!important;}
+@media(min-width:481px){
+  body{background:#000!important;}
+  .app{border-left:1px solid rgba(255,255,255,.07);border-right:1px solid rgba(255,255,255,.07);}
+}

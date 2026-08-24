@@ -1,5 +1,6 @@
-/* Noir Market V8.2 consolidated stability/version metadata bootstrap. */
+/* Noir Market V9.2 consolidated stability/version metadata bootstrap. */
 (function(){
+  window.NOIR_STATIC_VISUALS=true;
   if(!Array.prototype.at){Array.prototype.at=function(n){n=Math.trunc(n)||0;if(n<0)n+=this.length;return this[n];};}
   if(!Object.entries){Object.entries=function(o){var a=[];for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k))a.push([k,o[k]]);}return a;};}
   if(!Object.values){Object.values=function(o){var a=[];for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k))a.push(o[k]);}return a;};}
@@ -9,6 +10,71 @@
   if(typeof window!=='undefined'&&typeof window.requestAnimationFrame!=='function'){window.requestAnimationFrame=function(cb){return setTimeout(function(){cb(Date.now());},16);};window.cancelAnimationFrame=function(id){clearTimeout(id);};}
   function patchDialog(){var d=document.getElementById('modal');if(!d)return;if(!d.showModal){d.showModal=function(){this.setAttribute('open','');this.open=true;this.classList.add('dialog-open');};}if(!d.close){d.close=function(){this.removeAttribute('open');this.open=false;this.classList.remove('dialog-open');};}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patchDialog,false);else patchDialog();
+})();
+
+/* Noir Market V9.2: final mobile screen and performance controller. */
+(function(){
+  function removeObsoleteVisuals(){
+    var selectors=['#mainParticleCanvas','#particle-canvas','#splashDustCanvas','#splashSnowCanvas','.live-dust','.game-dust'];
+    for(var i=0;i<selectors.length;i++){
+      var nodes=document.querySelectorAll(selectors[i]);
+      for(var j=0;j<nodes.length;j++){
+        if(nodes[j]&&nodes[j].parentNode)nodes[j].parentNode.removeChild(nodes[j]);
+      }
+    }
+    var background=document.getElementById('mainParallaxBg');
+    if(background)background.innerHTML='';
+  }
+  function syncModalScreen(){
+    var dialog=document.getElementById('modal');
+    var open=!!(dialog&&(dialog.open||dialog.hasAttribute('open')));
+    document.body.classList.toggle('modal-open',open);
+    document.documentElement.classList.toggle('modal-open',open);
+  }
+  function initV92Mobile(){
+    removeObsoleteVisuals();
+    var dialog=document.getElementById('modal');
+    if(dialog){
+      dialog.addEventListener('close',syncModalScreen,false);
+      dialog.addEventListener('cancel',function(){setTimeout(syncModalScreen,0);},false);
+      if(window.MutationObserver){
+        new MutationObserver(syncModalScreen).observe(dialog,{attributes:true,attributeFilter:['open']});
+      }
+    }
+    try{
+      document.addEventListener('gesturestart',function(event){event.preventDefault();},{passive:false});
+      document.addEventListener('gesturechange',function(event){event.preventDefault();},{passive:false});
+      document.addEventListener('gestureend',function(event){event.preventDefault();},{passive:false});
+    }catch(e){}
+    syncModalScreen();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV92Mobile,{once:true});else initV92Mobile();
+})();
+
+/* Stop historical release bootstraps from all starting together. Their gameplay
+   functions remain available, but V9.2 owns the single active startup path. */
+(function(){
+  window.__NOIR_NATIVE_TIMEOUT=window.setTimeout.bind(window);
+  window.__NOIR_NATIVE_INTERVAL=window.setInterval.bind(window);
+  window.__NOIR_NATIVE_DOCUMENT_ADD=document.addEventListener.bind(document);
+  window.__NOIR_NATIVE_WINDOW_ADD=window.addEventListener.bind(window);
+  window.__NOIR_FILTER_LEGACY_BOOT=true;
+  window.setTimeout=function(callback,delay){
+    if(window.__NOIR_FILTER_LEGACY_BOOT)return 0;
+    return window.__NOIR_NATIVE_TIMEOUT(callback,delay);
+  };
+  window.setInterval=function(callback,delay){
+    if(window.__NOIR_FILTER_LEGACY_BOOT)return 0;
+    return window.__NOIR_NATIVE_INTERVAL(callback,delay);
+  };
+  document.addEventListener=function(type,listener,options){
+    if(window.__NOIR_FILTER_LEGACY_BOOT&&(type==='DOMContentLoaded'||type==='visibilitychange'))return;
+    return window.__NOIR_NATIVE_DOCUMENT_ADD(type,listener,options);
+  };
+  window.addEventListener=function(type,listener,options){
+    if(window.__NOIR_FILTER_LEGACY_BOOT&&(type==='load'||type==='pageshow'||type==='scroll'||type==='resize'))return;
+    return window.__NOIR_NATIVE_WINDOW_ADD(type,listener,options);
+  };
 })();
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
@@ -535,6 +601,8 @@ function load() { var x = localStorage.getItem('noir_market_v1_2') || localStora
     return false;
 } newGame(false); return true; }
 function particles() {
+    if (window.NOIR_STATIC_VISUALS)
+        return;
     var holder = $('particle-canvas');
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
@@ -597,6 +665,8 @@ function particles() {
     loop();
 }
 function createSplashDust() {
+    if (window.NOIR_STATIC_VISUALS)
+        return;
     var splash = $('splash');
     if (!splash || splash.querySelector('.live-dust'))
         return;
@@ -852,7 +922,7 @@ function createGameDust() { if (document.querySelector('.game-dust'))
     d.style.setProperty('--drift', (Math.random() * 24 - 12).toFixed(1) + 'px');
     layer.appendChild(d);
 } document.body.prepend(layer); }
-function createSplashDust() { var splash = $('splash'); if (!splash || splash.querySelector('.live-dust'))
+function createSplashDust() { if (window.NOIR_STATIC_VISUALS) return; var splash = $('splash'); if (!splash || splash.querySelector('.live-dust'))
     return; var layer = document.createElement('div'); layer.className = 'live-dust'; var count = 100; for (var i = 0; i < count; i++) {
     var d = document.createElement('i');
     var size = (Math.random() * 1.7 + 0.55).toFixed(2);
@@ -3138,7 +3208,9 @@ function renderStorageV22() {
         return "<div class=\"row\"><span>".concat(k, "</span><span>").concat(v, "</span><span>").concat(money(v * (((_b = s.prices) === null || _b === void 0 ? void 0 : _b[k]) || 0)), "</span></div>");
     }).join('') : "<div class=\"row\"><span>Empty</span><span>0</span><span>".concat(money(0), "</span></div>")) + "<div class=\"row header\"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>" + (weaponsRows || '<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
 }
-var v22PreviousDraw = draw;
+/* The previous assignment resolved back to this same hoisted function and caused
+   an infinite render recursion. V9.2 starts this renderer as the clean base. */
+var v22PreviousDraw = null;
 function draw() {
     var _a;
     try {
@@ -3379,6 +3451,8 @@ setTimeout(function () { bindMainButtonsV22(); ensureMainSectionsV22(); if (!win
 } console.log('NOIR MARKET V8.2: legacy compatibility layer active.'); }, 0);
 /* Noir Market V2.7 Icon Patch: splash-only particles and lighter startup. */
 function createSplashDust() {
+    if (window.NOIR_STATIC_VISUALS)
+        return;
     var splash = $('splash');
     if (!splash)
         return;
@@ -3421,6 +3495,8 @@ setTimeout(function () { try {
 catch (e) { } }, 420);
 /* Noir Market V2.7 Icon Patch: faster splash startup. */
 function createSplashDust() {
+    if (window.NOIR_STATIC_VISUALS)
+        return;
     var splash = $('splash');
     if (!splash)
         return;
@@ -3460,6 +3536,8 @@ setTimeout(function () { try {
 catch (e) { } }, 520);
 /* Noir Market V2.7 Splash Loading Patch: 70 larger particles and enter bar. */
 function createSplashDust() {
+    if (window.NOIR_STATIC_VISUALS)
+        return;
     var splash = $('splash');
     if (!splash)
         return;
@@ -4305,6 +4383,8 @@ catch (e) { } }, 980);
             bindQuickNavigationV29();
     };
     function startSplashSnowEffect() {
+        if (window.NOIR_STATIC_VISUALS)
+            return;
         var splash = $('splash');
         var canvas = $('splashSnowCanvas');
         if (!splash || !canvas || snowRuntime)
@@ -4811,6 +4891,8 @@ catch (e) { } }, 980);
     draw = function () { previousDraw(); if (s && s.economy && s.economy.news && $('newsTicker'))
         syncTickerV21(); };
     function startInstantTopSnow() {
+        if (window.NOIR_STATIC_VISUALS)
+            return;
         var canvas = $('splashSnowCanvas'), splash = $('splash');
         if (!canvas || !splash)
             return;
@@ -7264,6 +7346,11 @@ catch (e) { } }, 980);
         holder.className = 'main-particle-bg';
         holder.removeAttribute('style');
         holder.style.pointerEvents = 'none';
+        if (window.NOIR_STATIC_VISUALS) {
+            holder.innerHTML = '';
+            holder.dataset.v54Canvas = 'disabled';
+            return;
+        }
         if (isMobileV54()) {
             holder.innerHTML = '';
             return;
@@ -9166,6 +9253,7 @@ catch (e) { } }, 980);
     }
 
     function startSplashDustV80() {
+        if (window.NOIR_STATIC_VISUALS) return;
         stopLegacySplashEffectsV80();
         var canvas = document.getElementById('splashDustCanvas');
         var splash = document.getElementById('splash');
@@ -10223,18 +10311,25 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',applyMetadata,false);
 })();
 
-/* Noir Market V9.1: selected powder splash and N icon release.
-   The browser loads the supplied MP3 with the title, attempts immediate playback,
-   falls back to the first title-screen gesture on iPhone Safari, then reduces to
+/* Restore normal browser scheduling for the single V9.2 startup controller. */
+window.__NOIR_FILTER_LEGACY_BOOT=false;
+if(window.__NOIR_NATIVE_TIMEOUT)window.setTimeout=window.__NOIR_NATIVE_TIMEOUT;
+if(window.__NOIR_NATIVE_INTERVAL)window.setInterval=window.__NOIR_NATIVE_INTERVAL;
+if(window.__NOIR_NATIVE_DOCUMENT_ADD)document.addEventListener=window.__NOIR_NATIVE_DOCUMENT_ADD;
+if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_WINDOW_ADD;
+
+/* Noir Market V9.2: selected powder splash and mobile performance release.
+   The browser loads the supplied MP3 after the first title-screen gesture,
+   starts it during the title sequence, then reduces it to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.1';
-  var SAVE_KEY='noir_market_v9_1';
+  var VERSION='9.2';
+  var SAVE_KEY='noir_market_v9_2';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_1_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_0_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_2_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_1_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -10248,7 +10343,7 @@ catch (e) { } }, 980);
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{document.title='Noir Market V9.1';}catch(e){}
+    try{document.title='Noir Market V9.2';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -10296,16 +10391,16 @@ catch (e) { } }, 980);
   function prepareMusic(){
     if(musicElement)return musicElement;
     try{
-      musicElement=$('backgroundMusicV91');
+      musicElement=$('backgroundMusicV92');
       if(!musicElement){
         musicElement=new Audio();
-        musicElement.id='backgroundMusicV91';
+        musicElement.id='backgroundMusicV92';
         musicElement.hidden=true;
         musicElement.setAttribute('aria-hidden','true');
         musicElement.src=MUSIC_PATH;
         if(document.body)document.body.appendChild(musicElement);
       }
-      musicElement.preload='auto';
+      musicElement.preload='none';
       musicElement.loop=true;
       musicElement.setAttribute('data-title-volume',String(TITLE_VOLUME));
       musicElement.setAttribute('data-main-volume',String(MAIN_VOLUME));
@@ -10444,7 +10539,7 @@ catch (e) { } }, 980);
   };
   load=function(){
     var raw=null;
-    try{raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem('noir_market_v9_0');}catch(e){raw=null;}
+    try{raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem('noir_market_v9_1')||localStorage.getItem('noir_market_v9_0');}catch(e){raw=null;}
     if(raw){
       try{s=JSON.parse(raw);}catch(e){s=null;}
       s=ensureV91(s||(previousBaseState?previousBaseState():{}));
@@ -10485,11 +10580,136 @@ catch (e) { } }, 980);
     restoreMusicPreference();
     applyMetadata();
     bindTitleFallback();
-    prepareMusic();
-    playAtCurrentPhase();
     try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.1: powder splash and N icon release active.');
+    console.log('NOIR MARKET V9.2: mobile performance and isolated screens active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-  window.addEventListener('pageshow',function(){applyMetadata();prepareMusic();if(musicEnabled&&!mainGameStarted)playAtCurrentPhase();},false);
+  window.addEventListener('pageshow',function(){applyMetadata();if(interactionUnlocked&&musicEnabled)playAtCurrentPhase();},false);
+})();
+
+/* V9.2 uses one non-recursive renderer. Earlier release wrappers remain only for
+   save migration and gameplay compatibility; they are no longer part of the
+   active render path. */
+(function(){
+  function setText(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
+  function migrationKeysV92(){
+    var keys=['noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
+    for(var major=8;major>=1;major--){
+      for(var minor=9;minor>=0;minor--){
+        if(major===1&&minor<2)continue;
+        keys.push('noir_market_v'+major+'_'+minor);
+      }
+    }
+    return keys.concat(['noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4']);
+  }
+  function loadGameV92(){
+    var keys=migrationKeysV92();
+    var loaded=null;
+    for(var i=0;i<keys.length;i++){
+      try{
+        var raw=localStorage.getItem(keys[i]);
+        if(raw){var parsed=JSON.parse(raw);if(parsed&&typeof parsed==='object'){loaded=parsed;break;}}
+      }catch(e){}
+    }
+    if(loaded){
+      s=loaded;
+      try{ensureStats();}catch(e){}
+      try{setActiveCityMarket();}catch(e){}
+      try{save();}catch(e){}
+      renderGameV92();
+      return false;
+    }
+    try{newGame(false);}catch(e){try{s=baseState();}catch(_e){s=null;}}
+    try{save();}catch(e){}
+    renderGameV92();
+    return true;
+  }
+  function renderGameV92(){
+    if(!s||typeof s!=='object')return;
+    try{ensureStats();}catch(e){}
+    try{setActiveCityMarket();}catch(e){}
+    try{if(s.stats)s.stats.bestNet=Math.max(s.stats.bestNet||0,netWorth());}catch(e){}
+    var place=(places&&places[s.city])||places[0];
+    var healthState='health-good';
+    try{healthState=healthClass();}catch(e){}
+    setText('dayCount',s.day);
+    setText('cash',money(s.cash));
+    setText('bank',money(s.bank));
+    setText('debt',money(s.debt));
+    setText('health',Math.round(Number(s.health)||0)+'%');
+    var health=document.getElementById('health');if(health)health.className=healthState;
+    var bar=document.getElementById('healthBar');if(bar){bar.style.width=Math.max(0,Math.min(100,Number(s.health)||0))+'%';bar.className=healthState;}
+    setText('city',place[0]+' '+place[1]);
+    setText('country','');
+    setText('flag','');
+    var marketInfo=document.getElementById('marketInfo');if(marketInfo){try{marketInfo.innerHTML=place[0]+': '+cityText()+'.<br>'+rumourHtml();}catch(e){marketInfo.textContent=place[0];}}
+    setText('noticeText',s.notice||'');
+    var storageLabel=document.getElementById('spaceLabel');if(storageLabel){try{storageLabel.innerHTML=used()+'/'+totalSpace()+' <span class="storage-type">'+storageType()+'</span>';}catch(e){}}
+    setText('statusLocation',place[0]+', '+place[1]);
+    var currentRank='Wannabe';try{currentRank=updateBestRankV18();}catch(e){try{currentRank=rank();}catch(_e){}}
+    setText('rank',currentRank);
+    try{setText('rankDays',rankDaysText());}catch(e){setText('rankDays','0/5');}
+    setText('reputation',Math.max(0,Math.min(100,Number(s.reputation)||0))+'/100');
+    try{setText('space',used()+'/'+totalSpace()+' · '+storageType());}catch(e){}
+    setText('heat',Math.max(0,Math.min(100,Number(s.heat)||0))+'%');
+    try{renderMarketV22();renderStorageV22();}catch(e){}
+    try{syncTickerV21();}catch(e){}
+    try{bindMainButtonsV22();}catch(e){}
+    var contacts=document.getElementById('contactsBtn');if(contacts&&typeof window.contacts==='function')contacts.onclick=window.contacts;
+    var rows=document.querySelectorAll('#marketTable .row:not(.header)');
+    for(var i=0;i<rows.length;i++){
+      rows[i].classList.add('market-click-row');
+      rows[i].setAttribute('role','button');
+      rows[i].setAttribute('tabindex','0');
+      rows[i].onclick=function(){if(typeof buyModal==='function')buyModal();else if(typeof transact==='function')transact('Buy');};
+    }
+    try{document.title='Noir Market V9.2';document.documentElement.setAttribute('data-noir-version','9.2');window.NOIR_MARKET_VERSION='9.2';}catch(e){}
+  }
+  draw=renderGameV92;
+  load=loadGameV92;
+  function lockMetadata(){
+    try{document.title='Noir Market V9.2';document.documentElement.setAttribute('data-noir-version','9.2');window.NOIR_MARKET_VERSION='9.2';}catch(e){}
+  }
+  function initRendererV92(){
+    lockMetadata();
+    try{loadGameV92();}catch(e){console.error('V9.2 load failed:',e);}
+    var preintro=document.getElementById('preintro');
+    var splash=document.getElementById('splash');
+    var enter=document.getElementById('splashEnter');
+    var fill=document.getElementById('splashLoaderFill');
+    var loaderText=document.getElementById('splashLoaderText');
+    var entered=false;
+    function revealTitle(){
+      document.body.classList.remove('preintro-running');
+      document.body.classList.add('splash-ui-revealed');
+      if(preintro){preintro.classList.add('preintro-hide');preintro.style.opacity='0';preintro.style.visibility='hidden';}
+      if(fill)fill.style.width='100%';
+      if(loaderText)loaderText.textContent='ENTER';
+      if(enter){enter.disabled=false;enter.classList.add('ready');enter.setAttribute('aria-label','Enter Noir Market');}
+    }
+    function enterTitle(event){
+      if(entered||!enter||enter.disabled)return;
+      entered=true;
+      if(event){event.preventDefault();event.stopPropagation();}
+      try{startBackgroundMusic();}catch(e){}
+      try{sound('positive');}catch(e){}
+      try{showWelcome();}catch(e){console.error('V9.2 HOW TO PLAY failed:',e);return;}
+      if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone');splash.style.display='none';}
+    }
+    if(enter){enter.disabled=true;enter.addEventListener('click',enterTitle,false);enter.addEventListener('touchend',enterTitle,false);}
+    window.__NOIR_NATIVE_TIMEOUT(revealTitle,1250);
+    document.addEventListener('click',function(event){
+      var target=event.target;
+      while(target&&target!==document&&target.id!=='playWelcomeBtn')target=target.parentNode;
+      if(target&&target.id==='playWelcomeBtn')window.__NOIR_NATIVE_TIMEOUT(function(){try{if(typeof window.__NOIR_V91_MAIN_GAME==='function')window.__NOIR_V91_MAIN_GAME();}catch(e){}},0);
+    },true);
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});},{once:true});
+    }
+    var title=document.querySelector('title');
+    if(title&&window.MutationObserver)new MutationObserver(lockMetadata).observe(title,{childList:true,characterData:true,subtree:true});
+    setTimeout(lockMetadata,2500);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRendererV92,{once:true});else initRendererV92();
+  window.addEventListener('pageshow',lockMetadata,false);
 })();

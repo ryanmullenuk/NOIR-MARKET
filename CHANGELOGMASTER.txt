@@ -1,3 +1,14 @@
+V9.2 - Mobile Performance and Screen Isolation
+
+- Replaced the splash artwork with the selected Option 1 NOIR MARKET powder design at a 1320 x 2868 portrait ratio.
+- Locked the mobile viewport, disabled page zoom and kept the installed game portrait-first.
+- Made all modal game screens full-screen and fully opaque so the screen behind cannot show through.
+- Removed active splash dust, snow, particle canvas and parallax animation work from the runtime.
+- Deferred MP3 loading until the first title-screen interaction while preserving title playback and the 50% main-game volume.
+- Kept the MP3 outside the service worker install cache.
+- Updated page, manifest, service worker cache and save metadata to V9.2 with V9.1 migration retained.
+- Audited packaged assets and retained only files referenced by the live build, plus CNAME.
+
 V9.1 - Powder Splash and N Icon Update
 - Replaced the splash artwork with the selected portrait NOIR MARKET powder design.
 - Rebuilt the Apple touch and PWA icon set from the selected black N and white powder artwork.
