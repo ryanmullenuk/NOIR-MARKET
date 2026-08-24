@@ -1,3 +1,10 @@
+V9.3 - Redhead Intro Launch Recovery
+
+- Fixed an endless title metadata observer loop that could starve the intro handover timer and leave the app frozen on the Redhead Games logo.
+- Added an independent intro release safeguard before the main game script loads.
+- Preserved the static NOIR MARKET splash, music behaviour, isolated screens, mobile scaling and all V9.2 gameplay.
+- Updated page, manifest, service worker cache and save metadata to V9.3 with V9.2 migration retained.
+
 V9.2 - Mobile Performance and Screen Isolation
 
 - Replaced the splash artwork with the selected Option 1 NOIR MARKET powder design at a 1320 x 2868 portrait ratio.

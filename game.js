@@ -1,4 +1,4 @@
-/* Noir Market V9.2 consolidated stability/version metadata bootstrap. */
+/* Noir Market V9.3 consolidated stability/version metadata bootstrap. */
 (function(){
   window.NOIR_STATIC_VISUALS=true;
   if(!Array.prototype.at){Array.prototype.at=function(n){n=Math.trunc(n)||0;if(n<0)n+=this.length;return this[n];};}
@@ -12,7 +12,7 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patchDialog,false);else patchDialog();
 })();
 
-/* Noir Market V9.2: final mobile screen and performance controller. */
+/* Noir Market V9.3: final mobile screen and performance controller. */
 (function(){
   function removeObsoleteVisuals(){
     var selectors=['#mainParticleCanvas','#particle-canvas','#splashDustCanvas','#splashSnowCanvas','.live-dust','.game-dust'];
@@ -52,7 +52,7 @@
 })();
 
 /* Stop historical release bootstraps from all starting together. Their gameplay
-   functions remain available, but V9.2 owns the single active startup path. */
+   functions remain available, but V9.3 owns the single active startup path. */
 (function(){
   window.__NOIR_NATIVE_TIMEOUT=window.setTimeout.bind(window);
   window.__NOIR_NATIVE_INTERVAL=window.setInterval.bind(window);
@@ -3209,7 +3209,7 @@ function renderStorageV22() {
     }).join('') : "<div class=\"row\"><span>Empty</span><span>0</span><span>".concat(money(0), "</span></div>")) + "<div class=\"row header\"><span>Weapons Held</span><span>Qty</span><span>Status</span></div>" + (weaponsRows || '<div class="row storage-weapon"><span>None</span><span>0</span><span>Clear</span></div>');
 }
 /* The previous assignment resolved back to this same hoisted function and caused
-   an infinite render recursion. V9.2 starts this renderer as the clean base. */
+   an infinite render recursion. V9.3 starts this renderer as the clean base. */
 var v22PreviousDraw = null;
 function draw() {
     var _a;
@@ -10311,25 +10311,25 @@ catch (e) { } }, 980);
   window.addEventListener('pageshow',applyMetadata,false);
 })();
 
-/* Restore normal browser scheduling for the single V9.2 startup controller. */
+/* Restore normal browser scheduling for the single V9.3 startup controller. */
 window.__NOIR_FILTER_LEGACY_BOOT=false;
 if(window.__NOIR_NATIVE_TIMEOUT)window.setTimeout=window.__NOIR_NATIVE_TIMEOUT;
 if(window.__NOIR_NATIVE_INTERVAL)window.setInterval=window.__NOIR_NATIVE_INTERVAL;
 if(window.__NOIR_NATIVE_DOCUMENT_ADD)document.addEventListener=window.__NOIR_NATIVE_DOCUMENT_ADD;
 if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_WINDOW_ADD;
 
-/* Noir Market V9.2: selected powder splash and mobile performance release.
+/* Noir Market V9.3: selected powder splash and launch recovery release.
    The browser loads the supplied MP3 after the first title-screen gesture,
    starts it during the title sequence, then reduces it to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.2';
-  var SAVE_KEY='noir_market_v9_2';
+  var VERSION='9.3';
+  var SAVE_KEY='noir_market_v9_3';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_2_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_1_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_3_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_2_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -10343,7 +10343,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{document.title='Noir Market V9.2';}catch(e){}
+    try{if(document.title!=='Noir Market V9.3')document.title='Noir Market V9.3';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -10391,10 +10391,10 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   function prepareMusic(){
     if(musicElement)return musicElement;
     try{
-      musicElement=$('backgroundMusicV92');
+      musicElement=$('backgroundMusicV93');
       if(!musicElement){
         musicElement=new Audio();
-        musicElement.id='backgroundMusicV92';
+        musicElement.id='backgroundMusicV93';
         musicElement.hidden=true;
         musicElement.setAttribute('aria-hidden','true');
         musicElement.src=MUSIC_PATH;
@@ -10581,19 +10581,19 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     applyMetadata();
     bindTitleFallback();
     try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.2: mobile performance and isolated screens active.');
+    console.log('NOIR MARKET V9.3: launch recovery and isolated screens active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();if(interactionUnlocked&&musicEnabled)playAtCurrentPhase();},false);
 })();
 
-/* V9.2 uses one non-recursive renderer. Earlier release wrappers remain only for
+/* V9.3 uses one non-recursive renderer. Earlier release wrappers remain only for
    save migration and gameplay compatibility; they are no longer part of the
    active render path. */
 (function(){
   function setText(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
-  function migrationKeysV92(){
-    var keys=['noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
+  function migrationKeysV93(){
+    var keys=['noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
     for(var major=8;major>=1;major--){
       for(var minor=9;minor>=0;minor--){
         if(major===1&&minor<2)continue;
@@ -10602,8 +10602,8 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     }
     return keys.concat(['noir_market_v13','noir_market_v12','noir_market_v9','noir_market_v6','noir_market_v5','noir_market_v4']);
   }
-  function loadGameV92(){
-    var keys=migrationKeysV92();
+  function loadGameV93(){
+    var keys=migrationKeysV93();
     var loaded=null;
     for(var i=0;i<keys.length;i++){
       try{
@@ -10616,15 +10616,15 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       try{ensureStats();}catch(e){}
       try{setActiveCityMarket();}catch(e){}
       try{save();}catch(e){}
-      renderGameV92();
+      renderGameV93();
       return false;
     }
     try{newGame(false);}catch(e){try{s=baseState();}catch(_e){s=null;}}
     try{save();}catch(e){}
-    renderGameV92();
+    renderGameV93();
     return true;
   }
-  function renderGameV92(){
+  function renderGameV93(){
     if(!s||typeof s!=='object')return;
     try{ensureStats();}catch(e){}
     try{setActiveCityMarket();}catch(e){}
@@ -10663,16 +10663,20 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       rows[i].setAttribute('tabindex','0');
       rows[i].onclick=function(){if(typeof buyModal==='function')buyModal();else if(typeof transact==='function')transact('Buy');};
     }
-    try{document.title='Noir Market V9.2';document.documentElement.setAttribute('data-noir-version','9.2');window.NOIR_MARKET_VERSION='9.2';}catch(e){}
+    try{if(document.title!=='Noir Market V9.3')document.title='Noir Market V9.3';document.documentElement.setAttribute('data-noir-version','9.3');window.NOIR_MARKET_VERSION='9.3';}catch(e){}
   }
-  draw=renderGameV92;
-  load=loadGameV92;
+  draw=renderGameV93;
+  load=loadGameV93;
   function lockMetadata(){
-    try{document.title='Noir Market V9.2';document.documentElement.setAttribute('data-noir-version','9.2');window.NOIR_MARKET_VERSION='9.2';}catch(e){}
+    try{
+      if(document.title!=='Noir Market V9.3')document.title='Noir Market V9.3';
+      if(document.documentElement.getAttribute('data-noir-version')!=='9.3')document.documentElement.setAttribute('data-noir-version','9.3');
+      window.NOIR_MARKET_VERSION='9.3';
+    }catch(e){}
   }
-  function initRendererV92(){
+  function initRendererV93(){
     lockMetadata();
-    try{loadGameV92();}catch(e){console.error('V9.2 load failed:',e);}
+    try{loadGameV93();}catch(e){console.error('V9.3 load failed:',e);}
     var preintro=document.getElementById('preintro');
     var splash=document.getElementById('splash');
     var enter=document.getElementById('splashEnter');
@@ -10680,9 +10684,13 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     var loaderText=document.getElementById('splashLoaderText');
     var entered=false;
     function revealTitle(){
-      document.body.classList.remove('preintro-running');
-      document.body.classList.add('splash-ui-revealed');
-      if(preintro){preintro.classList.add('preintro-hide');preintro.style.opacity='0';preintro.style.visibility='hidden';}
+      if(window.__NOIR_INTRO_SAFEGUARD)window.clearTimeout(window.__NOIR_INTRO_SAFEGUARD);
+      if(typeof window.__NOIR_RELEASE_INTRO==='function')window.__NOIR_RELEASE_INTRO();
+      else{
+        document.body.classList.remove('preintro-running');
+        document.body.classList.add('splash-ui-revealed');
+        if(preintro){preintro.classList.add('preintro-hide');preintro.style.opacity='0';preintro.style.visibility='hidden';}
+      }
       if(fill)fill.style.width='100%';
       if(loaderText)loaderText.textContent='ENTER';
       if(enter){enter.disabled=false;enter.classList.add('ready');enter.setAttribute('aria-label','Enter Noir Market');}
@@ -10693,7 +10701,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       if(event){event.preventDefault();event.stopPropagation();}
       try{startBackgroundMusic();}catch(e){}
       try{sound('positive');}catch(e){}
-      try{showWelcome();}catch(e){console.error('V9.2 HOW TO PLAY failed:',e);return;}
+      try{showWelcome();}catch(e){console.error('V9.3 HOW TO PLAY failed:',e);return;}
       if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone');splash.style.display='none';}
     }
     if(enter){enter.disabled=true;enter.addEventListener('click',enterTitle,false);enter.addEventListener('touchend',enterTitle,false);}
@@ -10707,9 +10715,13 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});},{once:true});
     }
     var title=document.querySelector('title');
-    if(title&&window.MutationObserver)new MutationObserver(lockMetadata).observe(title,{childList:true,characterData:true,subtree:true});
+    /* Only correct a genuinely changed title. Writing the same title from inside
+       this observer caused V9.2's endless microtask loop and froze the intro. */
+    if(title&&window.MutationObserver)new MutationObserver(function(){
+      if(document.title!=='Noir Market V9.3')lockMetadata();
+    }).observe(title,{childList:true,characterData:true,subtree:true});
     setTimeout(lockMetadata,2500);
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRendererV92,{once:true});else initRendererV92();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRendererV93,{once:true});else initRendererV93();
   window.addEventListener('pageshow',lockMetadata,false);
 })();
