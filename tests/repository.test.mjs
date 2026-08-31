@@ -13,9 +13,9 @@ test('release metadata is aligned across the app shell', () => {
   const manifest = JSON.parse(read('manifest.json'));
   const serviceWorker = read('sw.js');
 
-  assert.match(html, /<title>Noir Market V9\.4<\/title>/);
-  assert.equal(manifest.version, '9.4');
-  assert.match(serviceWorker, /noir-market-v9\.4/);
+  assert.match(html, /<title>Noir Market V9\.5<\/title>/);
+  assert.equal(manifest.version, '9.5');
+  assert.match(serviceWorker, /noir-market-v9\.5/);
 });
 
 test('all packaged assets referenced by the app shell exist', () => {
@@ -50,7 +50,7 @@ test('game source parses and contains one active top-level declaration per funct
   assert.ok(Buffer.byteLength(source) < 400_000, 'game.js exceeded the 400 KB runtime budget');
 });
 
-test('the V9.4 startup remains static and single-renderer', () => {
+test('the V9.5 startup remains static and single-renderer', () => {
   const source = read('game.js');
 
   assert.match(source, /window\.NOIR_STATIC_VISUALS=true/);

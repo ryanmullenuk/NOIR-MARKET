@@ -1,3 +1,12 @@
+V9.5 - Free Play, City Stories and Player Identity
+
+Added a Free Play entry route limited to London, Manchester and Birmingham.
+Added an Unlock All Cities route with a StoreKit-ready purchase bridge and web preview entitlement.
+Added ten humorous next-day city stories using a hidden truth deck with exactly five true and five false results per cycle.
+Added male and female circular silhouette avatar choices to the menu.
+Locked full-game travel and shipping destinations consistently in Free Play.
+Expanded automated regression coverage to 16 passing checks.
+
 V9.4 - Runtime Consolidation and Regression Coverage
 - Removed 120 shadowed function declarations and 22 obsolete visual/startup patch layers.
 - Reduced game.js by roughly 46% while preserving active gameplay and save migration.

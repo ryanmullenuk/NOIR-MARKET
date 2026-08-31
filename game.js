@@ -1,4 +1,4 @@
-/* Noir Market V9.4 consolidated runtime and regression release. */
+/* Noir Market V9.5 free-play, city stories and player identity release. */
 (function(){
   window.NOIR_STATIC_VISUALS=true;
   if(!Array.prototype.at){Array.prototype.at=function(n){n=Math.trunc(n)||0;if(n<0)n+=this.length;return this[n];};}
@@ -12,7 +12,248 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patchDialog,false);else patchDialog();
 })();
 
-/* Noir Market V9.4: final mobile screen and performance controller. */
+/* Noir Market V9.5: hidden-accuracy city stories, player avatars and the
+   StoreKit-ready Free Play / Unlock All Cities access model. */
+(function(){
+ function installV95(){
+  var VERSION='9.5';
+  var FREE_CITY_COUNT=3;
+  var PRODUCT_ID='games.redhead.noirmarket.unlockallcities';
+  var previousBaseStateV95=typeof baseState==='function'?baseState:null;
+  var previousSaveV95=typeof save==='function'?save:null;
+  var previousLoadV95=typeof load==='function'?load:null;
+  var previousDrawV95=typeof draw==='function'?draw:null;
+  var previousShowMenuV95=typeof showMenu==='function'?showMenu:null;
+  var previousNextDayV95=typeof nextDay==='function'?nextDay:null;
+  var previousValidShipDestV95=typeof validShipDestV20==='function'?validShipDestV20:null;
+  var pendingUnlockCallbackV95=null;
+
+  var storyTemplatesV95=[
+    {type:'shortage',text:'A hen party in {city} has mistaken {drug} for table decorations. Dealers expect demand to climb tomorrow.'},
+    {type:'collapse',text:'A delivery driver in {city} has taken three crates of {drug} to the wrong Premier Inn. Street prices may fall tomorrow.'},
+    {type:'crackdown',text:'Police in {city} ordered extra evidence bags after somebody labelled a van “Definitely Not {drug}”. Expect attention tomorrow.'},
+    {type:'shortage',text:'A wedding in {city} has booked a DJ, a magician and rather too much {drug}. Demand could jump tomorrow.'},
+    {type:'collapse',text:'A dog walker found {drug} scattered across {city}; half the city is pretending not to notice. Prices may sink tomorrow.'},
+    {type:'crackdown',text:'Officers in {city} are practising suspiciously cheerful stop-and-search drills. Travel light tomorrow.'},
+    {type:'shortage',text:'A stag do in {city} bought the wrong kind of party bags. {drug} supply may tighten tomorrow.'},
+    {type:'collapse',text:'A bargain shipment of {drug} is circling {city} because the driver refuses to ask directions. Prices could tumble tomorrow.'},
+    {type:'crackdown',text:'A local paper in {city} printed a map of the quietest alleys. Police bought every copy. A crackdown may follow tomorrow.'},
+    {type:'shortage',text:'Someone in {city} has launched an “artisan” {drug} subscription box. Demand may rise tomorrow.'}
+  ];
+  window.NOIR_NEWS_STORIES_V95=storyTemplatesV95.slice();
+
+  function $(id){return document.getElementById(id);}
+  function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function ensureV95(state){
+    if(!state||typeof state!=='object')return state;
+    state.version=VERSION;
+    if(state.avatar!=='female'&&state.avatar!=='male')state.avatar='male';
+    if(typeof state.allCitiesUnlocked!=='boolean')state.allCitiesUnlocked=false;
+    if(state.accessMode!=='full'&&state.accessMode!=='free')state.accessMode=state.allCitiesUnlocked?'full':'free';
+    state.v95=state.v95||{};
+    if(!Array.isArray(state.v95.storyTruthDeck))state.v95.storyTruthDeck=[];
+    if(typeof state.v95.lastStoryIndex!=='number')state.v95.lastStoryIndex=-1;
+    state.v95.freeCityCount=FREE_CITY_COUNT;
+    state.v95.unlockProduct=PRODUCT_ID;
+    return state;
+  }
+  function fullAccessV95(){return !!(s&&s.allCitiesUnlocked&&s.accessMode==='full');}
+  function availableCityV95(index){return fullAccessV95()||index<FREE_CITY_COUNT;}
+  function shuffleV95(list){
+    for(var i=list.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var value=list[i];list[i]=list[j];list[j]=value;}
+    return list;
+  }
+  function nextStoryTruthV95(){
+    ensureV95(s);
+    if(!s.v95.storyTruthDeck.length)s.v95.storyTruthDeck=shuffleV95([true,true,true,true,true,false,false,false,false,false]);
+    return !!s.v95.storyTruthDeck.pop();
+  }
+  function storyTextV95(template,city,drug){return template.text.replace(/\{city\}/g,city).replace(/\{drug\}/g,drug);}
+
+  newRumour=function(){
+    if(typeof ensureEconomy==='function')ensureEconomy();
+    ensureV95(s);
+    var city=places[Math.floor(Math.random()*places.length)][0];
+    var drug=typeof pickDrug==='function'?pickDrug():drugs[Math.floor(Math.random()*drugs.length)][0];
+    var index=Math.floor(Math.random()*storyTemplatesV95.length);
+    if(index===s.v95.lastStoryIndex)index=(index+1)%storyTemplatesV95.length;
+    s.v95.lastStoryIndex=index;
+    var template=storyTemplatesV95[index];
+    var accurate=nextStoryTruthV95();
+    var text=storyTextV95(template,city,drug);
+    s.rumour={city:city,drug:drug,type:template.type,accurate:accurate,accuracy:50,text:text,storyIndex:index};
+    s.news=text;
+    if(s.economy){
+      s.economy.news={text:text,stories:[text],day:s.day};
+      s.economy.history=s.economy.history||[];
+      s.economy.history.unshift(text);
+      s.economy.history=s.economy.history.slice(0,10);
+    }
+    return s.rumour;
+  };
+  rumourHtml=function(){var rumour=s.rumour||newRumour();return '<strong>'+esc(rumour.text)+'</strong> <span class="subtle">Stories are unreliable.</span>';};
+
+  function concealStoryTruthV95(){
+    var body=$('modalBody');
+    if(!body)return;
+    var headings=body.querySelectorAll('h4');
+    for(var i=0;i<headings.length;i++)if(headings[i].textContent.trim()==='Rumour Result')headings[i].textContent="Yesterday's Story";
+    var strong=body.querySelectorAll('strong');
+    for(var j=0;j<strong.length;j++)if(/^(TRUE|FALSE)$/.test(strong[j].textContent.trim()))strong[j].textContent='UNCONFIRMED';
+  }
+  if(previousNextDayV95){nextDay=function(){var result=previousNextDayV95.apply(this,arguments);setTimeout(concealStoryTruthV95,0);return result;};}
+
+  function persistV95(){ensureV95(s);if(previousSaveV95)previousSaveV95();}
+  function setFullAccessV95(enabled){
+    ensureV95(s);
+    s.allCitiesUnlocked=!!enabled;
+    s.accessMode=enabled?'full':'free';
+    persistV95();
+    try{draw();}catch(e){}
+  }
+  window.NOIR_MARKET_UNLOCK_ALL_CITIES=function(){
+    setFullAccessV95(true);
+    if(typeof pendingUnlockCallbackV95==='function'){var callback=pendingUnlockCallbackV95;pendingUnlockCallbackV95=null;callback();}
+    return true;
+  };
+  window.NOIR_MARKET_RESTORE_UNLOCK=function(enabled){setFullAccessV95(!!enabled);return !!enabled;};
+
+  function requestUnlockV95(callback){
+    pendingUnlockCallbackV95=typeof callback==='function'?callback:null;
+    try{
+      if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.noirPurchase){
+        window.webkit.messageHandlers.noirPurchase.postMessage({productId:PRODUCT_ID});
+        return;
+      }
+      if(typeof window.noirNativePurchase==='function'){
+        window.noirNativePurchase(PRODUCT_ID);
+        return;
+      }
+    }catch(e){}
+    modal('Unlock All Cities','<div class="unlock-copy-v95"><p>Unlock all 14 cities, the complete travel network and shipping routes.</p><p class="subtle">The iPhone app will use a secure one-off App Store purchase. This website can unlock a local preview for testing.</p><div class="unlock-actions-v95"><button type="button" class="buy" id="unlockWebPreviewV95">UNLOCK WEB PREVIEW</button><button type="button" id="backToFreeV95">BACK TO FREE PLAY</button></div></div>');
+    setTimeout(function(){
+      var preview=$('unlockWebPreviewV95'),back=$('backToFreeV95');
+      if(preview)preview.onclick=function(){window.NOIR_MARKET_UNLOCK_ALL_CITIES();};
+      if(back)back.onclick=showWelcome;
+    },0);
+  }
+
+  function startPickerHtmlV95(full){
+    var limit=full?places.length:FREE_CITY_COUNT;
+    var buttons=places.slice(0,limit).map(function(place,index){return '<button type="button" class="start-city-option-v95 '+(index===0?'selected':'')+'" data-start-city-v95="'+index+'" aria-pressed="'+(index===0?'true':'false')+'">'+esc(place[0])+'</button>';}).join('');
+    return '<div class="access-start-v95"><p>'+(full?'Choose any starting city.':'Free Play includes London, Manchester and Birmingham.')+'</p><div class="start-city-grid-v95" id="startCityGridV95">'+buttons+'</div><div class="howto-actions"><button type="button" id="backStartV95">BACK</button><button type="button" class="buy" id="playWelcomeBtn">PLAY '+(full?'FULL GAME':'FREE')+'</button></div></div>';
+  }
+  function applyStartingCityV95(index,full){
+    ensureV95(s);
+    if(full&&!s.allCitiesUnlocked)return requestUnlockV95(function(){showStartPickerV95(true);});
+    s.accessMode=full?'full':'free';
+    s.city=index;
+    var city=places[index][0];
+    s.notice='You start in '+city+' with £1,000 cash, £0 in the bank and a clean slate.';
+    s.news=(city+': MARKETS ARE QUIET TODAY.').toUpperCase();
+    if(s.economy&&s.economy.news)s.economy.news.text=s.news;
+    try{ensureVaults();ensureEconomy();setActiveCityMarket();}catch(e){}
+    persistV95();
+    try{draw();}catch(e){}
+    var dialog=$('modal');if(dialog&&dialog.open)dialog.close();
+  }
+  function showStartPickerV95(full){
+    if(full&&!s.allCitiesUnlocked)return requestUnlockV95(function(){showStartPickerV95(true);});
+    var selected=0;
+    modal(full?'Full Game':'Free Play',startPickerHtmlV95(full));
+    setTimeout(function(){
+      var options=document.querySelectorAll('[data-start-city-v95]');
+      for(var i=0;i<options.length;i++)options[i].onclick=function(){
+        selected=Number(this.getAttribute('data-start-city-v95'))||0;
+        for(var j=0;j<options.length;j++){var active=Number(options[j].getAttribute('data-start-city-v95'))===selected;options[j].classList.toggle('selected',active);options[j].setAttribute('aria-pressed',active?'true':'false');}
+      };
+      var back=$('backStartV95'),play=$('playWelcomeBtn');
+      if(back)back.onclick=showWelcome;
+      if(play)play.onclick=function(){applyStartingCityV95(selected,full);};
+    },0);
+  }
+  showWelcome=function(){
+    ensureV95(s);
+    var unlocked=s.allCitiesUnlocked;
+    modal('How to Play','<div class="howto access-choice-v95"><p>You start with £1,000, no debt and questionable judgement.</p><p>News stories may point towards tomorrow’s opportunity. Half are useful. Half are complete nonsense.</p><p class="disclaimer">This game is for entertainment purposes only.</p><div class="access-buttons-v95"><button type="button" class="buy" id="freePlayBtnV95">FREE PLAY</button><button type="button" id="unlockAllCitiesBtnV95">'+(unlocked?'PLAY ALL CITIES':'UNLOCK ALL CITIES')+'</button></div><button type="button" id="welcomeInstructionsBtn" class="play-wide">INSTRUCTIONS</button></div>');
+    setTimeout(function(){
+      var free=$('freePlayBtnV95'),unlock=$('unlockAllCitiesBtnV95'),instructions=$('welcomeInstructionsBtn');
+      if(free)free.onclick=function(){showStartPickerV95(false);};
+      if(unlock)unlock.onclick=function(){if(s.allCitiesUnlocked)showStartPickerV95(true);else requestUnlockV95(function(){showStartPickerV95(true);});};
+      if(instructions)instructions.onclick=function(){if(typeof showInstructionsV49==='function')showInstructionsV49(true);};
+    },0);
+  };
+
+  showTravelFlights=function(){
+    ensureV95(s);
+    var panel=$('travelPanel');if(!panel)return;
+    panel.innerHTML='<div class="travel-head"><p class="subtle">Select a UK or Ireland city. Prices change daily and airport security is not your mate.</p><button type="button" id="stayFromTravel">STAY HERE</button></div><div class="travel-list">'+places.map(function(place,index){
+      var current=index===s.city;
+      var allowed=availableCityV95(index);
+      var fare=allowed?money(travelFare(index)):'FULL GAME';
+      return '<button type="button" data-city="'+index+'" class="'+(!allowed?'locked-city-v95':'')+'" '+(current?'disabled':'')+'><strong>'+esc(place[0])+' <em>'+esc(fare)+'</em></strong><span>'+esc(place[1]+' · '+place[3])+(allowed?'':' · Unlock all cities')+'</span></button>';
+    }).join('')+'</div>';
+    var stayButton=$('stayFromTravel');if(stayButton)stayButton.onclick=typeof performStayV22==='function'?performStayV22:stay;
+    var buttons=document.querySelectorAll('[data-city]');
+    for(var i=0;i<buttons.length;i++)buttons[i].onclick=function(){
+      var index=Number(this.getAttribute('data-city'));
+      if(!availableCityV95(index))return requestUnlockV95(function(){travel();});
+      var fare=travelFare(index);if(fare>s.cash){errorMsg('INSUFFICIENT FUNDS');return;}airportWarning(index,fare);
+    };
+  };
+
+  validShipDestV20=function(){
+    if(fullAccessV95()&&previousValidShipDestV95)return previousValidShipDestV95();
+    var selected=Number(selectedShippingDestV20);
+    if(!availableCityV95(selected)||selected===s.city){
+      selected=0;
+      while(selected<FREE_CITY_COUNT&&selected===s.city)selected++;
+      if(selected>=FREE_CITY_COUNT)selected=0;
+      selectedShippingDestV20=selected;
+    }
+    return Number(selectedShippingDestV20);
+  };
+  shippingDestinationTilesV20=function(){
+    var selected=validShipDestV20();
+    return '<div class="ship-destination-grid">'+places.map(function(place,index){
+      var current=index===s.city;
+      var allowed=availableCityV95(index);
+      return '<button type="button" class="ship-destination-tile '+(index===selected?'active ':'')+(!allowed?'locked-city-v95':'')+'" data-shipdest="'+index+'" '+((current||!allowed)?'disabled':'')+'><strong>'+esc(place[0])+'</strong><span>'+(current?'Current city':(!allowed?'Full game':esc(place[1]+' · '+place[3])))+'</span></button>';
+    }).join('')+'</div>';
+  };
+
+  function avatarFigureV95(type){return '<span class="avatar-circle-v95" aria-hidden="true"><span class="avatar-head-v95"></span><span class="avatar-body-v95"></span>'+(type==='female'?'<span class="avatar-hair-v95"></span>':'')+'</span>';}
+  function enhanceMenuV95(){
+    ensureV95(s);
+    var player=document.querySelector('#modalBody .menu-player');if(!player)return;
+    var block=document.createElement('div');block.className='menu-avatar-v95';
+    block.innerHTML='<span class="menu-avatar-label-v95">Player avatar</span><div class="avatar-options-v95"><button type="button" id="avatarMaleV95" class="avatar-option-v95 '+(s.avatar==='male'?'selected':'')+'" aria-pressed="'+(s.avatar==='male'?'true':'false')+'">'+avatarFigureV95('male')+'<span>Male</span></button><button type="button" id="avatarFemaleV95" class="avatar-option-v95 '+(s.avatar==='female'?'selected':'')+'" aria-pressed="'+(s.avatar==='female'?'true':'false')+'">'+avatarFigureV95('female')+'<span>Female</span></button></div>'+(s.allCitiesUnlocked?'':'<button type="button" id="menuUnlockCitiesV95" class="unlock-menu-v95">UNLOCK ALL CITIES</button>');
+    player.insertAdjacentElement('afterend',block);
+    function choose(type){s.avatar=type;persistV95();showMenu();}
+    var male=$('avatarMaleV95'),female=$('avatarFemaleV95'),unlock=$('menuUnlockCitiesV95');
+    if(male)male.onclick=function(){choose('male');};
+    if(female)female.onclick=function(){choose('female');};
+    if(unlock)unlock.onclick=function(){requestUnlockV95(showMenu);};
+  }
+  showMenu=function(){if(previousShowMenuV95)previousShowMenuV95();enhanceMenuV95();};
+
+  if(previousBaseStateV95)baseState=function(){return ensureV95(previousBaseStateV95());};
+  save=function(){ensureV95(s);if(previousSaveV95)previousSaveV95();};
+  load=function(){var result=previousLoadV95?previousLoadV95():true;ensureV95(s);save();try{draw();}catch(e){}return result;};
+  if(previousDrawV95)draw=function(){ensureV95(s);var result=previousDrawV95.apply(this,arguments);ensureV95(s);return result;};
+
+  function initV95(){
+    ensureV95(s);
+    persistV95();
+    try{draw();}catch(e){}
+    try{document.title='Noir Market V9.5';document.documentElement.setAttribute('data-noir-version',VERSION);window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
+  }
+  initV95();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installV95,{once:true});else installV95();
+})();
+
+/* Noir Market V9.5: final mobile screen and performance controller. */
 (function(){
   function removeObsoleteVisuals(){
     var selectors=['#mainParticleCanvas','#particle-canvas','#splashDustCanvas','#splashSnowCanvas','.live-dust','.game-dust'];
@@ -5294,18 +5535,18 @@ if(window.__NOIR_NATIVE_INTERVAL)window.setInterval=window.__NOIR_NATIVE_INTERVA
 if(window.__NOIR_NATIVE_DOCUMENT_ADD)document.addEventListener=window.__NOIR_NATIVE_DOCUMENT_ADD;
 if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_WINDOW_ADD;
 
-/* Noir Market V9.4: consolidated runtime and regression release.
+/* Noir Market V9.5: consolidated runtime and regression release.
    The browser loads the supplied MP3 after the first title-screen gesture,
    starts it during the title sequence, then reduces it to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.4';
-  var SAVE_KEY='noir_market_v9_4';
+  var VERSION='9.5';
+  var SAVE_KEY='noir_market_v9_5';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_4_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_3_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_5_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_4_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -5319,7 +5560,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{if(document.title!=='Noir Market V9.4')document.title='Noir Market V9.4';}catch(e){}
+    try{if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -5557,19 +5798,19 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     applyMetadata();
     bindTitleFallback();
     try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.4: consolidated runtime and regression checks active.');
+    console.log('NOIR MARKET V9.5: free play, city stories and player identity active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();if(interactionUnlocked&&musicEnabled)playAtCurrentPhase();},false);
 })();
 
-/* V9.4 uses one non-recursive renderer. Earlier release wrappers remain only for
+/* V9.5 uses one non-recursive renderer. Earlier release wrappers remain only for
    save migration and gameplay compatibility; they are no longer part of the
    active render path. */
 (function(){
   function setText(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
   function migrationKeysV93(){
-    var keys=['noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
+    var keys=['noir_market_v9_5','noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
     for(var major=8;major>=1;major--){
       for(var minor=9;minor>=0;minor--){
         if(major===1&&minor<2)continue;
@@ -5639,15 +5880,15 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       rows[i].setAttribute('tabindex','0');
       rows[i].onclick=function(){if(typeof buyModal==='function')buyModal();else if(typeof transact==='function')transact('Buy');};
     }
-    try{if(document.title!=='Noir Market V9.4')document.title='Noir Market V9.4';document.documentElement.setAttribute('data-noir-version','9.4');window.NOIR_MARKET_VERSION='9.4';}catch(e){}
+    try{if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';document.documentElement.setAttribute('data-noir-version','9.5');window.NOIR_MARKET_VERSION='9.5';}catch(e){}
   }
   draw=renderGameV93;
   load=loadGameV93;
   function lockMetadata(){
     try{
-      if(document.title!=='Noir Market V9.4')document.title='Noir Market V9.4';
-      if(document.documentElement.getAttribute('data-noir-version')!=='9.4')document.documentElement.setAttribute('data-noir-version','9.4');
-      window.NOIR_MARKET_VERSION='9.4';
+      if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';
+      if(document.documentElement.getAttribute('data-noir-version')!=='9.5')document.documentElement.setAttribute('data-noir-version','9.5');
+      window.NOIR_MARKET_VERSION='9.5';
     }catch(e){}
   }
   function initRendererV93(){
@@ -5677,7 +5918,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       if(event){event.preventDefault();event.stopPropagation();}
       try{startBackgroundMusic();}catch(e){}
       try{sound('positive');}catch(e){}
-      try{showWelcome();}catch(e){console.error('V9.4 HOW TO PLAY failed:',e);return;}
+      try{showWelcome();}catch(e){console.error('V9.5 HOW TO PLAY failed:',e);return;}
       if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone');splash.style.display='none';}
     }
     if(enter){enter.disabled=true;enter.addEventListener('click',enterTitle,false);enter.addEventListener('touchend',enterTitle,false);}
@@ -5694,7 +5935,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     /* Only correct a genuinely changed title. Writing the same title from inside
        this observer caused V9.2's endless microtask loop and froze the intro. */
     if(title&&window.MutationObserver)new MutationObserver(function(){
-      if(document.title!=='Noir Market V9.4')lockMetadata();
+      if(document.title!=='Noir Market V9.5')lockMetadata();
     }).observe(title,{childList:true,characterData:true,subtree:true});
     setTimeout(lockMetadata,2500);
   }
