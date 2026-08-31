@@ -1391,7 +1391,7 @@ body.v85-game-entered:not(.modal-open) .app{pointer-events:auto!important;}
 #splashDustCanvas,#splashSnowCanvas,.live-dust,.game-dust,#particle-canvas{display:none!important;opacity:0!important;pointer-events:none!important;}
 .splash-static-image{image-rendering:auto!important;}
 
-/* Noir Market V9.3: fixed mobile game canvas, isolated screens and static rendering. */
+/* Noir Market V9.4: fixed mobile game canvas, isolated screens and static rendering. */
 html{
   width:100%;
   min-height:100%;

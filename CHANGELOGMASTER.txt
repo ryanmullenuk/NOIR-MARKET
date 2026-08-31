@@ -1,3 +1,10 @@
+V9.4 - Runtime Consolidation and Regression Coverage
+- Removed 120 shadowed function declarations and 22 obsolete visual/startup patch layers.
+- Reduced game.js by roughly 46% while preserving active gameplay and save migration.
+- Disabled the unused animation loop so the static title screen has no background CPU drain.
+- Added automated parsing, asset, version, startup, navigation, trade, travel and save-migration checks.
+- Added GitHub Actions regression checks for every push and pull request.
+
 V9.3 - Redhead Intro Launch Recovery
 
 - Fixed an endless title metadata observer loop that could starve the intro handover timer and leave the app frozen on the Redhead Games logo.
