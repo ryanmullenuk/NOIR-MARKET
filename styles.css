@@ -1597,26 +1597,20 @@ body.preintro-running #splash.splash{
   width:min(90vw,540px)!important;
   margin:0!important;
   transform:translate(-50%,-54%)!important;
-  font-family:Impact,Haettenschweiler,"Arial Black",sans-serif!important;
-  font-size:clamp(56px,16vw,110px)!important;
+  color:#fff!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:clamp(54px,15vw,104px)!important;
   font-weight:900!important;
-  line-height:.79!important;
-  letter-spacing:-.045em!important;
+  line-height:.86!important;
+  letter-spacing:0!important;
   text-align:center!important;
-  text-shadow:0 3px 24px rgba(0,0,0,.82)!important;
+  text-shadow:none!important;
   pointer-events:none!important;
 }
 #splash .splash-title-v97 span{
   display:block!important;
-  color:transparent!important;
-  background-color:#fff!important;
-  background-image:
-    radial-gradient(circle at center,rgba(13,12,18,.72) 0 .65px,transparent .95px),
-    radial-gradient(circle at center,rgba(13,12,18,.45) 0 .45px,transparent .8px)!important;
-  background-position:0 0,3px 4px!important;
-  background-size:8px 10px,11px 13px!important;
-  -webkit-background-clip:text!important;
-  background-clip:text!important;
+  color:#fff!important;
+  background:none!important;
 }
 #splash .splash-loader{
   height:46px!important;

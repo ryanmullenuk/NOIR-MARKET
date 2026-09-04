@@ -14,8 +14,8 @@ test('release metadata is aligned across the app shell', () => {
   const serviceWorker = read('sw.js');
 
   assert.match(html, /<title>Noir Market V9\.7<\/title>/);
-  assert.match(html, /styles\.css\?v=9\.7\.2/);
-  assert.match(html, /game\.js\?v=9\.7\.2/);
+  assert.match(html, /styles\.css\?v=9\.7\.3/);
+  assert.match(html, /game\.js\?v=9\.7\.3/);
   assert.equal(manifest.version, '9.7');
   assert.match(serviceWorker, /noir-market-v9\.7/);
 });
@@ -69,7 +69,8 @@ test('the V9.7 startup uses one bounded settling-snow animation and one game ren
   assert.match(html, /class="splash-title-v97"[^>]*><span>NOIR<\/span><span>MARKET<\/span>/);
   assert.match(read('styles.css'), /body\.preintro-running #splash\.splash\{[\s\S]*?opacity:1!important/);
   assert.match(read('styles.css'), /\.splash-loader\.clicked-v97 \.splash-loader-fill/);
-  assert.match(read('styles.css'), /font-family:Impact,Haettenschweiler,"Arial Black",sans-serif/);
+  assert.match(read('styles.css'), /font-family:Arial,Helvetica,sans-serif/);
+  assert.match(read('styles.css'), /#splash \.splash-title-v97 span\{[\s\S]*?color:#fff!important;[\s\S]*?background:none!important/);
   assert.doesNotMatch(html, /splash-static\.jpg|splashStaticImage/);
   assert.doesNotMatch(serviceWorker, /splash-static\.jpg/);
 });
