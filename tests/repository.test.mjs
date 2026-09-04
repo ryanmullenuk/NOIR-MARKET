@@ -13,11 +13,11 @@ test('release metadata is aligned across the app shell', () => {
   const manifest = JSON.parse(read('manifest.json'));
   const serviceWorker = read('sw.js');
 
-  assert.match(html, /<title>Noir Market V9\.6<\/title>/);
-  assert.match(html, /styles\.css\?v=9\.6\.1/);
-  assert.match(html, /game\.js\?v=9\.6\.1/);
-  assert.equal(manifest.version, '9.6');
-  assert.match(serviceWorker, /noir-market-v9\.6/);
+  assert.match(html, /<title>Noir Market V9\.7<\/title>/);
+  assert.match(html, /styles\.css\?v=9\.7\.0/);
+  assert.match(html, /game\.js\?v=9\.7\.0/);
+  assert.equal(manifest.version, '9.7');
+  assert.match(serviceWorker, /noir-market-v9\.7/);
 });
 
 test('all packaged assets referenced by the app shell exist', () => {
@@ -51,7 +51,7 @@ test('game source parses and contains one active top-level declaration per funct
   assert.ok(Buffer.byteLength(source) < 400_000, 'game.js exceeded the 400 KB runtime budget');
 });
 
-test('the V9.6 startup uses one bounded splash animation and one game renderer', () => {
+test('the V9.7 startup uses one bounded settling-snow animation and one game renderer', () => {
   const source = read('game.js');
   const html = read('index.html');
   const serviceWorker = read('sw.js');
@@ -60,11 +60,15 @@ test('the V9.6 startup uses one bounded splash animation and one game renderer',
   assert.match(source, /draw=renderGameV93/);
   assert.match(source, /load=loadGameV93/);
   assert.match(source, /window\.__NOIR_NATIVE_TIMEOUT\(revealTitle,1250\)/);
-  assert.match(source, /Math\.min\(58,Math\.max\(28,/);
-  assert.match(source, /enter\.addEventListener\('click',stop,false\)/);
+  assert.match(source, /Math\.min\(92,Math\.max\(52,/);
+  assert.match(source, /var settled=\[\]/);
+  assert.match(source, /particle\.speed=\.72\+depth\*2\.35/);
+  assert.match(source, /document\.addEventListener\('noir:splash-exit',stop,false\)/);
   assert.match(source, /prefers-reduced-motion: reduce/);
-  assert.match(html, /id="pixelSnowCanvasV96"/);
-  assert.match(html, /class="splash-title-v96"[^>]*><span>NOIR<\/span><span>MARKET<\/span>/);
+  assert.match(html, /id="pixelSnowCanvasV97"/);
+  assert.match(html, /class="splash-title-v97"[^>]*><span>NOIR<\/span><span>MARKET<\/span>/);
+  assert.match(read('styles.css'), /body\.preintro-running #splash\.splash\{[\s\S]*?opacity:1!important/);
+  assert.match(read('styles.css'), /\.splash-loader\.clicked-v97 \.splash-loader-fill/);
   assert.doesNotMatch(html, /splash-static\.jpg|splashStaticImage/);
   assert.doesNotMatch(serviceWorker, /splash-static\.jpg/);
 });

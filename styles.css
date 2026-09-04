@@ -1560,3 +1560,102 @@ body.modal-open #mainParallaxBg{
   #splash .splash-title-v96{font-size:clamp(48px,13vw,78px)!important;}
   #splash .splash-loader{bottom:calc(18px + env(safe-area-inset-bottom))!important;}
 }
+
+/* Noir Market V9.7: seamless logo hand-off, rough display title and click-fill entry. */
+body.preintro-running #splash.splash{
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+}
+.preintro.preintro-fade-v97{
+  opacity:0!important;
+  visibility:visible!important;
+  animation:none!important;
+  transition:opacity .6s ease!important;
+  pointer-events:none!important;
+}
+.preintro.preintro-fade-v97.preintro-hide{
+  visibility:hidden!important;
+}
+#pixelSnowCanvasV97.pixel-snow-canvas-v97{
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  opacity:1!important;
+  pointer-events:none!important;
+}
+#splash .splash-title-v97{
+  position:absolute!important;
+  display:block!important;
+  z-index:5!important;
+  top:50%!important;
+  left:50%!important;
+  width:min(90vw,540px)!important;
+  margin:0!important;
+  transform:translate(-50%,-54%)!important;
+  font-family:Impact,Haettenschweiler,"Arial Black",sans-serif!important;
+  font-size:clamp(56px,16vw,110px)!important;
+  font-weight:900!important;
+  line-height:.79!important;
+  letter-spacing:-.045em!important;
+  text-align:center!important;
+  text-shadow:0 3px 24px rgba(0,0,0,.82)!important;
+  pointer-events:none!important;
+}
+#splash .splash-title-v97 span{
+  display:block!important;
+  color:transparent!important;
+  background-color:#fff!important;
+  background-image:
+    radial-gradient(circle at center,rgba(13,12,18,.72) 0 .65px,transparent .95px),
+    radial-gradient(circle at center,rgba(13,12,18,.45) 0 .45px,transparent .8px)!important;
+  background-position:0 0,3px 4px!important;
+  background-size:8px 10px,11px 13px!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+}
+#splash .splash-loader{
+  height:46px!important;
+  width:min(52vw,190px)!important;
+  border:2px solid #fff!important;
+  border-radius:2px!important;
+  background:rgba(7,7,9,.72)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.48)!important;
+}
+#splash .splash-loader-fill{
+  width:0!important;
+  background:#fff!important;
+  transition:width .22s cubic-bezier(.2,.75,.25,1)!important;
+}
+#splash .splash-loader.clicked-v97 .splash-loader-fill{
+  width:100%!important;
+}
+#splash .splash-loader-text,
+#splash .splash-loader.ready .splash-loader-text{
+  font-size:12px!important;
+  line-height:44px!important;
+  letter-spacing:.24em!important;
+}
+#splash .splash-loader.ready{cursor:pointer!important;}
+#splash .splash-loader.ready:focus-visible{outline:2px solid #fff!important;outline-offset:4px!important;}
+body.v85-game-entered #splash,
+#splash.v97-gone{
+  display:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body.v85-game-entered .app{
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+@media(max-height:620px){
+  #splash .splash-title-v97{font-size:clamp(50px,14vw,82px)!important;}
+  #splash .splash-loader{bottom:calc(18px + env(safe-area-inset-bottom))!important;}
+}

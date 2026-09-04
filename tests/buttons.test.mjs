@@ -7,7 +7,7 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8')
-  .replace('<script src="game.js?v=9.6.1"></script>', '');
+  .replace('<script src="game.js?v=9.7.0"></script>', '');
 const game = fs.readFileSync(path.join(root, 'game.js'), 'utf8');
 
 const wait = (window, milliseconds = 25) => new Promise((resolve) => {
@@ -40,7 +40,7 @@ async function createPlayableGame() {
 
   const document = window.document;
   document.getElementById('splashEnter').click();
-  await wait(window);
+  await wait(window, 280);
   document.getElementById('freePlayBtnV95').click();
   await wait(window);
   [...document.querySelectorAll('button')]
@@ -48,6 +48,10 @@ async function createPlayableGame() {
     .click();
   document.getElementById('playWelcomeBtn').click();
   await wait(window);
+
+  assert.equal(document.getElementById('splash').style.display, 'none');
+  assert.equal(document.body.classList.contains('v85-game-entered'), true);
+  assert.equal(document.getElementById('modal').open, false);
 
   return { document, dom, errors, window };
 }

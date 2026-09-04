@@ -1,4 +1,4 @@
-/* Noir Market V9.6 pixel-snow title release. */
+/* Noir Market V9.7 seamless title and start-flow release. */
 (function(){
   window.NOIR_STATIC_VISUALS=true;
   if(!Array.prototype.at){Array.prototype.at=function(n){n=Math.trunc(n)||0;if(n<0)n+=this.length;return this[n];};}
@@ -16,7 +16,7 @@
    StoreKit-ready Free Play / Unlock All Cities access model. */
 (function(){
  function installV95(){
-  var VERSION='9.6';
+  var VERSION='9.7';
   var FREE_CITY_COUNT=3;
   var PRODUCT_ID='games.redhead.noirmarket.unlockallcities';
   var previousBaseStateV95=typeof baseState==='function'?baseState:null;
@@ -104,6 +104,33 @@
   if(previousNextDayV95){nextDay=function(){var result=previousNextDayV95.apply(this,arguments);setTimeout(concealStoryTruthV95,0);return result;};}
 
   function persistV95(){ensureV95(s);if(previousSaveV95)previousSaveV95();}
+  function enterMainGameV97(){
+    window.__NOIR_SPLASH_DISMISSED_V97=true;
+    var splash=$('splash');
+    var preintro=$('preintro');
+    var dialog=$('modal');
+    document.body.classList.remove('preintro-running','splash-ui-revealed','modal-open');
+    document.body.classList.add('v85-game-entered');
+    document.documentElement.classList.remove('modal-open');
+    if(preintro){preintro.classList.add('preintro-hide');preintro.style.display='none';}
+    if(splash){
+      splash.setAttribute('aria-hidden','true');
+      splash.classList.add('v85-gone','v97-gone');
+      splash.style.display='none';
+      splash.style.opacity='0';
+      splash.style.visibility='hidden';
+      splash.style.pointerEvents='none';
+    }
+    if(dialog&&(dialog.open||dialog.hasAttribute('open'))){
+      try{dialog.close();}catch(e){dialog.removeAttribute('open');dialog.open=false;}
+    }
+    window.setTimeout(function(){
+      document.body.classList.remove('modal-open');
+      document.documentElement.classList.remove('modal-open');
+      try{draw();}catch(e){}
+    },0);
+  }
+  window.__NOIR_ENTER_MAIN_GAME_V97=enterMainGameV97;
   function setFullAccessV95(enabled){
     ensureV95(s);
     s.allCitiesUnlocked=!!enabled;
@@ -155,7 +182,7 @@
     try{ensureVaults();ensureEconomy();setActiveCityMarket();}catch(e){}
     persistV95();
     try{draw();}catch(e){}
-    var dialog=$('modal');if(dialog&&dialog.open)dialog.close();
+    enterMainGameV97();
   }
   function showStartPickerV95(full){
     if(full&&!s.allCitiesUnlocked)return requestUnlockV95(function(){showStartPickerV95(true);});
@@ -246,7 +273,7 @@
     ensureV95(s);
     persistV95();
     try{draw();}catch(e){}
-    try{document.title='Noir Market V9.6';document.documentElement.setAttribute('data-noir-version',VERSION);window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
+    try{document.title='Noir Market V9.7';document.documentElement.setAttribute('data-noir-version',VERSION);window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
   initV95();
  }
@@ -5540,13 +5567,13 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
    starts it during the title sequence, then reduces it to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.6';
-  var SAVE_KEY='noir_market_v9_6';
+  var VERSION='9.7';
+  var SAVE_KEY='noir_market_v9_7';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_6_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_5_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_7_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_6_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -5560,7 +5587,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';}catch(e){}
+    try{if(document.title!=='Noir Market V9.7')document.title='Noir Market V9.7';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -5798,7 +5825,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     applyMetadata();
     bindTitleFallback();
     try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.6: round pixel-snow title active.');
+    console.log('NOIR MARKET V9.7: settled depth-snow title active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();if(interactionUnlocked&&musicEnabled)playAtCurrentPhase();},false);
@@ -5810,7 +5837,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
 (function(){
   function setText(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
   function migrationKeysV93(){
-    var keys=['noir_market_v9_6','noir_market_v9_5','noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
+    var keys=['noir_market_v9_7','noir_market_v9_6','noir_market_v9_5','noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
     for(var major=8;major>=1;major--){
       for(var minor=9;minor>=0;minor--){
         if(major===1&&minor<2)continue;
@@ -5880,15 +5907,15 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       rows[i].setAttribute('tabindex','0');
       rows[i].onclick=function(){if(typeof buyModal==='function')buyModal();else if(typeof transact==='function')transact('Buy');};
     }
-    try{if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';document.documentElement.setAttribute('data-noir-version','9.6');window.NOIR_MARKET_VERSION='9.6';}catch(e){}
+    try{if(document.title!=='Noir Market V9.7')document.title='Noir Market V9.7';document.documentElement.setAttribute('data-noir-version','9.7');window.NOIR_MARKET_VERSION='9.7';}catch(e){}
   }
   draw=renderGameV93;
   load=loadGameV93;
   function lockMetadata(){
     try{
-      if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';
-      if(document.documentElement.getAttribute('data-noir-version')!=='9.6')document.documentElement.setAttribute('data-noir-version','9.6');
-      window.NOIR_MARKET_VERSION='9.6';
+      if(document.title!=='Noir Market V9.7')document.title='Noir Market V9.7';
+      if(document.documentElement.getAttribute('data-noir-version')!=='9.7')document.documentElement.setAttribute('data-noir-version','9.7');
+      window.NOIR_MARKET_VERSION='9.7';
     }catch(e){}
   }
   function initRendererV93(){
@@ -5908,9 +5935,9 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
         document.body.classList.add('splash-ui-revealed');
         if(preintro){preintro.classList.add('preintro-hide');preintro.style.opacity='0';preintro.style.visibility='hidden';}
       }
-      if(fill)fill.style.width='100%';
+      if(fill)fill.style.width='0%';
       if(loaderText)loaderText.textContent='ENTER';
-      if(enter){enter.disabled=false;enter.classList.add('ready');enter.setAttribute('aria-label','Enter Noir Market');}
+      if(enter){enter.disabled=false;enter.classList.remove('clicked-v97');enter.classList.add('ready');enter.setAttribute('aria-label','Enter Noir Market');}
     }
     function enterTitle(event){
       if(entered||!enter||enter.disabled)return;
@@ -5918,8 +5945,14 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       if(event){event.preventDefault();event.stopPropagation();}
       try{startBackgroundMusic();}catch(e){}
       try{sound('positive');}catch(e){}
-      try{showWelcome();}catch(e){console.error('V9.6 HOW TO PLAY failed:',e);return;}
-      if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone');splash.style.display='none';}
+      enter.disabled=true;
+      enter.classList.add('clicked-v97');
+      window.__NOIR_NATIVE_TIMEOUT(function(){
+        try{showWelcome();}catch(e){entered=false;enter.disabled=false;enter.classList.remove('clicked-v97');console.error('V9.7 HOW TO PLAY failed:',e);return;}
+        window.__NOIR_SPLASH_DISMISSED_V97=true;
+        if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone','v97-gone');splash.style.display='none';}
+        try{document.dispatchEvent(new CustomEvent('noir:splash-exit'));}catch(e){}
+      },240);
     }
     if(enter){enter.disabled=true;enter.addEventListener('click',enterTitle,false);enter.addEventListener('touchend',enterTitle,false);}
     window.__NOIR_NATIVE_TIMEOUT(revealTitle,1250);
@@ -5935,35 +5968,67 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     /* Only correct a genuinely changed title. Writing the same title from inside
        this observer caused V9.2's endless microtask loop and froze the intro. */
     if(title&&window.MutationObserver)new MutationObserver(function(){
-      if(document.title!=='Noir Market V9.6')lockMetadata();
+      if(document.title!=='Noir Market V9.7')lockMetadata();
     }).observe(title,{childList:true,characterData:true,subtree:true});
     setTimeout(lockMetadata,2500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRendererV93,{once:true});else initRendererV93();
-  window.addEventListener('pageshow',lockMetadata,false);
+  window.addEventListener('pageshow',function(){
+    lockMetadata();
+    if(window.__NOIR_SPLASH_DISMISSED_V97){
+      var splash=document.getElementById('splash');
+      if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v97-gone');splash.style.display='none';}
+    }
+  },false);
 })();
 
-/* Noir Market V9.6: one capped canvas for the round pixel-snow splash. */
+/* Noir Market V9.7: fast depth snow that settles into a bounded bottom pile. */
 (function(){
-  var canvas=document.getElementById('pixelSnowCanvasV96');
+  var canvas=document.getElementById('pixelSnowCanvasV97');
   if(!canvas||typeof window.CanvasRenderingContext2D==='undefined')return;
   var context;
   try{context=canvas.getContext('2d',{alpha:true});}catch(e){return;}
   if(!context)return;
   var particles=[];
+  var settled=[];
+  var pileHeights=[];
+  var columnWidth=5;
   var frame=0;
   var running=true;
   var lastTime=0;
   var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function resetParticle(particle,randomY){
-    particle.x=Math.random()*canvas.clientWidth;
-    particle.y=randomY?Math.random()*canvas.clientHeight:-8;
-    particle.radius=.7+Math.random()*2.5;
-    particle.speed=.16+Math.random()*.34;
-    particle.drift=(Math.random()-.5)*.14;
-    particle.alpha=.22+Math.random()*.62;
+    var depth=.18+Math.random()*.82;
+    particle.depth=depth;
+    particle.x=Math.random()*(canvas.clientWidth||window.innerWidth||1);
+    particle.y=randomY?Math.random()*(canvas.clientHeight||window.innerHeight||1):-10-Math.random()*24;
+    particle.radius=.55+depth*3.05;
+    particle.speed=.72+depth*2.35;
+    particle.drift=(Math.random()-.5)*(.12+depth*.24);
+    particle.alpha=.18+depth*.72;
     particle.phase=Math.random()*Math.PI*2;
+  }
+  function seedPile(width){
+    var columns=Math.ceil(width/columnWidth)+1;
+    pileHeights.length=columns;
+    for(var i=0;i<columns;i++){
+      var centre=Math.abs((i/(columns-1||1))-.5)*2;
+      pileHeights[i]=3+Math.random()*4+(1-centre)*5;
+    }
+    settled.length=0;
+  }
+  function settleParticle(particle,width,height){
+    var column=Math.max(0,Math.min(pileHeights.length-1,Math.floor(particle.x/columnWidth)));
+    var floor=height-(pileHeights[column]||0);
+    settled.push({x:particle.x,y:floor-particle.radius*.45,r:particle.radius,a:Math.min(.92,particle.alpha+.08)});
+    if(settled.length>1400)settled.splice(0,200);
+    var rise=Math.max(.45,particle.radius*.5);
+    var maxPile=height*.28;
+    pileHeights[column]=Math.min(maxPile,(pileHeights[column]||0)+rise);
+    if(column>0)pileHeights[column-1]=Math.min(maxPile,(pileHeights[column-1]||0)+rise*.32);
+    if(column<pileHeights.length-1)pileHeights[column+1]=Math.min(maxPile,(pileHeights[column+1]||0)+rise*.32);
+    resetParticle(particle,false);
   }
   function resize(){
     var width=Math.max(1,canvas.clientWidth||window.innerWidth||1);
@@ -5972,9 +6037,26 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     canvas.width=Math.round(width*ratio);
     canvas.height=Math.round(height*ratio);
     context.setTransform(ratio,0,0,ratio,0,0);
-    var count=Math.min(58,Math.max(28,Math.round((width*height)/13500)));
+    seedPile(width);
+    var count=Math.min(92,Math.max(52,Math.round((width*height)/9000)));
     particles.length=count;
     for(var i=0;i<count;i++){particles[i]=particles[i]||{};resetParticle(particles[i],true);}
+  }
+  function drawPile(width,height){
+    context.globalAlpha=.9;
+    context.beginPath();
+    context.moveTo(0,height);
+    for(var i=0;i<pileHeights.length;i++)context.lineTo(i*columnWidth,height-pileHeights[i]);
+    context.lineTo(width,height);
+    context.closePath();
+    context.fill();
+    for(var j=0;j<settled.length;j++){
+      var speck=settled[j];
+      context.globalAlpha=speck.a;
+      context.beginPath();
+      context.arc(Math.round(speck.x),Math.round(speck.y),speck.r,0,Math.PI*2);
+      context.fill();
+    }
   }
   function draw(time){
     if(!running)return;
@@ -5984,13 +6066,17 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     lastTime=time;
     context.clearRect(0,0,width,height);
     context.fillStyle='#fff';
+    drawPile(width,height);
     for(var i=0;i<particles.length;i++){
       var particle=particles[i];
       if(!reduceMotion){
-        particle.phase+=.008*step;
-        particle.x+=(particle.drift+Math.sin(particle.phase)*.045)*step;
+        particle.phase+=(.01+particle.depth*.012)*step;
+        particle.x+=(particle.drift+Math.sin(particle.phase)*(.035+particle.depth*.07))*step;
         particle.y+=particle.speed*step;
-        if(particle.y>height+8||particle.x<-10||particle.x>width+10)resetParticle(particle,false);
+        if(particle.x<-10)particle.x=width+8;
+        if(particle.x>width+10)particle.x=-8;
+        var column=Math.max(0,Math.min(pileHeights.length-1,Math.floor(Math.max(0,particle.x)/columnWidth)));
+        if(particle.y+particle.radius>=height-(pileHeights[column]||0))settleParticle(particle,width,height);
       }
       context.globalAlpha=particle.alpha;
       context.beginPath();
@@ -6015,6 +6101,5 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   draw(0);
   window.addEventListener('resize',resize,{passive:true});
   document.addEventListener('visibilitychange',visibility,false);
-  var enter=document.getElementById('splashEnter');
-  if(enter){enter.addEventListener('click',stop,false);enter.addEventListener('touchend',stop,false);}
+  document.addEventListener('noir:splash-exit',stop,false);
 })();

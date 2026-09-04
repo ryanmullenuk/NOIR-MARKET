@@ -7,7 +7,7 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8')
-  .replace('<script src="game.js?v=9.6.1"></script>', '');
+  .replace('<script src="game.js?v=9.7.0"></script>', '');
 const game = fs.readFileSync(path.join(root, 'game.js'), 'utf8');
 
 const wait = (window, milliseconds) => new Promise((resolve) => {
@@ -43,17 +43,18 @@ async function createGame(storage = {}) {
   return { dom, errors, window };
 }
 
-test('V9.6 starts once and reaches the playable pixel-snow title screen', async () => {
+test('V9.7 starts once and reaches the playable settled-snow title screen', async () => {
   const { dom, errors, window } = await createGame();
 
-  assert.equal(window.document.title, 'Noir Market V9.6');
-  assert.equal(window.NOIR_MARKET_VERSION, '9.6');
+  assert.equal(window.document.title, 'Noir Market V9.7');
+  assert.equal(window.NOIR_MARKET_VERSION, '9.7');
   assert.equal(window.document.getElementById('splashLoaderText').textContent, 'ENTER');
   assert.equal(window.document.getElementById('splashEnter').disabled, false);
   assert.equal(window.document.querySelectorAll('#marketTable .row:not(.header)').length, 14);
-  assert.equal(window.document.querySelector('.splash-title-v96').textContent, 'NOIRMARKET');
+  assert.equal(window.document.querySelector('.splash-title-v97').textContent, 'NOIRMARKET');
   assert.equal(window.document.querySelectorAll('canvas').length, 1);
-  assert.ok(window.document.getElementById('pixelSnowCanvasV96'));
+  assert.ok(window.document.getElementById('pixelSnowCanvasV97'));
+  assert.equal(window.document.getElementById('splashLoaderFill').style.width, '0%');
   assert.equal(window.document.querySelectorAll('.live-dust,.game-dust,#splashStaticImage').length, 0);
   assert.deepEqual(errors, []);
 
@@ -79,7 +80,7 @@ test('older saves migrate without losing player progress', async () => {
   assert.equal(window.s.bank, 9876);
   assert.equal(window.s.city, 3);
   assert.equal(window.s.playerName, 'Regression Runner');
-  assert.ok(window.localStorage.getItem('noir_market_v9_6'));
+  assert.ok(window.localStorage.getItem('noir_market_v9_7'));
   assert.deepEqual(errors, []);
 
   dom.window.close();
@@ -90,7 +91,8 @@ test('intro, city selection and trade screens remain connected', async () => {
   const document = window.document;
 
   document.getElementById('splashEnter').click();
-  await wait(window, 20);
+  assert.equal(document.getElementById('splashEnter').classList.contains('clicked-v97'), true);
+  await wait(window, 280);
   assert.equal(document.getElementById('modalTitle').textContent, 'How to Play');
 
   document.getElementById('freePlayBtnV95').click();
@@ -106,6 +108,12 @@ test('intro, city selection and trade screens remain connected', async () => {
   assert.equal(play.disabled, false);
   play.click();
   await wait(window, 20);
+
+  assert.equal(document.getElementById('splash').getAttribute('aria-hidden'), 'true');
+  assert.equal(document.getElementById('splash').style.display, 'none');
+  assert.equal(document.body.classList.contains('v85-game-entered'), true);
+  assert.equal(document.body.classList.contains('modal-open'), false);
+  assert.equal(document.getElementById('modal').open, false);
 
   document.getElementById('buyBtn').click();
   await wait(window, 20);
@@ -144,7 +152,7 @@ test('unlock route exposes every city and persists the entitlement', async () =>
   const document = window.document;
 
   document.getElementById('splashEnter').click();
-  await wait(window, 20);
+  await wait(window, 280);
   document.getElementById('unlockAllCitiesBtnV95').click();
   await wait(window, 20);
   assert.equal(document.getElementById('modalTitle').textContent, 'Unlock All Cities');
@@ -155,8 +163,19 @@ test('unlock route exposes every city and persists the entitlement', async () =>
   assert.equal(window.s.accessMode, 'full');
   assert.equal(document.querySelectorAll('[data-start-city-v95]').length, 14);
 
-  const saved = JSON.parse(window.localStorage.getItem('noir_market_v9_6'));
+  const edinburgh = [...document.querySelectorAll('[data-start-city-v95]')]
+    .find((button) => button.textContent.trim() === 'Edinburgh');
+  assert.ok(edinburgh, 'Edinburgh full-game starting-city button is missing');
+  edinburgh.click();
+  document.getElementById('playWelcomeBtn').click();
+  await wait(window, 20);
+  assert.equal(document.getElementById('modal').open, false);
+  assert.equal(document.body.classList.contains('v85-game-entered'), true);
+  assert.equal(document.getElementById('splash').style.display, 'none');
+
+  const saved = JSON.parse(window.localStorage.getItem('noir_market_v9_7'));
   assert.equal(saved.allCitiesUnlocked, true);
+  assert.equal(saved.accessMode, 'full');
   assert.deepEqual(errors, []);
 
   dom.window.close();
