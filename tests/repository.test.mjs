@@ -14,8 +14,8 @@ test('release metadata is aligned across the app shell', () => {
   const serviceWorker = read('sw.js');
 
   assert.match(html, /<title>Noir Market V9\.7<\/title>/);
-  assert.match(html, /styles\.css\?v=9\.7\.1/);
-  assert.match(html, /game\.js\?v=9\.7\.1/);
+  assert.match(html, /styles\.css\?v=9\.7\.2/);
+  assert.match(html, /game\.js\?v=9\.7\.2/);
   assert.equal(manifest.version, '9.7');
   assert.match(serviceWorker, /noir-market-v9\.7/);
 });
@@ -28,7 +28,6 @@ test('all packaged assets referenced by the app shell exist', () => {
     'manifest.json',
     'sw.js',
     'assets/redhead-games-logo.png',
-    'assets/the-globe-personal-use-bold.ttf',
     'assets/game-music.mp3',
     'icon-192.png',
     'icon-512.png',
@@ -70,8 +69,7 @@ test('the V9.7 startup uses one bounded settling-snow animation and one game ren
   assert.match(html, /class="splash-title-v97"[^>]*><span>NOIR<\/span><span>MARKET<\/span>/);
   assert.match(read('styles.css'), /body\.preintro-running #splash\.splash\{[\s\S]*?opacity:1!important/);
   assert.match(read('styles.css'), /\.splash-loader\.clicked-v97 \.splash-loader-fill/);
-  assert.match(read('styles.css'), /font-family:"The Globe Title"/);
-  assert.match(read('styles.css'), /assets\/the-globe-personal-use-bold\.ttf/);
+  assert.match(read('styles.css'), /font-family:Impact,Haettenschweiler,"Arial Black",sans-serif/);
   assert.doesNotMatch(html, /splash-static\.jpg|splashStaticImage/);
   assert.doesNotMatch(serviceWorker, /splash-static\.jpg/);
 });
