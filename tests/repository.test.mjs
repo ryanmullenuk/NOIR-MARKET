@@ -14,8 +14,8 @@ test('release metadata is aligned across the app shell', () => {
   const serviceWorker = read('sw.js');
 
   assert.match(html, /<title>Noir Market V9\.6<\/title>/);
-  assert.match(html, /styles\.css\?v=9\.6/);
-  assert.match(html, /game\.js\?v=9\.6/);
+  assert.match(html, /styles\.css\?v=9\.6\.1/);
+  assert.match(html, /game\.js\?v=9\.6\.1/);
   assert.equal(manifest.version, '9.6');
   assert.match(serviceWorker, /noir-market-v9\.6/);
 });
