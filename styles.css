@@ -1562,6 +1562,13 @@ body.modal-open #mainParallaxBg{
 }
 
 /* Noir Market V9.7: seamless logo hand-off, rough display title and click-fill entry. */
+@font-face{
+  font-family:"The Globe Title";
+  src:url("assets/the-globe-personal-use-bold.ttf") format("truetype");
+  font-style:normal;
+  font-weight:700;
+  font-display:swap;
+}
 body.preintro-running #splash.splash{
   display:block!important;
   opacity:1!important;
@@ -1597,9 +1604,10 @@ body.preintro-running #splash.splash{
   width:min(90vw,540px)!important;
   margin:0!important;
   transform:translate(-50%,-54%)!important;
-  font-family:Impact,Haettenschweiler,"Arial Black",sans-serif!important;
+  font-family:"The Globe Title",Impact,Haettenschweiler,"Arial Black",sans-serif!important;
   font-size:clamp(56px,16vw,110px)!important;
   font-weight:900!important;
+  font-synthesis:none!important;
   line-height:.79!important;
   letter-spacing:-.045em!important;
   text-align:center!important;
