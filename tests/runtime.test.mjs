@@ -43,15 +43,18 @@ async function createGame(storage = {}) {
   return { dom, errors, window };
 }
 
-test('V9.5 starts once and reaches the playable title screen', async () => {
+test('V9.6 starts once and reaches the playable pixel-snow title screen', async () => {
   const { dom, errors, window } = await createGame();
 
-  assert.equal(window.document.title, 'Noir Market V9.5');
-  assert.equal(window.NOIR_MARKET_VERSION, '9.5');
+  assert.equal(window.document.title, 'Noir Market V9.6');
+  assert.equal(window.NOIR_MARKET_VERSION, '9.6');
   assert.equal(window.document.getElementById('splashLoaderText').textContent, 'ENTER');
   assert.equal(window.document.getElementById('splashEnter').disabled, false);
   assert.equal(window.document.querySelectorAll('#marketTable .row:not(.header)').length, 14);
-  assert.equal(window.document.querySelectorAll('.live-dust,.game-dust,canvas').length, 0);
+  assert.equal(window.document.querySelector('.splash-title-v96').textContent, 'NOIRMARKET');
+  assert.equal(window.document.querySelectorAll('canvas').length, 1);
+  assert.ok(window.document.getElementById('pixelSnowCanvasV96'));
+  assert.equal(window.document.querySelectorAll('.live-dust,.game-dust,#splashStaticImage').length, 0);
   assert.deepEqual(errors, []);
 
   dom.window.close();
@@ -76,7 +79,7 @@ test('older saves migrate without losing player progress', async () => {
   assert.equal(window.s.bank, 9876);
   assert.equal(window.s.city, 3);
   assert.equal(window.s.playerName, 'Regression Runner');
-  assert.ok(window.localStorage.getItem('noir_market_v9_5'));
+  assert.ok(window.localStorage.getItem('noir_market_v9_6'));
   assert.deepEqual(errors, []);
 
   dom.window.close();
@@ -152,7 +155,7 @@ test('unlock route exposes every city and persists the entitlement', async () =>
   assert.equal(window.s.accessMode, 'full');
   assert.equal(document.querySelectorAll('[data-start-city-v95]').length, 14);
 
-  const saved = JSON.parse(window.localStorage.getItem('noir_market_v9_5'));
+  const saved = JSON.parse(window.localStorage.getItem('noir_market_v9_6'));
   assert.equal(saved.allCitiesUnlocked, true);
   assert.deepEqual(errors, []);
 

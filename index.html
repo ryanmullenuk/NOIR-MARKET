@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Noir Market V9.5</title>
+  <title>Noir Market V9.6</title>
   <link rel="preload" as="image" href="assets/redhead-games-logo.png" fetchpriority="high" />
-  <link rel="preload" as="image" href="assets/splash-static.jpg" fetchpriority="high" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="180x180" media="(prefers-color-scheme: dark)" href="apple-touch-icon-dark.png" />
@@ -25,16 +24,13 @@
     <img class="preintro-logo" src="assets/redhead-games-logo.png" alt="Redhead Games" width="640" height="640" decoding="sync" fetchpriority="high" />
   </div>
   <div id="splash" class="splash">
-    <img id="splashStaticImage" class="splash-static-image" src="assets/splash-static.jpg" alt="" aria-hidden="true" decoding="async" fetchpriority="high" />
+    <canvas id="pixelSnowCanvasV96" class="pixel-snow-canvas-v96" aria-hidden="true"></canvas>
     <div class="splash-vignette" aria-hidden="true"></div>
+    <h1 class="splash-title-v96" aria-label="Noir Market"><span>NOIR</span><span>MARKET</span></h1>
     <button type="button" id="splashEnter" class="splash-loader" aria-label="Loading Noir Market" disabled>
       <span class="splash-loader-fill" id="splashLoaderFill"></span>
       <span class="splash-loader-text" id="splashLoaderText">LOADING</span>
     </button>
-    <div class="splash-instructions" aria-label="Instructions">
-      <strong>INSTRUCTIONS</strong>
-      <span>For a better gaming experience, click share and add to homescreen.</span>
-    </div>
   </div>
   <audio id="backgroundMusicV93" src="assets/game-music.mp3" preload="none" loop hidden aria-hidden="true"></audio>
   <div id="mainParallaxBg" class="main-parallax-bg" aria-hidden="true"></div>

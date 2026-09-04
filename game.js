@@ -1,4 +1,4 @@
-/* Noir Market V9.5 free-play, city stories and player identity release. */
+/* Noir Market V9.6 pixel-snow title release. */
 (function(){
   window.NOIR_STATIC_VISUALS=true;
   if(!Array.prototype.at){Array.prototype.at=function(n){n=Math.trunc(n)||0;if(n<0)n+=this.length;return this[n];};}
@@ -16,7 +16,7 @@
    StoreKit-ready Free Play / Unlock All Cities access model. */
 (function(){
  function installV95(){
-  var VERSION='9.5';
+  var VERSION='9.6';
   var FREE_CITY_COUNT=3;
   var PRODUCT_ID='games.redhead.noirmarket.unlockallcities';
   var previousBaseStateV95=typeof baseState==='function'?baseState:null;
@@ -246,7 +246,7 @@
     ensureV95(s);
     persistV95();
     try{draw();}catch(e){}
-    try{document.title='Noir Market V9.5';document.documentElement.setAttribute('data-noir-version',VERSION);window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
+    try{document.title='Noir Market V9.6';document.documentElement.setAttribute('data-noir-version',VERSION);window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
   initV95();
  }
@@ -5540,13 +5540,13 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
    starts it during the title sequence, then reduces it to
    50% volume only when HOW TO PLAY hands over to the main game. */
 (function(){
-  var VERSION='9.5';
-  var SAVE_KEY='noir_market_v9_5';
+  var VERSION='9.6';
+  var SAVE_KEY='noir_market_v9_6';
   var MUSIC_PATH='assets/game-music.mp3';
   var TITLE_VOLUME=1;
   var MAIN_VOLUME=0.5;
-  var MUSIC_PREFERENCE_KEY='noir_market_v9_5_music_preference';
-  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_4_music_preference';
+  var MUSIC_PREFERENCE_KEY='noir_market_v9_6_music_preference';
+  var PREVIOUS_MUSIC_PREFERENCE_KEY='noir_market_v9_5_music_preference';
   var previousBaseState=typeof baseState==='function'?baseState:null;
   var previousDraw=typeof draw==='function'?draw:null;
   var previousLoad=typeof load==='function'?load:null;
@@ -5560,7 +5560,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
   function $(id){return document.getElementById(id);}
   function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   function applyMetadata(){
-    try{if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';}catch(e){}
+    try{if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';}catch(e){}
     try{document.documentElement.setAttribute('data-noir-version',VERSION);}catch(e){}
     try{window.NOIR_MARKET_VERSION=VERSION;}catch(e){}
   }
@@ -5798,7 +5798,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     applyMetadata();
     bindTitleFallback();
     try{if(typeof s!=='undefined'&&s){s=ensureV91(s);save();}}catch(e){}
-    console.log('NOIR MARKET V9.5: free play, city stories and player identity active.');
+    console.log('NOIR MARKET V9.6: round pixel-snow title active.');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
   window.addEventListener('pageshow',function(){applyMetadata();if(interactionUnlocked&&musicEnabled)playAtCurrentPhase();},false);
@@ -5810,7 +5810,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
 (function(){
   function setText(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
   function migrationKeysV93(){
-    var keys=['noir_market_v9_5','noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
+    var keys=['noir_market_v9_6','noir_market_v9_5','noir_market_v9_4','noir_market_v9_3','noir_market_v9_2','noir_market_v9_1','noir_market_v9_0'];
     for(var major=8;major>=1;major--){
       for(var minor=9;minor>=0;minor--){
         if(major===1&&minor<2)continue;
@@ -5880,15 +5880,15 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       rows[i].setAttribute('tabindex','0');
       rows[i].onclick=function(){if(typeof buyModal==='function')buyModal();else if(typeof transact==='function')transact('Buy');};
     }
-    try{if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';document.documentElement.setAttribute('data-noir-version','9.5');window.NOIR_MARKET_VERSION='9.5';}catch(e){}
+    try{if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';document.documentElement.setAttribute('data-noir-version','9.6');window.NOIR_MARKET_VERSION='9.6';}catch(e){}
   }
   draw=renderGameV93;
   load=loadGameV93;
   function lockMetadata(){
     try{
-      if(document.title!=='Noir Market V9.5')document.title='Noir Market V9.5';
-      if(document.documentElement.getAttribute('data-noir-version')!=='9.5')document.documentElement.setAttribute('data-noir-version','9.5');
-      window.NOIR_MARKET_VERSION='9.5';
+      if(document.title!=='Noir Market V9.6')document.title='Noir Market V9.6';
+      if(document.documentElement.getAttribute('data-noir-version')!=='9.6')document.documentElement.setAttribute('data-noir-version','9.6');
+      window.NOIR_MARKET_VERSION='9.6';
     }catch(e){}
   }
   function initRendererV93(){
@@ -5918,7 +5918,7 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
       if(event){event.preventDefault();event.stopPropagation();}
       try{startBackgroundMusic();}catch(e){}
       try{sound('positive');}catch(e){}
-      try{showWelcome();}catch(e){console.error('V9.5 HOW TO PLAY failed:',e);return;}
+      try{showWelcome();}catch(e){console.error('V9.6 HOW TO PLAY failed:',e);return;}
       if(splash){splash.setAttribute('aria-hidden','true');splash.classList.add('v85-gone');splash.style.display='none';}
     }
     if(enter){enter.disabled=true;enter.addEventListener('click',enterTitle,false);enter.addEventListener('touchend',enterTitle,false);}
@@ -5935,10 +5935,86 @@ if(window.__NOIR_NATIVE_WINDOW_ADD)window.addEventListener=window.__NOIR_NATIVE_
     /* Only correct a genuinely changed title. Writing the same title from inside
        this observer caused V9.2's endless microtask loop and froze the intro. */
     if(title&&window.MutationObserver)new MutationObserver(function(){
-      if(document.title!=='Noir Market V9.5')lockMetadata();
+      if(document.title!=='Noir Market V9.6')lockMetadata();
     }).observe(title,{childList:true,characterData:true,subtree:true});
     setTimeout(lockMetadata,2500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initRendererV93,{once:true});else initRendererV93();
   window.addEventListener('pageshow',lockMetadata,false);
+})();
+
+/* Noir Market V9.6: one capped canvas for the round pixel-snow splash. */
+(function(){
+  var canvas=document.getElementById('pixelSnowCanvasV96');
+  if(!canvas||typeof window.CanvasRenderingContext2D==='undefined')return;
+  var context;
+  try{context=canvas.getContext('2d',{alpha:true});}catch(e){return;}
+  if(!context)return;
+  var particles=[];
+  var frame=0;
+  var running=true;
+  var lastTime=0;
+  var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resetParticle(particle,randomY){
+    particle.x=Math.random()*canvas.clientWidth;
+    particle.y=randomY?Math.random()*canvas.clientHeight:-8;
+    particle.radius=.7+Math.random()*2.5;
+    particle.speed=.16+Math.random()*.34;
+    particle.drift=(Math.random()-.5)*.14;
+    particle.alpha=.22+Math.random()*.62;
+    particle.phase=Math.random()*Math.PI*2;
+  }
+  function resize(){
+    var width=Math.max(1,canvas.clientWidth||window.innerWidth||1);
+    var height=Math.max(1,canvas.clientHeight||window.innerHeight||1);
+    var ratio=Math.min(window.devicePixelRatio||1,1.5);
+    canvas.width=Math.round(width*ratio);
+    canvas.height=Math.round(height*ratio);
+    context.setTransform(ratio,0,0,ratio,0,0);
+    var count=Math.min(58,Math.max(28,Math.round((width*height)/13500)));
+    particles.length=count;
+    for(var i=0;i<count;i++){particles[i]=particles[i]||{};resetParticle(particles[i],true);}
+  }
+  function draw(time){
+    if(!running)return;
+    var width=canvas.clientWidth||window.innerWidth||1;
+    var height=canvas.clientHeight||window.innerHeight||1;
+    var step=lastTime?Math.min(2,(time-lastTime)/16.67):1;
+    lastTime=time;
+    context.clearRect(0,0,width,height);
+    context.fillStyle='#fff';
+    for(var i=0;i<particles.length;i++){
+      var particle=particles[i];
+      if(!reduceMotion){
+        particle.phase+=.008*step;
+        particle.x+=(particle.drift+Math.sin(particle.phase)*.045)*step;
+        particle.y+=particle.speed*step;
+        if(particle.y>height+8||particle.x<-10||particle.x>width+10)resetParticle(particle,false);
+      }
+      context.globalAlpha=particle.alpha;
+      context.beginPath();
+      context.arc(Math.round(particle.x),Math.round(particle.y),particle.radius,0,Math.PI*2);
+      context.fill();
+    }
+    context.globalAlpha=1;
+    if(!reduceMotion)frame=window.requestAnimationFrame(draw);
+  }
+  function stop(){
+    if(!running)return;
+    running=false;
+    if(frame)window.cancelAnimationFrame(frame);
+    window.removeEventListener('resize',resize);
+    document.removeEventListener('visibilitychange',visibility);
+  }
+  function visibility(){
+    if(document.hidden){if(frame)window.cancelAnimationFrame(frame);frame=0;}
+    else if(running&&!reduceMotion&&!frame){lastTime=0;frame=window.requestAnimationFrame(draw);}
+  }
+  resize();
+  draw(0);
+  window.addEventListener('resize',resize,{passive:true});
+  document.addEventListener('visibilitychange',visibility,false);
+  var enter=document.getElementById('splashEnter');
+  if(enter){enter.addEventListener('click',stop,false);enter.addEventListener('touchend',stop,false);}
 })();

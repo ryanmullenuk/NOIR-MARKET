@@ -1,3 +1,8 @@
+V9.6 - Round Pixel-Snow Title Screen
+- Replaced the powder splash artwork with a lightweight, capped canvas of round floating snow particles.
+- Centred the stacked NOIR / MARKET title and moved ENTER to the safe-area-aware bottom edge.
+- Stops animation after entering, pauses while hidden and renders a static frame for reduced-motion users.
+
 V9.5 - Free Play, City Stories and Player Identity
 
 Added a Free Play entry route limited to London, Manchester and Birmingham.

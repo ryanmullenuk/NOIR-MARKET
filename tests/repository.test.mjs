@@ -13,9 +13,9 @@ test('release metadata is aligned across the app shell', () => {
   const manifest = JSON.parse(read('manifest.json'));
   const serviceWorker = read('sw.js');
 
-  assert.match(html, /<title>Noir Market V9\.5<\/title>/);
-  assert.equal(manifest.version, '9.5');
-  assert.match(serviceWorker, /noir-market-v9\.5/);
+  assert.match(html, /<title>Noir Market V9\.6<\/title>/);
+  assert.equal(manifest.version, '9.6');
+  assert.match(serviceWorker, /noir-market-v9\.6/);
 });
 
 test('all packaged assets referenced by the app shell exist', () => {
@@ -26,7 +26,6 @@ test('all packaged assets referenced by the app shell exist', () => {
     'manifest.json',
     'sw.js',
     'assets/redhead-games-logo.png',
-    'assets/splash-static.jpg',
     'assets/game-music.mp3',
     'icon-192.png',
     'icon-512.png',
@@ -50,12 +49,20 @@ test('game source parses and contains one active top-level declaration per funct
   assert.ok(Buffer.byteLength(source) < 400_000, 'game.js exceeded the 400 KB runtime budget');
 });
 
-test('the V9.5 startup remains static and single-renderer', () => {
+test('the V9.6 startup uses one bounded splash animation and one game renderer', () => {
   const source = read('game.js');
+  const html = read('index.html');
+  const serviceWorker = read('sw.js');
 
   assert.match(source, /window\.NOIR_STATIC_VISUALS=true/);
   assert.match(source, /draw=renderGameV93/);
   assert.match(source, /load=loadGameV93/);
   assert.match(source, /window\.__NOIR_NATIVE_TIMEOUT\(revealTitle,1250\)/);
-  assert.doesNotMatch(source, /requestAnimationFrame\(loop\);\s*}\s*loop\(\);/);
+  assert.match(source, /Math\.min\(58,Math\.max\(28,/);
+  assert.match(source, /enter\.addEventListener\('click',stop,false\)/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(html, /id="pixelSnowCanvasV96"/);
+  assert.match(html, /class="splash-title-v96"[^>]*><span>NOIR<\/span><span>MARKET<\/span>/);
+  assert.doesNotMatch(html, /splash-static\.jpg|splashStaticImage/);
+  assert.doesNotMatch(serviceWorker, /splash-static\.jpg/);
 });
