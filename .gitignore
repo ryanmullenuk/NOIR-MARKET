@@ -14,3 +14,4 @@ ios/build/
 *.xcresult/
 ios-xcode-project.zip
 ios-simulator-build.log
+ios-release-build.log

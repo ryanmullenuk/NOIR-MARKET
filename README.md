@@ -43,8 +43,8 @@ offline resources, generates the project and opens it in Xcode.
 The **iOS simulator checks** GitHub Actions workflow builds with Xcode 26.3 and
 runs native startup/free-play and privacy-sheet UI tests. Its
 **NoirMarket-Xcode-project** artifact contains ready-to-open sources and bundled
-game files. The simulator job deliberately skips the unfinished App Store icon;
-it does not sign, archive, upload or certify the app for release.
+game files. A 1024px opaque app icon uses the existing plain white title on black.
+The simulator job does not sign, archive, upload or certify the app for release.
 
 ## Maintenance commands
 

@@ -2,10 +2,12 @@
 
 Status: compiled with Xcode 26.3 on GitHub's iPhone simulator runner. NOT signed
 for a device, NOT tested on a physical iPhone, NOT uploaded, NOT submitted.
-The first simulator run passed the privacy-sheet test and exposed a city-label
-selector mismatch in the Free Play test; see the latest **iOS simulator checks**
-run for the corrected test's result. Web regression results do not prove that
-StoreKit works on an iPhone.
+Both native UI tests passed in [run 34170815218](https://github.com/ryanmullenuk/NOIR-MARKET/actions/runs/34170815218):
+Free Play (including choosing Manchester and reaching playable controls), and
+opening/closing the privacy sheet. That run omitted the then-missing icon.
+The icon is now included; use the latest **iOS simulator checks** result to verify
+the complete asset-catalog build and unsigned iPhone Release compilation.
+Web regression results do not prove that StoreKit works on an iPhone.
 
 ## Proposed first release
 
@@ -39,10 +41,14 @@ The workflow builds using Xcode 26.3 on a macOS runner and runs two native UI
 tests: title → Free Play → city selection → playable screen, and opening and
 closing Privacy & support. Check the run result for the exact commit being
 released. A generated project artifact alone does not prove compilation passed.
-Result bundles and compiler output are saved separately. The AppIcon requirement
-is disabled only for these simulator checks while the final icon is outstanding.
+Result bundles and compiler output are saved separately. The app icon is included
+in the normal asset-catalog build; no icon override is required.
 Purchase verification, physical device tests and signed archive validation are
 separate release gates.
+
+The workflow also compiles the Release configuration for a generic iPhone with
+signing disabled. This checks device-SDK compilation and packaging, but produces
+neither a distributable archive nor an IPA that can be installed on your phone.
 
 ### Manual setup
 
@@ -82,9 +88,9 @@ been run in the Linux preparation environment.
 
 ## Release blockers to resolve before an archive
 
-1. Supply the final 1024x1024 App Store icon with no transparency. The AppIcon
-   asset set is deliberately empty; the existing web icon is only 512x512.
-   Add the approved image in Xcode Assets > AppIcon and retain it in the repo.
+1. Review the included 1024x1024 opaque App Store icon at home-screen size. It
+   uses the established plain bold white NOIR MARKET title on black. The PNG
+   in Assets.xcassets is the build asset; ios/AppIcon.svg is the editable source.
 2. Confirm unlock price and territories in App Store Connect. Complete Apple's
    paid-app agreement, banking and tax steps in your account if required. The
    app reads Apple's localised displayPrice; there is no hard-coded price.
