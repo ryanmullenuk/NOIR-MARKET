@@ -1,8 +1,11 @@
 # Noir Market: iOS preparation and release handoff
 
-Status: native source scaffold prepared, NOT signed, NOT compiled with Xcode,
-NOT device-tested, NOT uploaded, NOT submitted. Web regression results do not
-prove that the Swift code compiles or that StoreKit works on an iPhone.
+Status: compiled with Xcode 26.3 on GitHub's iPhone simulator runner. NOT signed
+for a device, NOT tested on a physical iPhone, NOT uploaded, NOT submitted.
+The first simulator run passed the privacy-sheet test and exposed a city-label
+selector mismatch in the Free Play test; see the latest **iOS simulator checks**
+run for the corrected test's result. Web regression results do not prove that
+StoreKit works on an iPhone.
 
 ## Proposed first release
 

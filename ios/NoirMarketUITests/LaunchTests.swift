@@ -21,11 +21,17 @@ final class LaunchTests: XCTestCase {
         app.webViews.buttons["FREE PLAY"].tap()
         let play = app.webViews.buttons["PLAY FREE"]
         XCTAssertTrue(play.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.webViews.buttons["London"].exists)
-        XCTAssertTrue(app.webViews.buttons["Manchester"].exists)
-        XCTAssertTrue(app.webViews.buttons["Birmingham"].exists)
+        // WebKit exposes the CSS-transformed uppercase labels to accessibility.
+        // aria-pressed city choices may also be exposed as toggle controls.
+        for city in ["London", "Manchester", "Birmingham"] {
+            let choice = app.webViews.descendants(matching: .any)
+                .matching(NSPredicate(format: "label ==[c] %@", city)).firstMatch
+            XCTAssertTrue(choice.exists, "Missing city choice: \(city)\n\(app.debugDescription)")
+        }
+        app.webViews.descendants(matching: .any)
+            .matching(NSPredicate(format: "label ==[c] %@", "Manchester")).firstMatch.tap()
         play.tap()
-        let buy = app.webViews.buttons["Buy"]
+        let buy = app.webViews.buttons.matching(NSPredicate(format: "label ==[c] %@", "Buy")).firstMatch
         XCTAssertTrue(buy.waitForExistence(timeout: 5))
         for _ in 0..<5 where !buy.isHittable { app.webViews.firstMatch.swipeUp() }
         XCTAssertTrue(buy.isHittable, "The title or modal must not cover the running game")
