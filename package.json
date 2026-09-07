@@ -4,6 +4,7 @@
   "private": true,
   "description": "Noir Market browser game",
   "scripts": {
+    "ios:setup": "bash scripts/setup-ios.sh",
     "ios:prepare": "node scripts/prepare-ios.mjs",
     "check": "node --check game.js && node --check sw.js && node --test tests/*.test.mjs",
     "clean:legacy": "node scripts/dedupe-top-level-functions.mjs && node scripts/prune-obsolete-layers.mjs",

@@ -36,6 +36,16 @@ Run `npm run ios:prepare` to bundle the game offline. See [ios/RELEASE.md](ios/R
 for Mac setup, signing, remaining release blockers and the native test matrix.
 This is preparation source, not a signed or submitted App Store build.
 
+On a Mac with Node.js 22+, Xcode 26+ and XcodeGen installed, run
+`npm run ios:setup`. It installs dependencies, checks the game, packages the
+offline resources, generates the project and opens it in Xcode.
+
+The **iOS simulator checks** GitHub Actions workflow builds with Xcode 26.3 and
+runs native startup/free-play and privacy-sheet UI tests. Its
+**NoirMarket-Xcode-project** artifact contains ready-to-open sources and bundled
+game files. The simulator job deliberately skips the unfinished App Store icon;
+it does not sign, archive, upload or certify the app for release.
+
 ## Maintenance commands
 
 ```bash

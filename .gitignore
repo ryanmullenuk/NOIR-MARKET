@@ -11,3 +11,6 @@ ios/build/
 *.p12
 *.mobileprovision
 *.p8
+*.xcresult/
+ios-xcode-project.zip
+ios-simulator-build.log

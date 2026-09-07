@@ -19,6 +19,30 @@ prove that the Swift code compiles or that StoreKit works on an iPhone.
 
 ## Prepare on your Mac
 
+### Simplified setup
+
+With the tools below installed, run `npm run ios:setup` from the repository
+root. This checks the selected Xcode version, installs dependencies, runs the
+JavaScript checks, bundles the game, generates the project and opens Xcode.
+It does not change your Apple account or install signing credentials.
+
+Alternatively, open the latest **iOS simulator checks** run in GitHub Actions
+and download **NoirMarket-Xcode-project** once its packaging step succeeds.
+Extract it and open `ios/NoirMarket.xcodeproj`. This contains the source and game
+resources, not an installable iPhone app. Make lasting edits in a repository
+checkout so they can be saved back to GitHub.
+
+The workflow builds using Xcode 26.3 on a macOS runner and runs two native UI
+tests: title → Free Play → city selection → playable screen, and opening and
+closing Privacy & support. Check the run result for the exact commit being
+released. A generated project artifact alone does not prove compilation passed.
+Result bundles and compiler output are saved separately. The AppIcon requirement
+is disabled only for these simulator checks while the final icon is outstanding.
+Purchase verification, physical device tests and signed archive validation are
+separate release gates.
+
+### Manual setup
+
 Install Xcode 26 or later from Apple, launch it once, accept its licence and
 install an iOS simulator. Install Node.js 22+ and XcodeGen if absent. XcodeGen is
 a build-time project generator; it is not an SDK embedded in the app.
