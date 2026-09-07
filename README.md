@@ -29,7 +29,14 @@ This validates JavaScript syntax, release metadata, packaged assets, the runtime
 - `manifest.json` and the icon files define the installable PWA.
 - Browser saves use `localStorage`. V9.7 writes `noir_market_v9_7` and migrates earlier supported keys.
 
-## Maintenance
+## iOS preparation
+
+Native SwiftUI/WebKit source and StoreKit 2 purchase handling are in `ios/`.
+Run `npm run ios:prepare` to bundle the game offline. See [ios/RELEASE.md](ios/RELEASE.md)
+for Mac setup, signing, remaining release blockers and the native test matrix.
+This is preparation source, not a signed or submitted App Store build.
+
+## Maintenance commands
 
 ```bash
 npm run clean:legacy

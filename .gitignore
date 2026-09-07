@@ -3,4 +3,11 @@ coverage/
 test-results/
 playwright-report/
 .DS_Store
-
+ios/Generated/
+ios/*.xcodeproj/
+ios/build/
+*.xcarchive/
+*.ipa
+*.p12
+*.mobileprovision
+*.p8

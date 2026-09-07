@@ -1,0 +1,171 @@
+# Noir Market: iOS preparation and release handoff
+
+Status: native source scaffold prepared, NOT signed, NOT compiled with Xcode,
+NOT device-tested, NOT uploaded, NOT submitted. Web regression results do not
+prove that the Swift code compiles or that StoreKit works on an iPhone.
+
+## Proposed first release
+
+- App name: Noir Market. Proposed bundle ID: `games.redhead.noirmarket` (confirm
+  availability in your Developer account before registering).
+- Version 1.0, build 1. iPhone portrait, iOS 16+ deployment target.
+- Three free cities. One non-consumable purchase unlocks all 14 cities.
+- Product ID: `games.redhead.noirmarket.unlockallcities`.
+- No ads, accounts, online leaderboard or subscription in this build.
+- Existing on-device save behaviour retained for both modes. The previously
+  discussed paid-only saves/reset-on-quit proposal is NOT implemented.
+- Native SwiftUI + WKWebView with bundled local game assets, not a remotely
+  hosted website. The live web game is unchanged.
+
+## Prepare on your Mac
+
+Install Xcode 26 or later from Apple, launch it once, accept its licence and
+install an iOS simulator. Install Node.js 22+ and XcodeGen if absent. XcodeGen is
+a build-time project generator; it is not an SDK embedded in the app.
+
+From the repository root:
+
+```sh
+npm ci
+npm run check
+npm run ios:prepare
+cd ios
+xcodegen generate
+open NoirMarket.xcodeproj
+```
+
+In Xcode select the NoirMarket target, Signing & Capabilities, then select your
+Apple team and leave automatic signing on. Confirm the bundle ID. Keep signing
+keys, certificates and App Store Connect API keys OUT of the repo and chat.
+
+The generated `.xcodeproj` and Web folder are intentionally ignored. The source
+of truth is project.yml and the repository's web assets. Run ios:prepare after
+any web change, then regenerate the project if files/settings changed. Record
+final signing/build configuration in project.yml, not only the generated project.
+
+Build the simulator before signing:
+
+```sh
+xcodebuild -project NoirMarket.xcodeproj -scheme NoirMarket \
+  -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+```
+
+Fix any compiler/SDK errors, then run on a physical iPhone. This command has NOT
+been run in the Linux preparation environment.
+
+## Release blockers to resolve before an archive
+
+1. Supply the final 1024x1024 App Store icon with no transparency. The AppIcon
+   asset set is deliberately empty; the existing web icon is only 512x512.
+   Add the approved image in Xcode Assets > AppIcon and retain it in the repo.
+2. Confirm unlock price and territories in App Store Connect. Complete Apple's
+   paid-app agreement, banking and tax steps in your account if required. The
+   app reads Apple's localised displayPrice; there is no hard-coded price.
+3. Replace the privacy/support placeholder in NoirMarketApp.swift with the
+   approved privacy wording, public HTTPS privacy-policy URL and monitored
+   support contact. Publish a support page. Do not submit with placeholder text.
+4. Review the privacy manifest against the final archive and any added SDKs.
+   The draft declares no tracking/data collection and no directly used
+   required-reason APIs. It is not an audit of an as-yet-unbuilt binary.
+5. Confirm rights for the bundled game music, Redhead logo and all artwork.
+   The rejected personal-use title font is not included.
+6. Complete the current age-rating questionnaire honestly for drug references,
+   crime, violence and any gambling-style mechanics. Do not pick a rating first
+   and tailor answers to it. Apple calculates the rating from the answers.
+7. Review export-compliance questions against the finished binary. This project
+   does not predeclare a cryptography exemption on your behalf.
+
+## Purchase safety and tests
+
+StoreKit 2 verifies transactions on-device. Only the matching, non-revoked
+product in currentEntitlements grants access. Transaction updates handle pending
+approvals and revocations. Restore calls AppStore.sync only on a user action.
+The web package builder removes UNLOCK WEB PREVIEW entirely, and ignores saved
+unlock flags until the native entitlement is checked. The bridge accepts only
+the bundled main frame and fixed product ID. This is not a server-authoritative
+anti-cheat system; local game state can always be modified on a compromised device.
+
+Configure the non-consumable in App Store Connect and, for local tests, create a
+StoreKit Configuration in Xcode with that exact product ID. Do not submit
+screenshots that show local test pricing as production pricing.
+
+Required native test matrix (all currently pending):
+
+- Small and large iPhones: logo fade, white two-line title, snow pile, ENTER,
+  safe areas, keyboard, all dialogs, scrolling and orientation restrictions.
+- Free start, each free city, locked travel/shipping, full start after purchase.
+- Successful purchase, cancellation, pending approval, unavailable product,
+  offline purchase attempt, restore with/without ownership, refund/revocation.
+- Force quit/relaunch, background/foreground, device restart and app update:
+  saves survive; verified city access refreshes without losing progress.
+- Flight mode: bundled assets, sound and gameplay work. Purchases need Apple.
+- Buy/sell, finances, storage, travel, stay, next day, menus, new game and endgame.
+- Audio interruption, silent switch, Reduced Motion and VoiceOver controls.
+- Web-process termination recovery, long sessions and memory/performance.
+- Reinstall: explain that restore recovers purchase ownership, not local saves.
+- Confirm web Safari progress is not assumed to migrate into the native sandbox.
+
+## App Store Connect and submission
+
+Create a new iOS app with the matching registered bundle ID. Confirm the name,
+primary language, SKU and ownership details. No account has been created or
+configured by this preparation work.
+
+Draft subtitle: **Trade. Travel. Survive.**
+
+Draft description:
+
+> Noir Market is a fictional turn-based crime strategy game. Start with £1,000,
+> trade in changing markets, manage cash and storage, and decide when to move on.
+> News stories can point towards tomorrow's opportunity, but not every rumour is
+> reliable. Balance profit against heat, debt and health over a 30-day run.
+>
+> Play in London, Manchester and Birmingham for free. A one-off in-app purchase
+> unlocks all 14 cities and their travel and shipping routes. No subscription.
+> Game progress is saved on your device. There are no real-world goods or
+> real-money rewards.
+
+Draft review note (use only after native verification):
+
+> This is an offline fictional crime/trading game, not a marketplace for real
+> goods. No login is required. Tap ENTER > FREE PLAY > choose a city > PLAY FREE.
+> For the non-consumable, tap UNLOCK ALL CITIES and use Apple's purchase sheet.
+> Restore Purchases is available in the native footer. Drug references are
+> fictional game content and have been declared in the age-rating questionnaire.
+
+Provide real screenshots from the finished iPhone build, not browser mockups.
+For an iPhone-only target use an accepted iPhone screenshot size; check the
+current specification below. Add an IAP review screenshot and submit the first
+IAP with its app version. Answer app privacy based on the final build, complete
+review contact details and select manual release if you want control after approval.
+
+In Xcode choose a physical/generic iOS destination, Product > Archive. Validate
+the archive, then Distribute App > App Store Connect > Upload. After processing,
+test through TestFlight before attaching that exact build to version 1.0 and
+submitting the app and purchase for review. No signed archive or upload exists yet.
+
+## Review risk and official references (checked 7 September 2026)
+
+Apple requires Xcode 26+ and iOS 26 SDK+ for uploads since 28 April 2026. This is
+the build SDK requirement, not a requirement to drop support for older iPhones.
+https://developer.apple.com/news/upcoming-requirements/
+
+Guideline 1.4.3 prohibits encouraging illegal drug consumption/facilitating real
+controlled-substance sales. Fictional depiction is not the same as an actual
+sale, but the game's theme is a review risk, not a guaranteed acceptance. A
+disclaimer or high age rating does not guarantee compliance. Do not conceal the
+theme. Guideline 4.2 also assesses lasting entertainment/app functionality.
+https://developer.apple.com/app-store/review/guidelines/
+
+Privacy policy URL is required and the policy must also be accessible in-app:
+https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy/
+
+Screenshot requirements:
+https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/
+
+StoreKit entitlements and restore:
+https://developer.apple.com/documentation/storekit/transaction/currententitlements
+https://developer.apple.com/documentation/storekit/appstore/sync()
+
+XcodeGen setup:
+https://github.com/yonaskolb/XcodeGen
