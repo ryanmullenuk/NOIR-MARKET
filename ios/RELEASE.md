@@ -16,6 +16,12 @@ Web regression results do not prove that StoreKit works on an iPhone.
 - Version 1.0, build 1. iPhone portrait, iOS 16+ deployment target.
 - Three free cities. One non-consumable purchase unlocks all 14 cities.
 - Product ID: `games.redhead.noirmarket.unlockallcities`.
+- Agreed UK one-off unlock price: **£1.99 GBP** (confirmed by Ryan). Configure
+  this in App Store Connect; it has NOT been set in the Apple account by this
+  repository update. Keep the in-app price sourced from StoreKit displayPrice.
+- Support contact: **ryanmullenuk@yahoo.co.uk**.
+- Support URL: **https://redhead.games/support.html**.
+- Privacy policy URL: **https://redhead.games/privacy.html**.
 - No ads, accounts, online leaderboard or subscription in this build.
 - Existing on-device save behaviour retained for both modes. The previously
   discussed paid-only saves/reset-on-quit proposal is NOT implemented.
@@ -91,12 +97,14 @@ been run in the Linux preparation environment.
 1. Review the included 1024x1024 opaque App Store icon at home-screen size. It
    uses the established plain bold white NOIR MARKET title on black. The PNG
    in Assets.xcassets is the build asset; ios/AppIcon.svg is the editable source.
-2. Confirm unlock price and territories in App Store Connect. Complete Apple's
+2. Set the agreed UK unlock price to £1.99 and choose territories in App Store
+   Connect. Complete Apple's
    paid-app agreement, banking and tax steps in your account if required. The
    app reads Apple's localised displayPrice; there is no hard-coded price.
-3. Replace the privacy/support placeholder in NoirMarketApp.swift with the
-   approved privacy wording, public HTTPS privacy-policy URL and monitored
-   support contact. Publish a support page. Do not submit with placeholder text.
+3. Enter the support and privacy URLs above into App Store Connect and verify
+   both public pages load before submission. The in-app placeholder has been
+   replaced with the support email and links. Monitor the published mailbox and
+   handle support correspondence according to the privacy policy.
 4. Review the privacy manifest against the final archive and any added SDKs.
    The draft declares no tracking/data collection and no directly used
    required-reason APIs. It is not an audit of an as-yet-unbuilt binary.
